@@ -9,6 +9,7 @@ public enum ClientExceptionCode {
     SCHOOL_NOT_FOUND,
     SCHOOL_ALREADY_BOOKMARKED,
     SCHOOL_BOOKMARK_NOT_FOUND,
+    EDULEVEL_NOT_FOUND,
 
     // 층
     FLOOR_NOT_FOUND,
