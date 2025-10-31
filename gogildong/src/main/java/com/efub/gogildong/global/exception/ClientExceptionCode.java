@@ -1,0 +1,26 @@
+package com.efub.gogildong.global.exception;
+
+public enum ClientExceptionCode {
+    // 전체
+    INTERNAL_SERVER_ERROR,
+    ILLEGAL_ARGUMENT,
+
+    // 학교
+    SCHOOL_NOT_FOUND,
+    SCHOOL_ALREADY_BOOKMARKED,
+    SCHOOL_BOOKMARK_NOT_FOUND,
+
+    // 층
+    FLOOR_NOT_FOUND,
+
+    // 시설
+    FACILITY_NOT_FOUND,
+    FACILITY_TYPE_NOT_FOUND,
+    FACILITY_TYPE_BAD_REQUEST,
+
+    // 제보
+    DOOR_TYPE_BAD_REQUEST,
+
+    // 허가
+    UNAUTHORIZED_SCHOOL_ACCESS,
+}
