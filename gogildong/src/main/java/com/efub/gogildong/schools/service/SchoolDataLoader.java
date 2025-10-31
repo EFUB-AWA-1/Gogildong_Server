@@ -101,7 +101,7 @@ public class SchoolDataLoader {
                 }
                 if(existingSchools.contains(uniName)) continue; // 이미 포함된 경우 제외
 
-                Point location = toPoint(line[14], line[15]);
+                Point location = toPoint(line[15], line[14]);
                 School newSchool = School.builder()
                         .schoolCode(generateUniqueSchoolCode())
                         .schoolName(uniName)
