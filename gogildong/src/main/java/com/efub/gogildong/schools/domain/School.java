@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -30,6 +33,9 @@ public class School {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     EduLevel eduLevel;
+
+    @OneToMany(mappedBy = "school")
+    List<SchoolTag> SchoolTags = new ArrayList<>();
 
     @Builder
     public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel) {
