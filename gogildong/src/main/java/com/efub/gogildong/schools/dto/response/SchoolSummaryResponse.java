@@ -1,6 +1,7 @@
 package com.efub.gogildong.schools.dto.response;
 
 import com.efub.gogildong.schools.domain.School;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class SchoolSummaryResponse {
     private double latitude;
     private double longitude;
     private List<String> tag;
-    private boolean isLike;
+    private boolean bookmarked;
 
     public static SchoolSummaryResponse fromEntity(School school) {
         List<String> tagList = school.getSchoolTags().stream()
