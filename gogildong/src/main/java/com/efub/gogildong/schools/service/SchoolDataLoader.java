@@ -42,7 +42,7 @@ public class SchoolDataLoader {
         // 기존 데이터 미리 불러오기 (학교명 + 주소)
         Set<String> existingSchools = schoolRepository.findAll()
                 .stream()
-                .map(School::getSchoolName)
+                .map(sc -> sc.getSchoolName() + "|" + sc.getAddress())
                 .collect(Collectors.toSet());
 
         List<School> allSchools = new ArrayList<>();
@@ -66,13 +66,14 @@ public class SchoolDataLoader {
             String[] line;
             while ((line = reader.readNext()) != null) {
                 String name = line[1];
-                if (existingSchools.contains(name)) continue; // 이미 포함된 경우 스킵
+                String address = line[8];
+                if (existingSchools.contains(name + "|" + address)) continue; // 이미 포함된 경우 스킵
                 EduLevel eduLevel = getEdulevel(line[2]);
                 Point location = toPoint(line[16], line[15]);
                 School newSchool = School.builder()
                         .schoolCode(generateUniqueSchoolCode())
                         .schoolName(name)
-                        .address(line[8])
+                        .address(address)
                         .location(location)
                         .eduLevel(eduLevel)
                         .build();
@@ -99,13 +100,14 @@ public class SchoolDataLoader {
                 if (!campus.equals("본교") && !campus.equals("분교")) { // 캠퍼스 이름 포함
                     uniName += " " + campus;
                 }
-                if(existingSchools.contains(uniName)) continue; // 이미 포함된 경우 제외
+                String address = line[12];
+                if(existingSchools.contains(uniName + "|" + address)) continue; // 이미 포함된 경우 제외
 
                 Point location = toPoint(line[15], line[14]);
                 School newSchool = School.builder()
                         .schoolCode(generateUniqueSchoolCode())
                         .schoolName(uniName)
-                        .address(line[12])
+                        .address(address)
                         .location(location)
                         .eduLevel(EduLevel.uni)
                         .build();
