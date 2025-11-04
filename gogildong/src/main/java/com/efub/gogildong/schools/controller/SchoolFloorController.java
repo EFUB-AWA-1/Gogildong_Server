@@ -3,6 +3,7 @@ package com.efub.gogildong.schools.controller;
 import com.efub.gogildong.schools.domain.constants.TagCategory;
 import com.efub.gogildong.schools.dto.response.FacilityListResponse;
 import com.efub.gogildong.schools.dto.response.FloorListResponse;
+import com.efub.gogildong.schools.dto.response.FloorPlanImageResponse;
 import com.efub.gogildong.schools.service.SchoolFloorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,15 @@ public class SchoolFloorController {
                                                                          @PathVariable Long floorId,
                                                                          @RequestParam(name = "type", defaultValue = "all") TagCategory type) {
         return ResponseEntity.ok(schoolFloorService.getAllFacilitiesByFloorId(schoolId, floorId, type));
+    }
+
+    /*
+    * 층 별 도면 조회
+    */
+    @GetMapping("/{schoolId}/floors/{floorId}/plan")
+    public ResponseEntity<FloorPlanImageResponse> getFloorPlanImageByFloorId(@PathVariable Long schoolId,
+                                                                             @PathVariable Long floorId){
+        return ResponseEntity.ok(schoolFloorService.getFloorPlanImageByFloorId(schoolId, floorId));
     }
 
 }

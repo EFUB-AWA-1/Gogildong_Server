@@ -10,10 +10,7 @@ import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.constants.TagCategory;
-import com.efub.gogildong.schools.dto.response.FacilityListResponse;
-import com.efub.gogildong.schools.dto.response.FacilitySummaryResponse;
-import com.efub.gogildong.schools.dto.response.FloorListResponse;
-import com.efub.gogildong.schools.dto.response.FloorResponse;
+import com.efub.gogildong.schools.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -67,11 +64,7 @@ public class SchoolFloorService {
 
         Floor floor = getFloorById(floorId);
 
-        Building building = buildingRepository
-                .findByFloor(floor).orElseThrow(()-> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
-        if(!building.getSchool().equals(school)) {
-            throw new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND_IN_SCHOOL);
-        }
+        getValidatedSchoolByFloorId(floor, school);
 
         List<Facility> facilities = facilityRepository.findAllByFloorAndType(floor, tagCategory.name());
         List<FacilitySummaryResponse> facilitySummaryResponses = facilities.stream().map(FacilitySummaryResponse::from).toList();
@@ -85,4 +78,28 @@ public class SchoolFloorService {
         return floorRepository.findByFloorId(floorId)
                 .orElseThrow(()-> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
     }
+
+    /*
+    * 층 별 도면을 조회합니다.
+    * */
+    @Transactional(readOnly = true)
+    public FloorPlanImageResponse getFloorPlanImageByFloorId(Long schoolId, Long floorId) {
+        // TODO: 추후 회원 유효성 검사 진행
+        Floor floor = getFloorById(floorId);
+        School school = schoolService.getSchoolById(schoolId);
+        getValidatedSchoolByFloorId(floor, school);
+        return FloorPlanImageResponse.from(floor);
+    }
+
+    /*
+    * 해당 학교에 해당 층이 존재하는지 확인합니다.
+    * */
+    private void getValidatedSchoolByFloorId(Floor floor, School school) {
+        Building building = buildingRepository
+                .findByFloor(floor).orElseThrow(()-> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
+        if(!building.getSchool().equals(school)) {
+            throw new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND_IN_SCHOOL);
+        }
+    }
+
 }
