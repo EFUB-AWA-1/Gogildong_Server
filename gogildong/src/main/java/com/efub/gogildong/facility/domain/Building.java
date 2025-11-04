@@ -29,10 +29,8 @@ public class Building {
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Floor> floors = new ArrayList<>();
 
-    // 편의 메서드
     // 건물층 추가
     public void addFloor(Floor floor) {
         floors.add(floor);
-        floor.setBuilding(this);
     }
 }
