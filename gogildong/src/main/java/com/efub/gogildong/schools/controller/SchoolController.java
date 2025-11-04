@@ -3,16 +3,14 @@ package com.efub.gogildong.schools.controller;
 import com.efub.gogildong.schools.domain.constants.NearbySearchDefaults;
 import com.efub.gogildong.schools.domain.constants.TagCategory;
 import com.efub.gogildong.schools.dto.response.SchoolListResponse;
+import com.efub.gogildong.schools.dto.response.SchoolSummaryResponse;
 import com.efub.gogildong.schools.service.SchoolService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/schools")
@@ -41,5 +39,13 @@ public class SchoolController {
     public ResponseEntity<SchoolListResponse> getSchoolsByQuery(@RequestParam("query") String query,
                                                                 @PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(schoolService.getSchoolsByQuery(query, pageable));
+    }
+
+    /*
+    * 학교 정보 상세 조회
+    * */
+    @GetMapping("/{schoolId}")
+    public ResponseEntity<SchoolSummaryResponse> getSchoolInfo(@PathVariable long schoolId) {
+        return ResponseEntity.ok(schoolService.getSchoolInfoById(schoolId));
     }
 }
