@@ -13,6 +13,7 @@ public enum ClientExceptionCode {
 
     // 층
     FLOOR_NOT_FOUND,
+    FLOOR_NOT_FOUND_IN_SCHOOL,
 
     // 시설
     FACILITY_NOT_FOUND,

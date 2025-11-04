@@ -79,9 +79,18 @@ public class SchoolService {
     /*
     * 학교 id로 상세 정보를 조회합니다.
     * */
+    @Transactional(readOnly = true)
     public SchoolSummaryResponse getSchoolInfoById(Long schoolId) {
-        School school = schoolRepository.findBySchoolId(schoolId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+        School school = getSchoolById(schoolId);
         return SchoolSummaryResponse.fromEntity(school);
+    }
+
+    /*
+    * 학교 아이디로 학교 조회
+    * */
+    @Transactional(readOnly = true)
+    public School getSchoolById(Long schoolId) {
+        return schoolRepository.findBySchoolId(schoolId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
     }
 }
