@@ -56,7 +56,7 @@ public class FacilityReview extends BaseEntity {
     }
 
     // 리뷰 내용 수정
-    public  void updateReviewText(String reviewText) {
+    public void updateReviewText(String reviewText) {
         this.reviewText = reviewText;
     }
 

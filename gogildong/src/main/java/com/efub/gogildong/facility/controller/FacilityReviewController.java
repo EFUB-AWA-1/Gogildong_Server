@@ -58,7 +58,7 @@ public class FacilityReviewController {
 
     // 시설 리뷰 삭제
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<FacilityReviewResponse> deleteFacilityReview(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<Void> deleteFacilityReview(//@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                         @PathVariable("reviewId") Long reviewId) {
         facilityReviewService.deleteFacilityReview(reviewId);
         return ResponseEntity.noContent().build();
