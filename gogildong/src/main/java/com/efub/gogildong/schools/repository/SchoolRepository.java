@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SchoolRepository extends JpaRepository<School, Long> {
     boolean existsBySchoolCode(String schoolCode);
@@ -30,5 +31,7 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
             @Param("radiusInMeters") double radiusInMeters,
             @Param("tag") String tag
     );
+
+    Optional<School> findBySchoolCode(String schoolCode);
 
 }
