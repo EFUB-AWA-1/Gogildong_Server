@@ -14,7 +14,6 @@ import java.util.List;
 public class SchoolSummaryResponse {
     private Long schoolId;
     private String schoolName;
-    private String image;
     private String address;
     private double latitude;
     private double longitude;

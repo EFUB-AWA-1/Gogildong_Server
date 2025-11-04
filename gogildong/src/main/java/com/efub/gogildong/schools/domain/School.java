@@ -1,6 +1,6 @@
 package com.efub.gogildong.schools.domain;
 
-import com.efub.gogildong.buildings.domain.Building;
+import com.efub.gogildong.facility.domain.Building;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

@@ -75,4 +75,13 @@ public class SchoolService {
             throw new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND);
         }
     }
+
+    /*
+    * 학교 id로 상세 정보를 조회합니다.
+    * */
+    public SchoolSummaryResponse getSchoolInfoById(Long schoolId) {
+        School school = schoolRepository.findBySchoolId(schoolId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+        return SchoolSummaryResponse.fromEntity(school);
+    }
 }
