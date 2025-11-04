@@ -5,8 +5,10 @@ import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import com.efub.gogildong.user.domain.User;
+import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
 import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
+import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,31 @@ public class UserService {
         return CreateInternalUserResponseDto.from(saved);
     }
 
+    // 내부인 소속 학교 변경
+
+    // 외부인 생성
+    @Transactional
+    public CreateUserResponseDto createExternalUser(CreateExternalUserRequestDto request) {
+
+        // 이메일 형식 체크
+        EmailValidator.validateOrThrow(request.getEmail());
+
+        // 외부인 생성
+        User user = request.toEntity();
+
+        User saved = userRepository.save(user);
+        return CreateUserResponseDto.from(saved);
+    }
+
+    // 학교 관리자 생성
+
+    // 전체 관리자 생성
+
+    // user 정보 수정
+
+    // user 삭제
+
+    // 이메일 검증
     public final class EmailValidator {
         private static final Pattern EMAIL_PATTERN =
                 Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
@@ -52,16 +79,4 @@ public class UserService {
             }
         }
     }
-
-    // 내부인 소속 학교 변경
-
-    // 외부인 생성
-
-    // 학교 관리자 생성
-
-    // 전체 관리자 생성
-
-    // user 정보 수정
-
-    // user 삭제
 }

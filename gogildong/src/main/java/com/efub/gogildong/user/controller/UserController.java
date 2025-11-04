@@ -1,7 +1,9 @@
 package com.efub.gogildong.user.controller;
 
+import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
 import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
+import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,13 @@ public class UserController {
         CreateInternalUserResponseDto responseDto = userService.createInternalUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 
+    }
+
+    // 외부인 생성: POST /users/signup/external
+    @PostMapping("/signup/external")
+    public ResponseEntity<CreateUserResponseDto> createExternalUser(@RequestBody @Valid CreateExternalUserRequestDto requestDto) {
+        CreateUserResponseDto responseDto = userService.createExternalUser(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
 }

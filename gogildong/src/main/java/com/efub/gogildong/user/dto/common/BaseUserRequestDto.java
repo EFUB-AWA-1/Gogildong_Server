@@ -1,4 +1,4 @@
-package com.efub.gogildong.user.dto.request.common;
+package com.efub.gogildong.user.dto.common;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateUserRequestDto {
+public abstract class BaseUserRequestDto {
 
     @NotBlank
     private String loginId;
