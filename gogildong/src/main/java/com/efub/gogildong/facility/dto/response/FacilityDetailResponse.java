@@ -8,9 +8,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @Builder
-public class FacilityDetailResponseDto {
+public class FacilityDetailResponse {
     private String buildingName;
     private String floorName;
     private Long facilityId;
@@ -20,13 +19,13 @@ public class FacilityDetailResponseDto {
     private String reviewSummary;
     private LocalDateTime createdAt;
 
-    public static FacilityDetailResponseDto from(Facility facility) {
-        return FacilityDetailResponseDto.builder()
+    public static FacilityDetailResponse from(Facility facility) {
+        return FacilityDetailResponse.builder()
                 .buildingName(facility.getFloor().getBuilding().getBuildingName())
                 .floorName(facility.getFloor().getFloorName())
                 .facilityId(facility.getFacilityId())
                 .facilityName(facility.getFacilityName())
-                .facilityNiceName(facility.getFacilityName())
+                .facilityNiceName(facility.getFacilityNickname())
                 .facilityType(facility.getFacilityType())
                 .reviewSummary(facility.getReviewSummary())
                 .createdAt(facility.getCreatedAt())

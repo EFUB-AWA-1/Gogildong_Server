@@ -1,5 +1,6 @@
 package com.efub.gogildong.facility.domain;
 
+import com.efub.gogildong.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,12 +20,14 @@ public class FacilityReviewLike {
     @JoinColumn(name = "facility_review_id", nullable = false)
     private FacilityReview facilityReview;
 
-    @Builder
-    public FacilityReviewLike(Long facilityReviewLikeId) {
-        this.facilityReviewLikeId = facilityReviewLikeId;
-    }
+    // 유저와 n:1 매핑, 주인, 지연로딩
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public void setFacilityReview(FacilityReview facilityReview) {
+    @Builder
+    public FacilityReviewLike(FacilityReview facilityReview, User user) {
         this.facilityReview = facilityReview;
+        this.user = user;
     }
 }

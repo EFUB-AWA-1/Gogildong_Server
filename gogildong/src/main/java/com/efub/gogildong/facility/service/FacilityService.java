@@ -1,8 +1,8 @@
 package com.efub.gogildong.facility.service;
 
 import com.efub.gogildong.facility.domain.Facility;
-import com.efub.gogildong.facility.dto.response.FacilityDetailResponseDto;
-import com.efub.gogildong.facility.dto.response.RestroomResponseDto;
+import com.efub.gogildong.facility.dto.response.FacilityDetailResponse;
+import com.efub.gogildong.facility.dto.response.RestroomResponse;
 import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -26,9 +26,9 @@ public class FacilityService {
         // 각 타입별 Dto 변환 메서드 호출
         switch (facility.getFacilityType()) {
             case "restroom":
-                return RestroomResponseDto.from(facility.getRestroom());
+                return RestroomResponse.from(facility.getRestroom());
             default:
-                return FacilityDetailResponseDto.from(facility);
+                return FacilityDetailResponse.from(facility);
         }
     }
 }

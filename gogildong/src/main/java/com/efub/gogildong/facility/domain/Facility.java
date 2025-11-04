@@ -45,32 +45,21 @@ public class Facility extends BaseEntity {
 
     @Builder
     public Facility(String facilityName, String facilityNickname, String facilityType,
-        String reviewSummary) {
+        String reviewSummary, Floor floor) {
         this.facilityName = facilityName;
         this.facilityNickname = facilityNickname;
         this.facilityType = facilityType;
         this.reviewSummary = reviewSummary;
-    }
-
-    // 연관관계 편의 메서드
-    public void setFloor(Floor floor) {
         this.floor = floor;
-    }
-
-    public void setRestroom(Restroom restroom) {
-        this.restroom = restroom;
-        restroom.setFacility(this);
     }
 
     // 리뷰 추가
     public void addReview(FacilityReview review) {
         reviews.add(review);
-        review.setFacility(this);
     }
 
     // 리뷰 삭제
     public void removeReview(FacilityReview review) {
         reviews.remove(review);
-        review.setFacility(null);
     }
 }
