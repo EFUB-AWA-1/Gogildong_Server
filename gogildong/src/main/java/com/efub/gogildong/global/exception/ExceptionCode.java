@@ -17,6 +17,7 @@ public enum ExceptionCode {
 
     // 층
     FLOOR_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND, "존재하지 않는 층입니다."),
+    FLOOR_NOT_FOUND_IN_SCHOOL(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND_IN_SCHOOL, "해당 학교에는 해당 층이 존재하지 않습니다."),
 
     // 시설
     FACILITY_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FACILITY_NOT_FOUND, "존재하지 않는 시설입니다."),
