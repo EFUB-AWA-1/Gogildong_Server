@@ -1,5 +1,6 @@
 package com.efub.gogildong.user.controller;
 
+import com.efub.gogildong.user.dto.request.CreateAdminUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
 import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
@@ -36,4 +37,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    // 학교 관리자 생성: POST /users/signup/admin
+    @PostMapping("/signup/admin")
+    public ResponseEntity<CreateInternalUserResponseDto> createAdminUser(@RequestBody @Valid CreateAdminUserRequestDto requestDto) {
+        CreateInternalUserResponseDto responseDto = userService.createAdminUser(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
 }
