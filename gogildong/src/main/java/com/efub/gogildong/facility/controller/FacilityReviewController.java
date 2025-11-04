@@ -6,8 +6,11 @@ import com.efub.gogildong.facility.dto.request.FacilityReviewUpdateRequest;
 import com.efub.gogildong.facility.dto.response.FacilityReviewListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewResponse;
 import com.efub.gogildong.facility.service.FacilityReviewService;
+import com.efub.gogildong.global.exception.ExceptionCode;
+import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.domain.UserRole;
+import com.efub.gogildong.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ public class FacilityReviewController {
 
 
     private final FacilityReviewService facilityReviewService;
+    private final UserRepository userRepository;
 
     // 시설 리뷰 조회
     @GetMapping("/{facilityId}")
@@ -36,6 +40,8 @@ public class FacilityReviewController {
     public ResponseEntity<FacilityReviewResponse> createFacilityReview(//@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                        @RequestBody @Valid FacilityReviewRequest request) {
         //User user = userDetails.getUser();
+        User mockUser = userRepository.findById(3L)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         FacilityReviewResponse response = facilityReviewService.createFacilityReview(mockUser, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

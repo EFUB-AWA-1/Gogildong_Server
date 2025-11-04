@@ -48,6 +48,7 @@ public class FacilityReviewService {
     @Transactional
     // 시설 리뷰 작성
     public FacilityReviewResponse createFacilityReview(User user, FacilityReviewRequest request) {
+
         Facility facility = facilityRepository.findByFacilityId(request.getFacilityId())
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_NOT_FOUND));
 

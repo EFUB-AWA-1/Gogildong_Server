@@ -1,17 +1,16 @@
 package com.efub.gogildong.schools.controller;
 
-import com.efub.gogildong.schools.domain.TagName;
 import com.efub.gogildong.schools.domain.constants.NearbySearchDefaults;
 import com.efub.gogildong.schools.domain.constants.TagCategory;
 import com.efub.gogildong.schools.dto.response.SchoolListResponse;
+import com.efub.gogildong.schools.dto.response.SchoolSummaryResponse;
 import com.efub.gogildong.schools.service.SchoolService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/schools")
@@ -25,10 +24,28 @@ public class SchoolController {
     * 반경의 단위는 m
     * */
     @GetMapping("/nearby")
-    public ResponseEntity<SchoolListResponse> getNearbySchools(@RequestParam(name = "lat", defaultValue = NearbySearchDefaults.LATITUDE + "") double latitude,
+    public ResponseEntity<SchoolListResponse> getSchoolsByNear(@RequestParam(name = "lat", defaultValue = NearbySearchDefaults.LATITUDE + "") double latitude,
                                                                @RequestParam(name = "lng", defaultValue = NearbySearchDefaults.LONGITUDE + "") double longitude,
                                                                @RequestParam(name = "tag", defaultValue = "all") TagCategory tagCategory,
-                                                               @RequestParam(name = "radius", defaultValue = NearbySearchDefaults.RADIUS + "") double radius) {
-        return ResponseEntity.ok(schoolService.getNearbySchools(latitude, longitude, tagCategory, radius));
+                                                               @RequestParam(name = "radius", defaultValue = NearbySearchDefaults.RADIUS + "") double radius,
+                                                               @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(schoolService.getNearbySchools(latitude, longitude, tagCategory, radius, pageable));
+    }
+
+    /*
+    * 검색어 기반 학교 리스트 조회
+    * */
+    @GetMapping("/search")
+    public ResponseEntity<SchoolListResponse> getSchoolsByQuery(@RequestParam("query") String query,
+                                                                @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(schoolService.getSchoolsByQuery(query, pageable));
+    }
+
+    /*
+    * 학교 정보 상세 조회
+    * */
+    @GetMapping("/{schoolId}")
+    public ResponseEntity<SchoolSummaryResponse> getSchoolInfo(@PathVariable long schoolId) {
+        return ResponseEntity.ok(schoolService.getSchoolInfoById(schoolId));
     }
 }
