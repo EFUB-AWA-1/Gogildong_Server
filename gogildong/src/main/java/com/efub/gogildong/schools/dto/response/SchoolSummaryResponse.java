@@ -35,4 +35,10 @@ public class SchoolSummaryResponse {
                 .tag(tagList)
                 .build();
     }
+
+    public static List<SchoolSummaryResponse> fromEntityList(List<School> schools) {
+        return schools.stream()
+                .map(SchoolSummaryResponse::fromEntity)
+                .toList();
+    }
 }

@@ -1,5 +1,6 @@
 package com.efub.gogildong.schools.domain;
 
+import com.efub.gogildong.buildings.domain.Building;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,8 +35,11 @@ public class School {
     @Column(nullable = false)
     EduLevel eduLevel;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SchoolTag> SchoolTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Building> buildings = new ArrayList<>();
 
     @Builder
     public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel) {
