@@ -1,6 +1,7 @@
 package com.efub.gogildong.facility.domain;
 
 import com.efub.gogildong.global.domain.BaseEntity;
+import com.efub.gogildong.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,13 +24,15 @@ public class FacilityReviewComment extends BaseEntity {
     @JoinColumn(name = "facility_review_id", nullable = false)
     private FacilityReview facilityReview;
 
-    @Builder
-    public FacilityReviewComment(Long facilityReviewCommentId, String commentText) {
-        this.facilityReviewCommentId = facilityReviewCommentId;
-        this.commentText = commentText;
-    }
+    // 유저와 n:1 매핑, 주인, 지연로딩
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public void setFacilityReview(FacilityReview facilityReview) {
+    @Builder
+    public FacilityReviewComment(String commentText, FacilityReview facilityReview, User user) {
+        this.commentText = commentText;
         this.facilityReview = facilityReview;
+        this.user = user;
     }
 }

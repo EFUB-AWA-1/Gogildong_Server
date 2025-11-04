@@ -17,10 +17,11 @@ public class FacilityController {
 
     // 시설 상세 조회
     @GetMapping
-    public ResponseEntity<?> getFacilityDetail(@PathVariable Long facility_id) {
+    public ResponseEntity<?> getFacilityDetail(//@AuthenticationPrincipal CustomUserDetails userDetails,
+                                               @PathVariable Long facility_id) {
         // 시설 타입에 따라 Dto가 달라지므로 반환타입 Object
-        Object responseDto = facilityService.getFacilityDetail(facility_id);
-        return ResponseEntity.ok(responseDto);
+        Object response = facilityService.getFacilityDetail(facility_id);
+        return ResponseEntity.ok(response);
     }
 
     // 시설 이미지 조회

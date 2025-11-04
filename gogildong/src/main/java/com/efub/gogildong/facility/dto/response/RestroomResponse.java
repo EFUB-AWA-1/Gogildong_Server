@@ -7,19 +7,18 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 @Builder
-public class RestroomResponseDto {
-    private FacilityDetailResponseDto facilityDetail;
+public class RestroomResponse {
+    private FacilityDetailResponse facilityDetail;
     private Float doorWidth;
     private String gender;
-    private Boolean isAccessible;
+    private boolean isAccessible;
     private String doorType;
 
-    public static RestroomResponseDto from(Restroom restroom) {
+    public static RestroomResponse from(Restroom restroom) {
         Facility facility = restroom.getFacility();
-        return RestroomResponseDto.builder()
-                .facilityDetail(FacilityDetailResponseDto.from(facility))
+        return RestroomResponse.builder()
+                .facilityDetail(FacilityDetailResponse.from(facility))
                 .doorWidth(restroom.getDoorWidth())
                 .gender(restroom.getGender())
                 .isAccessible(restroom.getIsAccessible())

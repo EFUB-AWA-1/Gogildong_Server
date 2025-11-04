@@ -50,7 +50,7 @@ public class Restroom {
     @Builder
     public Restroom(Boolean isAccessible, String gender, String doorType,
                     Float doorWidth, Float minDoorWidth, Float maxDoorWidth,
-                    Float doorHeight, Float toiletHeight, Boolean grabBar) {
+                    Float doorHeight, Float toiletHeight, Boolean grabBar,  Facility facility) {
         this.isAccessible = isAccessible;
         this.gender = gender;
         this.doorType = doorType;
@@ -60,9 +60,6 @@ public class Restroom {
         this.doorHeight = doorHeight;
         this.toiletHeight = toiletHeight;
         this.grabBar = grabBar;
-    }
-
-    public void setFacility(Facility facility) {
         this.facility = facility;
     }
 }

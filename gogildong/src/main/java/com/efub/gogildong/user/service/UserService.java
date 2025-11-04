@@ -5,6 +5,7 @@ import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import com.efub.gogildong.user.domain.User;
+import com.efub.gogildong.user.dto.request.CreateAdminUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
 import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
@@ -59,6 +60,28 @@ public class UserService {
     }
 
     // 학교 관리자 생성
+    @Transactional
+    public CreateInternalUserResponseDto createAdminUser(CreateAdminUserRequestDto request) {
+
+        // 이메일 형식 체크
+        EmailValidator.validateOrThrow(request.getEmail());
+
+        // schoolCode로 학교 조회
+        School school = schoolRepository.findBySchoolCode(request.getSchoolCode())
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+
+        // adminCode로 학교 관리자 검증
+        if (!school.matchesAdminCode(request.getAdminCode())) {
+            throw new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND);
+        }
+
+        // 외부인 생성
+        User user = request.toEntity();
+        user.changeSchool(school);
+
+        User saved = userRepository.save(user);
+        return CreateInternalUserResponseDto.from(saved);
+    }
 
     // 전체 관리자 생성
 

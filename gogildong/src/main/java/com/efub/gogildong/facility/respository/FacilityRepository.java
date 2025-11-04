@@ -8,7 +8,13 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import java.util.Optional;
+
 public interface FacilityRepository extends JpaRepository <Facility, Long> {
+
     @Query("SELECT f FROM Facility f WHERE f.floor = :floor AND (:type = 'all' OR f.facilityType = :type)")
     List<Facility> findAllByFloorAndType(@Param("floor") Floor floor, @Param("type") String type);
+
+    Optional<Facility> findByFacilityId(Long facilityId);
+
 }
