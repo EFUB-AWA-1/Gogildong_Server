@@ -14,7 +14,6 @@ import java.util.List;
 public class SchoolSummaryResponse {
     private Long schoolId;
     private String schoolName;
-    private String image;
     private String address;
     private double latitude;
     private double longitude;
@@ -34,5 +33,11 @@ public class SchoolSummaryResponse {
                 .longitude(school.getLocation().getX())
                 .tag(tagList)
                 .build();
+    }
+
+    public static List<SchoolSummaryResponse> fromEntityList(List<School> schools) {
+        return schools.stream()
+                .map(SchoolSummaryResponse::fromEntity)
+                .toList();
     }
 }

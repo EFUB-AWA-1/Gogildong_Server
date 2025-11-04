@@ -1,6 +1,8 @@
 package com.efub.gogildong.schools.repository;
 
 import com.efub.gogildong.schools.domain.School;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,13 +27,32 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
     )
     AND (:tag IS NULL OR st.tag_name = :tag)
     """, nativeQuery = true)
-    List<School> findSchoolsWithinRadiusAndTag(
+    Page<School> findSchoolsWithinRadiusAndTag(
             @Param("lat") double latitude,
             @Param("lng") double longitude,
             @Param("radiusInMeters") double radiusInMeters,
-            @Param("tag") String tag
+            @Param("tag") String tag,
+            Pageable pageable
     );
 
-    Optional<School> findBySchoolCode(String schoolCode);
+    /*
+    * 검색어를 기준으로 학교를 반환합니다.
+    * */
+    @Query(value = """
+                    SELECT *
+                    FROM school
+                    WHERE school_name ILIKE %:query%
+                    OR address ILIKE %:query%
+                    ORDER BY
+                    CASE WHEN school_name ILIKE :query||'%' THEN 1
+                    WHEN school_name ILIKE '%'||:query||'%' THEN 2
+                    WHEN address ILIKE '% '||:query||' %' THEN 3
+                    ELSE 4 END
+                    """, nativeQuery = true)
+   Page<School> searchByQuery(@Param("query") String query, Pageable pageable);
+           
+   Optional<School> findBySchoolCode(String schoolCode);
+
+   Optional<School> findBySchoolId(Long schoolId);
 
 }

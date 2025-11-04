@@ -8,6 +8,8 @@ import com.efub.gogildong.schools.dto.response.SchoolListResponse;
 import com.efub.gogildong.schools.dto.response.SchoolSummaryResponse;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,23 +27,61 @@ public class SchoolService {
     public SchoolListResponse getNearbySchools(double latitude,
                                                double longitude,
                                                TagCategory tagCategory,
-                                               double radius) {
+                                               double radius,
+                                               Pageable pageable) {
         // param으로 들어온 tag category 값을 tag 이름으로 변환
         String tagFilter = tagCategory == TagCategory.all ? null : tagCategory.toTagName().name();
 
         // 위도, 경도, 태그, 반경을 기준으로 학교 정보 조회
-        List<School> nearbySchools = schoolRepository.findSchoolsWithinRadiusAndTag(latitude, longitude, radius, tagFilter);
-
+        Page<School> pageOfSchools = schoolRepository.findSchoolsWithinRadiusAndTag(latitude, longitude, radius, tagFilter, pageable);
+        List<School> schools = pageOfSchools.getContent();
         // 검색 결과가 없을 때 404 에러
-        if (nearbySchools.isEmpty()) {
-            throw new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND);
-        }
+        ensureSchoolExists(schools);
 
         // 학교를 DTO로 변환
-        List<SchoolSummaryResponse> schoolSummaryResponses = nearbySchools.stream()
-                .map(SchoolSummaryResponse::fromEntity)
-                .toList();
+        List<SchoolSummaryResponse> schoolSummaryResponses = SchoolSummaryResponse.fromEntityList(schools);
 
-        return new SchoolListResponse(schoolSummaryResponses.size(), schoolSummaryResponses);
+        return SchoolListResponse.builder()
+                .totalPages(pageOfSchools.getTotalPages())
+                .totalElements(pageOfSchools.getTotalElements())
+                .last(pageOfSchools.isLast())
+                .schools(schoolSummaryResponses)
+                .build();
+    }
+
+    /*
+    * 검색어 기반 학교 정보를 조회합니다.
+    * */
+    @Transactional(readOnly = true)
+    public SchoolListResponse getSchoolsByQuery(String query, Pageable pageable) {
+        Page<School> pageOfSchools = schoolRepository.searchByQuery(query, pageable);
+        List<School> schools = pageOfSchools.getContent();
+        ensureSchoolExists(schools);
+        List<SchoolSummaryResponse> schoolSummaryResponses = SchoolSummaryResponse.fromEntityList(schools);
+
+        return SchoolListResponse.builder()
+                .last(pageOfSchools.isLast())
+                .totalElements(pageOfSchools.getTotalElements())
+                .totalPages(pageOfSchools.getTotalPages())
+                .schools(schoolSummaryResponses)
+                .build();
+    }
+
+    /*
+    * 검색 결과에 학교가 포함되는 것을 보장합니다.
+    * */
+    private void ensureSchoolExists(List<School> schools) {
+        if(schools.isEmpty()) {
+            throw new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND);
+        }
+    }
+
+    /*
+    * 학교 id로 상세 정보를 조회합니다.
+    * */
+    public SchoolSummaryResponse getSchoolInfoById(Long schoolId) {
+        School school = schoolRepository.findBySchoolId(schoolId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+        return SchoolSummaryResponse.fromEntity(school);
     }
 }
