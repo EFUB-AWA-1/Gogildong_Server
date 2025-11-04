@@ -24,6 +24,7 @@ public enum ExceptionCode {
     FACILITY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FACILITY_TYPE_NOT_FOUND, "존재하지 않는 시설 종류입니다."),
     FACILITY_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST, ClientExceptionCode.FACILITY_TYPE_BAD_REQUEST, "유효하지 않은 시설 타입입니다."),
     FACILITY_REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FACILITY_REVIEW_NOT_FOUND, "존재하지 않는 시설 리뷰입니다."),
+    FACILITY_REVIEW_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FACILITY_REVIEW_COMMENT_NOT_FOUND,"존재하지 않는 시설 리뷰 댓글입니다."),
 
     // 제보
     DOOR_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST, ClientExceptionCode.DOOR_TYPE_BAD_REQUEST, "유효하지 않은 문 타입입니다."),

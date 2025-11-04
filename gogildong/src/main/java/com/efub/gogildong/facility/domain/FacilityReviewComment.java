@@ -35,4 +35,9 @@ public class FacilityReviewComment extends BaseEntity {
         this.facilityReview = facilityReview;
         this.user = user;
     }
+
+    // 리뷰 댓글 내용 수정
+    public void updateCommentText(String commentText) {
+        this.commentText = commentText;
+    }
 }
