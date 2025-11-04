@@ -3,6 +3,7 @@ package com.efub.gogildong.facility.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,10 @@ public class Floor {
 
     @Column(nullable = false)
     private String floorName;
+
+    @Column
+    @Setter
+    private String floorPlanImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", nullable = false)
