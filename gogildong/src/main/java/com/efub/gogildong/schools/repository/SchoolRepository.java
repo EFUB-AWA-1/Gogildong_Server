@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SchoolRepository extends JpaRepository<School, Long> {
     boolean existsBySchoolCode(String schoolCode);
@@ -49,5 +50,7 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
                     ELSE 4 END
                     """, nativeQuery = true)
    Page<School> searchByQuery(@Param("query") String query, Pageable pageable);
+           
+   Optional<School> findBySchoolCode(String schoolCode);
 
 }
