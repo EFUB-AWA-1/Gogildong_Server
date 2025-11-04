@@ -21,7 +21,6 @@ public class CreateInternalUserRequestDto extends BaseUserRequestDto {
     public User toEntity() {
         return User.builder()
                 .loginId(getLoginId())
-                .password(getPassword())
                 .username(getUsername())
                 .email(getEmail())
                 .phone(getPhone())
