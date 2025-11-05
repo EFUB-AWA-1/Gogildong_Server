@@ -29,4 +29,8 @@ public enum ClientExceptionCode {
 
     // 허가
     UNAUTHORIZED_SCHOOL_ACCESS,
+
+    // 사용자
+    USER_NOT_FOUND,
+    ACCESS_DENIED,
 }

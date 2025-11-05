@@ -1,21 +1,19 @@
 package com.efub.gogildong.user.controller;
 
-import com.efub.gogildong.user.dto.request.CreateAdminUserRequestDto;
-import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
-import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
-import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
+import com.efub.gogildong.user.dto.request.*;
+import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
+import com.efub.gogildong.user.dto.response.UpdateUserResponseDto;
 import com.efub.gogildong.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
@@ -24,10 +22,21 @@ public class UserController {
 
     // 내부인 생성: POST /users/signup/internal
     @PostMapping("/signup/internal")
-    public ResponseEntity<CreateInternalUserResponseDto> createInternalUser(@RequestBody @Valid CreateInternalUserRequestDto requestDto) {
-        CreateInternalUserResponseDto responseDto = userService.createInternalUser(requestDto);
+    public ResponseEntity<InternalUserResponseDto> createInternalUser(@RequestBody @Valid CreateInternalUserRequestDto requestDto) {
+        InternalUserResponseDto responseDto = userService.createInternalUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 
+    }
+
+    // 내부인 학교 변경: PATCH /users/me/school
+    @PreAuthorize("hasAnyRole('INTERNAL')")
+    @PatchMapping("/me/school")
+    public ResponseEntity<InternalUserResponseDto> updateInternalSchool(Authentication authentication,
+                                                                        @RequestBody @Valid UpdateInternalSchoolRequestDto request) {
+
+        String loginId = authentication.getName();
+        InternalUserResponseDto dto = userService.updateInternalUserSchoolByLoginId(loginId, request.getSchoolCode());
+        return ResponseEntity.ok(dto);
     }
 
     // 외부인 생성: POST /users/signup/external
@@ -39,8 +48,24 @@ public class UserController {
 
     // 학교 관리자 생성: POST /users/signup/admin
     @PostMapping("/signup/admin")
-    public ResponseEntity<CreateInternalUserResponseDto> createAdminUser(@RequestBody @Valid CreateAdminUserRequestDto requestDto) {
-        CreateInternalUserResponseDto responseDto = userService.createAdminUser(requestDto);
+    public ResponseEntity<InternalUserResponseDto> createAdminUser(@RequestBody @Valid CreateAdminUserRequestDto requestDto) {
+        InternalUserResponseDto responseDto = userService.createAdminUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
+
+    // user 정보 수정: PATCH /users/me
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/me")
+    public ResponseEntity<UpdateUserResponseDto> updateUser(
+            Authentication authentication,
+            @RequestBody @Valid UpdateUserRequestDto request) {
+
+        String loginId = authentication.getName(); // JwtFilter에서 set한 username
+        UpdateUserResponseDto responseDto = userService.updateUserByLoginId(loginId, request);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
+
+
 }

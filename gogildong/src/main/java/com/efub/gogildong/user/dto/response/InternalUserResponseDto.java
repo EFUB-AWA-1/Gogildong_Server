@@ -6,19 +6,18 @@ import com.efub.gogildong.user.domain.UserRole;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Builder
-public class CreateInternalUserResponseDto {
+public class InternalUserResponseDto {
 
     private Long userId;
     private UserRole role;
     private String schoolCode;
     private String schoolName;
 
-    public static CreateInternalUserResponseDto of(User user, School school) {
-        return CreateInternalUserResponseDto.builder()
+    public static InternalUserResponseDto of(User user, School school) {
+        return InternalUserResponseDto.builder()
                 .userId(user.getUserId())
                 .role(user.getRole())
                 .schoolCode(school != null ? school.getSchoolCode() : null)
@@ -26,7 +25,7 @@ public class CreateInternalUserResponseDto {
                 .build();
     }
 
-    public static CreateInternalUserResponseDto from(User user) {
+    public static InternalUserResponseDto from(User user) {
         School s = user.getSchool();
         return of(user, s);
     }
