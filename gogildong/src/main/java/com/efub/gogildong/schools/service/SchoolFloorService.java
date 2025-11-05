@@ -5,7 +5,7 @@ import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.Floor;
 import com.efub.gogildong.facility.respository.BuildingRepository;
 import com.efub.gogildong.facility.respository.FacilityRepository;
-import com.efub.gogildong.facility.respository.FloorRespository;
+import com.efub.gogildong.facility.respository.FloorRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
@@ -24,7 +24,7 @@ import java.util.List;
 public class SchoolFloorService {
     private final SchoolService schoolService;
     private final BuildingRepository buildingRepository;
-    private final FloorRespository floorRespository;
+    private final FloorRepository floorRepository;
     private final FacilityRepository facilityRepository;
 
     /*
@@ -75,7 +75,7 @@ public class SchoolFloorService {
     * 층 id로 floor를 조회합니다.
     * */
     private Floor getFloorById(Long floorId) {
-        return floorRespository.findByFloorId(floorId)
+        return floorRepository.findByFloorId(floorId)
                 .orElseThrow(()-> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
     }
 

@@ -1,15 +1,40 @@
 package com.efub.gogildong.facility.controller;
 
+import com.efub.gogildong.facility.dto.response.FacilityReviewLikeResponse;
+import com.efub.gogildong.facility.service.FacilityReviewLikeService;
+import com.efub.gogildong.user.domain.User;
+import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/reviews/{review_id}/likes")
+@RequestMapping("/reviews/{reviewId}/likes")
 @RequiredArgsConstructor
 public class FacilityReviewLikeController {
+
+    private final UserRepository userRepository;
+    private final FacilityReviewLikeService facilityReviewLikeService;
+
     // 시설 리뷰 좋아요 생성
+    @PostMapping
+    public ResponseEntity<FacilityReviewLikeResponse> createFacilityReviewLike(//@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                               @PathVariable("reviewId") Long reviewId) {
+        //User user = userDetails.getUser();
+        User mockUser = userRepository.findById(3L)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        FacilityReviewLikeResponse response = facilityReviewLikeService.createFacilityReviewLike(reviewId, mockUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     // 시설 리뷰 좋아요 취소
-
+    @DeleteMapping("/{likeId}")
+    public ResponseEntity<Void> deleteFacilityReviewLike(//@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                         @PathVariable("reviewId") Long reviewId,
+                                                         @PathVariable("likeId") Long likeId) {
+        facilityReviewLikeService.deleteFacilityReviewLike(likeId);
+        return ResponseEntity.noContent().build();
+    }
 }
