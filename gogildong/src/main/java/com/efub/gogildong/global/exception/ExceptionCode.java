@@ -36,7 +36,9 @@ public enum ExceptionCode {
 
     // 사용자
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.USER_NOT_FOUND, "존재하지 않는 회원입니다."),
-    ACCESS_DENIED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.ACCESS_DENIED, "접근이 허용되지 않습니다.");
+    ACCESS_DENIED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.ACCESS_DENIED, "접근이 허용되지 않습니다."),
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,ClientExceptionCode.INVALID_PASSWORD, "비밀번호가 일치하지 않습니다.");
+
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;

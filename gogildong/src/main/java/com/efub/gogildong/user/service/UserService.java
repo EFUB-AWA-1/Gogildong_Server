@@ -115,6 +115,18 @@ public class UserService {
 
 
     // user 삭제
+    @Transactional
+    public void deleteUserWithPassword(String loginId, String password) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
+
+        // bcrypt 검증
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new GoGildongException(ExceptionCode.INVALID_PASSWORD);
+        }
+
+        userRepository.delete(user); // 하드 삭제 (소프트 삭제면 user.markDeleted() 등으로 변경)
+    }
 
     // 이메일 검증
     public final class EmailValidator {
