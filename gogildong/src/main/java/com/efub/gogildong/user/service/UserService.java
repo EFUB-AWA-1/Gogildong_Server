@@ -54,8 +54,7 @@ public class UserService {
     // 내부인 학교 변경
     @Transactional
     public InternalUserResponseDto updateInternalUserSchoolByLoginId(String loginId, String schoolCode) {
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
+        User user = getUserByLoginId(loginId);
 
         if (!user.getRole().isInternal()) {
             throw new GoGildongException(ExceptionCode.ACCESS_DENIED);
@@ -106,8 +105,7 @@ public class UserService {
     // user 정보 수정
     @Transactional
     public UpdateUserResponseDto updateUserByLoginId(String loginId, UpdateUserRequestDto requestDto) {
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
+        User user = getUserByLoginId(loginId);
 
         user.updateUser(requestDto.getUsername(), requestDto.getEmail(), requestDto.getPhone());
         return UpdateUserResponseDto.from(user);
@@ -128,5 +126,11 @@ public class UserService {
                 throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다: " + email);
             }
         }
+    }
+
+    // login id로 유저 반환
+    public User getUserByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
     }
 }

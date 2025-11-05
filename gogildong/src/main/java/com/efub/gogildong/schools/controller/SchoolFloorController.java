@@ -7,6 +7,7 @@ import com.efub.gogildong.schools.dto.response.FloorPlanImageResponse;
 import com.efub.gogildong.schools.service.SchoolFloorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,19 +29,21 @@ public class SchoolFloorController {
     * 타입 별 층에 존재하는 시설 조회
     * */
     @GetMapping("/{schoolId}/floors/{floorId}")
-    public ResponseEntity<FacilityListResponse> getFacilityListByFloorId(@PathVariable Long schoolId,
+    public ResponseEntity<FacilityListResponse> getFacilityListByFloorId(Authentication authentication,
+                                                                         @PathVariable Long schoolId,
                                                                          @PathVariable Long floorId,
                                                                          @RequestParam(name = "type", defaultValue = "all") TagCategory type) {
-        return ResponseEntity.ok(schoolFloorService.getAllFacilitiesByFloorId(schoolId, floorId, type));
+        return ResponseEntity.ok(schoolFloorService.getAllFacilitiesByFloorId(authentication.getName(), schoolId, floorId, type));
     }
 
     /*
     * 층 별 도면 조회
     */
     @GetMapping("/{schoolId}/floors/{floorId}/plan")
-    public ResponseEntity<FloorPlanImageResponse> getFloorPlanImageByFloorId(@PathVariable Long schoolId,
+    public ResponseEntity<FloorPlanImageResponse> getFloorPlanImageByFloorId(Authentication authentication,
+                                                                             @PathVariable Long schoolId,
                                                                              @PathVariable Long floorId){
-        return ResponseEntity.ok(schoolFloorService.getFloorPlanImageByFloorId(schoolId, floorId));
+        return ResponseEntity.ok(schoolFloorService.getFloorPlanImageByFloorId(authentication.getName(), schoolId, floorId));
     }
 
 }

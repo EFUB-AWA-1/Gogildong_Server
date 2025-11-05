@@ -11,6 +11,8 @@ import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.constants.TagCategory;
 import com.efub.gogildong.schools.dto.response.*;
+import com.efub.gogildong.user.domain.User;
+import com.efub.gogildong.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class SchoolFloorService {
     private final BuildingRepository buildingRepository;
     private final FloorRepository floorRepository;
     private final FacilityRepository facilityRepository;
+    private final UserService userService;
+    private final SchoolViewRequestService schoolViewRequestService;
 
     /*
     * 학교 id로 해당 학교에 존재하는 층을 조회합니다.
@@ -55,12 +59,13 @@ public class SchoolFloorService {
     * 층 id를 이용해 타입 별로 층에 존재하는 시설을 조회합니다.
     * */
     @Transactional(readOnly = true)
-    public FacilityListResponse getAllFacilitiesByFloorId(Long schoolId,
+    public FacilityListResponse getAllFacilitiesByFloorId(String loginId,
+                                                          Long schoolId,
                                                           Long floorId,
                                                           TagCategory tagCategory) {
+        User user = userService.getUserByLoginId(loginId);
         School school = schoolService.getSchoolById(schoolId);
-
-        // TODO: 추후 회원 유효성 검사 필요
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
 
         Floor floor = getFloorById(floorId);
 
@@ -83,10 +88,11 @@ public class SchoolFloorService {
     * 층 별 도면을 조회합니다.
     * */
     @Transactional(readOnly = true)
-    public FloorPlanImageResponse getFloorPlanImageByFloorId(Long schoolId, Long floorId) {
-        // TODO: 추후 회원 유효성 검사 진행
+    public FloorPlanImageResponse getFloorPlanImageByFloorId(String loginId, Long schoolId, Long floorId) {
+        User user = userService.getUserByLoginId(loginId);
         Floor floor = getFloorById(floorId);
         School school = schoolService.getSchoolById(schoolId);
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
         getValidatedSchoolByFloorId(floor, school);
         return FloorPlanImageResponse.from(floor);
     }
