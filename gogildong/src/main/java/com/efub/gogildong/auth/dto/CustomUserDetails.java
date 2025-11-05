@@ -16,8 +16,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of((GrantedAuthority) () -> "ROLE_" + user.getRole().name());
+        var authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(() -> "ROLE_" + user.getRole().name()); // ROLE_INTERNAL 등
+        return authorities;
     }
+
+    public Long getUserId() { return user.getUserId(); }
 
     @Override
     public String getPassword() { return user.getPassword(); }

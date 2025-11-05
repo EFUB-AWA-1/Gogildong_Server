@@ -33,15 +33,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+
         String loginId, password;
         try {
-            if (request.getContentType() != null && request.getContentType().contains("application/json")) {
+            String ct = request.getContentType();
+            if (ct != null && ct.toLowerCase().startsWith("application/json")) {
                 var node = new ObjectMapper().readTree(request.getInputStream());
-                loginId = node.get("loginId").asText();
-                password = node.get("password").asText();
+
+                var idNode = node.get("loginId");
+                var pwNode = node.get("password");
+                if (idNode == null || pwNode == null) {
+                    throw new AuthenticationServiceException("Missing loginId or password in JSON body");
+                }
+
+                loginId  = idNode.asText();
+                password = pwNode.asText();
             } else {
-                loginId = obtainUsername(request);
+                loginId  = obtainUsername(request); // setUsernameParameter("loginId") 적용됨
                 password = obtainPassword(request);
+                if (loginId == null || password == null) {
+                    throw new AuthenticationServiceException("Missing loginId or password in form parameters");
+                }
             }
         } catch (IOException e) {
             throw new AuthenticationServiceException("Invalid login payload", e);

@@ -8,7 +8,7 @@ import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.dto.request.CreateAdminUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
-import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
+import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class UserService {
 
     // 내부인 생성
     @Transactional
-    public CreateInternalUserResponseDto createInternalUser(CreateInternalUserRequestDto request) {
+    public InternalUserResponseDto createInternalUser(CreateInternalUserRequestDto request) {
 
         // 이메일 형식 체크
         EmailValidator.validateOrThrow(request.getEmail());
@@ -46,10 +46,26 @@ public class UserService {
         // 학교 매핑
         user.changeSchool(school);
 
-        return CreateInternalUserResponseDto.from(userRepository.save(user));
+        return InternalUserResponseDto.from(userRepository.save(user));
     }
 
-    // 내부인 소속 학교 변경
+    // 내부인 학교 변경
+    @Transactional
+    public InternalUserResponseDto updateInternalUserSchoolByLoginId(String loginId, String schoolCode) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
+
+        if (!user.getRole().isInternal()) {
+            throw new GoGildongException(ExceptionCode.ACCESS_DENIED);
+        }
+
+        School school = schoolRepository.findBySchoolCode(schoolCode)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+
+        user.changeSchool(school); // 변경감지로 업데이트
+        return InternalUserResponseDto.from(user);
+    }
+
 
     // 외부인 생성
     @Transactional
@@ -64,7 +80,7 @@ public class UserService {
     }
 
     // 학교 관리자 생성
-    public CreateInternalUserResponseDto createAdminUser(CreateAdminUserRequestDto request) {
+    public InternalUserResponseDto createAdminUser(CreateAdminUserRequestDto request) {
 
         EmailValidator.validateOrThrow(request.getEmail());
 
@@ -80,7 +96,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.changeSchool(school);
 
-        return CreateInternalUserResponseDto.from(userRepository.save(user));
+        return InternalUserResponseDto.from(userRepository.save(user));
     }
 
     // 전체 관리자 생성

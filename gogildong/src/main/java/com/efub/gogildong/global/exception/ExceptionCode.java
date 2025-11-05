@@ -27,7 +27,11 @@ public enum ExceptionCode {
     DOOR_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST, ClientExceptionCode.DOOR_TYPE_BAD_REQUEST, "유효하지 않은 문 타입입니다."),
 
     // 허가
-    UNAUTHORIZED_SCHOOL_ACCESS(HttpStatus.UNAUTHORIZED, ClientExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS, "허가되지 않은 사용자가 학교 정보에 접근했습니다.");
+    UNAUTHORIZED_SCHOOL_ACCESS(HttpStatus.UNAUTHORIZED, ClientExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS, "허가되지 않은 사용자가 학교 정보에 접근했습니다."),
+
+    // 사용자
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.USER_NOT_FOUND, "존재하지 않는 회원입니다."),
+    ACCESS_DENIED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.ACCESS_DENIED, "접근이 허용되지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;
