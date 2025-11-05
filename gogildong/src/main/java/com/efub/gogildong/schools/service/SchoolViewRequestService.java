@@ -32,11 +32,15 @@ public class SchoolViewRequestService {
 
     // 해당 학교, 사용자에게 열람 권한이 있는지 확인합니다.
     public void validateViewRequestBySchoolAndUser(School school, User user) {
-        SchoolViewRequest schoolViewRequest = schoolViewRequestRepository.findBySchoolAndUser(school, user)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS));
+        SchoolViewRequest schoolViewRequest =
+                schoolViewRequestRepository.findBySchoolAndUser(school, user)
+                        .orElse(null);
 
-        // 해당 학교 소속 아니면서, 열람 요청 받아서 승인 받지 않은 경우
-        if(!(user.getSchool().equals(school) || schoolViewRequest.getStatus().equals(RequestStatus.APPROVED))) {
+        boolean isSameSchool = user.getSchool().equals(school);
+        boolean isApproved = (schoolViewRequest != null && schoolViewRequest.getStatus() == RequestStatus.APPROVED);
+
+        // 해당 학교 소속이 아니면서, 열람 승인도 받지 않은 경우
+        if (!isSameSchool && !isApproved) {
             throw new GoGildongException(ExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS);
         }
     }
