@@ -14,3 +14,8 @@ spring:
     secret: ${JWT_SECRET}
     access-ttl: 900000
     refresh-ttl: 604800000
+
+  data:
+    redis:
+      host: localhost
+      port: ${REDIS_PORT}
