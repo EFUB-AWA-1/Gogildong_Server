@@ -8,8 +8,10 @@ import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.dto.request.CreateAdminUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateExternalUserRequestDto;
 import com.efub.gogildong.user.dto.request.CreateInternalUserRequestDto;
+import com.efub.gogildong.user.dto.request.UpdateUserRequestDto;
 import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
+import com.efub.gogildong.user.dto.response.UpdateUserResponseDto;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -102,6 +104,15 @@ public class UserService {
     // 전체 관리자 생성
 
     // user 정보 수정
+    @Transactional
+    public UpdateUserResponseDto updateUserByLoginId(String loginId, UpdateUserRequestDto requestDto) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
+
+        user.updateUser(requestDto.getUsername(), requestDto.getEmail(), requestDto.getPhone());
+        return UpdateUserResponseDto.from(user);
+    }
+
 
     // user 삭제
 
