@@ -10,3 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  jwt:
+    secret: ${JWT_SECRET}
+    access-ttl: 900000
+    refresh-ttl: 604800000

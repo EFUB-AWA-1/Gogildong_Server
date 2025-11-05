@@ -4,22 +4,20 @@ import com.efub.gogildong.schools.domain.School;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "users")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String loginId;
 
     @Column(nullable = false)
@@ -64,26 +62,4 @@ public class User {
         this.school = school;
     }
 
-//    @Builder
-//    public Account(String email, String password, String nickname) {
-//        this.email = email;
-//        this.password = password;
-//        this.nickname = nickname;
-//    }
-//
-//    public void updateBio(String bio) {
-//        this.bio = bio;
-//    }
-//
-//    public void changeStatus(AccountStatus status) {
-//        this.status = status;
-//    }
-//
-//    public void updateNickname(String nickname) {
-//        this.nickname = nickname;
-//    }
-//
-//    public void setAccountId(Long accountId) {
-//        this.accountId = accountId;
-//    }
 }

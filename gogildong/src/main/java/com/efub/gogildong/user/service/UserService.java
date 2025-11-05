@@ -12,6 +12,7 @@ import com.efub.gogildong.user.dto.response.CreateInternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final SchoolRepository schoolRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 내부인 생성
     @Transactional
@@ -35,12 +37,16 @@ public class UserService {
         School school = schoolRepository.findBySchoolCode(request.getSchoolCode())
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
 
-        // 내부인 생성
+        // 엔티티 생성
         User user = request.toEntity();
+
+        // 비밀번호 인코딩
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        // 학교 매핑
         user.changeSchool(school);
 
-        User saved = userRepository.save(user);
-        return CreateInternalUserResponseDto.from(saved);
+        return CreateInternalUserResponseDto.from(userRepository.save(user));
     }
 
     // 내부인 소속 학교 변경
@@ -49,38 +55,32 @@ public class UserService {
     @Transactional
     public CreateUserResponseDto createExternalUser(CreateExternalUserRequestDto request) {
 
-        // 이메일 형식 체크
         EmailValidator.validateOrThrow(request.getEmail());
 
-        // 외부인 생성
         User user = request.toEntity();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        User saved = userRepository.save(user);
-        return CreateUserResponseDto.from(saved);
+        return CreateUserResponseDto.from(userRepository.save(user));
     }
 
     // 학교 관리자 생성
-    @Transactional
     public CreateInternalUserResponseDto createAdminUser(CreateAdminUserRequestDto request) {
 
-        // 이메일 형식 체크
         EmailValidator.validateOrThrow(request.getEmail());
 
-        // schoolCode로 학교 조회
         School school = schoolRepository.findBySchoolCode(request.getSchoolCode())
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
 
-        // adminCode로 학교 관리자 검증
+        // adminCode 검증
         if (!school.matchesAdminCode(request.getAdminCode())) {
             throw new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND);
         }
 
-        // 외부인 생성
         User user = request.toEntity();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.changeSchool(school);
 
-        User saved = userRepository.save(user);
-        return CreateInternalUserResponseDto.from(saved);
+        return CreateInternalUserResponseDto.from(userRepository.save(user));
     }
 
     // 전체 관리자 생성
