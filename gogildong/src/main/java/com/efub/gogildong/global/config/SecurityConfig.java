@@ -78,6 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/refresh", "/users/signup/**").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/users/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/users/me").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)

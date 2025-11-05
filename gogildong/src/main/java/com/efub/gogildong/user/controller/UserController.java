@@ -1,5 +1,6 @@
 package com.efub.gogildong.user.controller;
 
+import com.efub.gogildong.auth.dto.CustomUserDetails;
 import com.efub.gogildong.user.dto.request.*;
 import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
@@ -65,7 +67,16 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
+    // user 삭제: Delete /users/me
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteUser(
+            Authentication authentication,
+            @RequestBody @Valid DeleteUserRequestDto request) {
 
-
+        String loginId = authentication.getName();
+        userService.deleteUserWithPassword(loginId, request.getPassword());
+        return ResponseEntity.noContent().build();
+    }
 
 }

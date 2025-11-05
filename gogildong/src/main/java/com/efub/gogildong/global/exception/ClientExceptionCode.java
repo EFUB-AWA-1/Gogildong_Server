@@ -33,4 +33,5 @@ public enum ClientExceptionCode {
     // 사용자
     USER_NOT_FOUND,
     ACCESS_DENIED,
+    INVALID_PASSWORD
 }
