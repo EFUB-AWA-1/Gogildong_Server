@@ -7,10 +7,12 @@ import com.efub.gogildong.facility.dto.request.FacilityReviewUpdateRequest;
 import com.efub.gogildong.facility.dto.response.FacilityReviewListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewSummaryResponse;
-import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
+import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.schools.domain.School;
+import com.efub.gogildong.schools.service.SchoolViewRequestService;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,17 +27,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FacilityReviewService {
 
-    private final FacilityRepository facilityRepository;
+    private final EntityFinder entityFinder;
     private final FacilityReviewRepository facilityReviewRepository;
+    private final SchoolViewRequestService schoolViewRequestService;
 
     // 시설 리뷰 조회
     @Transactional(readOnly = true)
-    public FacilityReviewListResponse getFacilityReviews(Long facilityId, int page) {
-        Facility facility = facilityRepository.findByFacilityId(facilityId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_NOT_FOUND));
+    public FacilityReviewListResponse getFacilityReviews(String loginId, Long facilityId, int page) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        Facility facility = entityFinder.getFacilityById(facilityId);
+        School school = entityFinder.getSchoolByFacility(facility);
+
+        // 시설 리뷰 열람 권한 검사
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
 
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
-
         Page<FacilityReview> reviewPage = facilityReviewRepository.findByFacility(facility, pageRequest);
 
         List<FacilityReviewSummaryResponse> reviewList = reviewPage.getContent().stream()
@@ -45,29 +51,54 @@ public class FacilityReviewService {
         return FacilityReviewListResponse.from(reviewPage, reviewList);
     }
 
-    @Transactional
     // 시설 리뷰 작성
-    public FacilityReviewResponse createFacilityReview(User user, FacilityReviewRequest request) {
-        Facility facility = facilityRepository.findByFacilityId(request.getFacilityId())
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_NOT_FOUND));
+    @Transactional
+    public FacilityReviewResponse createFacilityReview(String loginId, FacilityReviewRequest request) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        Facility facility = entityFinder.getFacilityById(request.getFacilityId());
+        School school = entityFinder.getSchoolByFacility(facility);
+
+        // 열람 권한 검사
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
 
         FacilityReview review = request.toEntity(facility, user);
         facilityReviewRepository.save(review);
+
         return FacilityReviewResponse.from(review);
     }
 
-    @Transactional
     // 시설 리뷰 수정
-    public FacilityReviewResponse updateFacilityReview(Long reviewId, FacilityReviewUpdateRequest request) {
-        FacilityReview review = facilityReviewRepository.findByFacilityReviewId(reviewId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_NOT_FOUND));
+    @Transactional
+    public FacilityReviewResponse updateFacilityReview(String loginId, Long reviewId, FacilityReviewUpdateRequest request) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        // 열람 권한(학교가 바뀌면 이전 학교에 작성했던 리뷰에도 접근 불가) + 작성자 확인
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+        validateReviewAuthor(review, user);
 
         review.updateReviewText(request.getReviewText());
         return FacilityReviewResponse.from(review);
     }
 
+    // 시설 리뷰 삭제
     @Transactional
-    public void deleteFacilityReview(Long reviewId) {
-        facilityReviewRepository.deleteById(reviewId);
+    public void deleteFacilityReview(String loginId, Long reviewId) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        // 열람 권한(학교가 바뀌면 이전 학교에 작성했던 리뷰에도 접근 불가) + 작성자 확인
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+        validateReviewAuthor(review, user);
+
+        facilityReviewRepository.delete(review);
+    }
+
+    private void validateReviewAuthor(FacilityReview review, User user) {
+        if (!review.getUser().getUserId().equals(user.getUserId())) {
+            throw new GoGildongException(ExceptionCode.UNAUTHORIZED_ACCESS);
+        }
     }
 }

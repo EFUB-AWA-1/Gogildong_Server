@@ -7,11 +7,12 @@ import com.efub.gogildong.facility.dto.request.FacilityReviewCommentUpdateReques
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentResponse;
 import com.efub.gogildong.facility.respository.FacilityReviewCommentRepository;
-import com.efub.gogildong.facility.respository.FacilityReviewRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
+import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.schools.domain.School;
+import com.efub.gogildong.schools.service.SchoolViewRequestService;
 import com.efub.gogildong.user.domain.User;
-import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +24,19 @@ import java.util.List;
 public class FacilityReviewCommentService {
 
     private final FacilityReviewCommentRepository facilityReviewCommentRepository;
-    private final FacilityReviewRepository facilityReviewRepository;
-    private final UserRepository userRepository;
+    private final EntityFinder entityFinder;
+    private final SchoolViewRequestService schoolViewRequestService;
 
     // 시설 리뷰 댓글 조회
     @Transactional(readOnly = true)
-    public FacilityReviewCommentListResponse getFacilityReviewComments(Long facilityReviewId) {
+    public FacilityReviewCommentListResponse getFacilityReviewComments(String loginId, Long facilityReviewId) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(facilityReviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        // 시설 리뷰 댓글 열람 권한 검사
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+
         List<FacilityReviewComment> commentList =
                 facilityReviewCommentRepository.findAllByFacilityReview_FacilityReviewId(facilityReviewId);
 
@@ -41,9 +49,13 @@ public class FacilityReviewCommentService {
 
     // 시설 리뷰 댓글 작성
     @Transactional
-    public FacilityReviewCommentResponse createFacilityReviewComment(User user, Long reviewId, FacilityReviewCommentRequest request) {
-        FacilityReview review = facilityReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_NOT_FOUND));
+    public FacilityReviewCommentResponse createFacilityReviewComment(String loginId, Long reviewId, FacilityReviewCommentRequest request) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        // 시설 리뷰 댓글 작성 권한 검사
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
 
         FacilityReviewComment comment = request.toEntity(review, user);
         facilityReviewCommentRepository.save(comment);
@@ -52,9 +64,18 @@ public class FacilityReviewCommentService {
 
     // 시설 리뷰 댓글 수정
     @Transactional
-    public FacilityReviewCommentResponse updateFacilityReviewComment(Long reviewId, Long commentId, FacilityReviewCommentUpdateRequest request) {
-        FacilityReviewComment comment = facilityReviewCommentRepository.findByFacilityReviewCommentId(commentId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_COMMENT_NOT_FOUND));
+    public FacilityReviewCommentResponse updateFacilityReviewComment(String loginId, Long reviewId, Long commentId, FacilityReviewCommentUpdateRequest request) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        // 시설 리뷰 댓글 접근 권한 검사
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+
+        FacilityReviewComment comment = entityFinder.getReviewCommentById(commentId);
+
+        // 작성자 검사
+        validateCommentAuthor(comment, user);
 
         comment.updateCommentText(request.getCommentText());
         facilityReviewCommentRepository.save(comment);
@@ -63,8 +84,27 @@ public class FacilityReviewCommentService {
 
     // 시설 리뷰 댓글 삭제
     @Transactional
-    public void deleteFacilityReviewComment(Long commentId) {
+    public void deleteFacilityReviewComment(String loginId, Long reviewId, Long commentId) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        // 시설 리뷰 댓글 접근 권한 검사
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+
+        FacilityReviewComment comment = entityFinder.getReviewCommentById(commentId);
+
+        // 작성자 검사
+        validateCommentAuthor(comment, user);
+
         facilityReviewCommentRepository.deleteById(commentId);
+    }
+
+    // 댓글 작성자 검사
+    private void validateCommentAuthor(FacilityReviewComment comment, User user) {
+        if (!comment.getUser().getUserId().equals(user.getUserId())) {
+            throw new GoGildongException(ExceptionCode.UNAUTHORIZED_ACCESS);
+        }
     }
 
 }

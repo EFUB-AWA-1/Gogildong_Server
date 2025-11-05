@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,41 +25,37 @@ public class FacilityReviewCommentController {
 
     // 시설 리뷰 댓글 조회
     @GetMapping
-    public ResponseEntity<FacilityReviewCommentListResponse> getFacilityReviewComments(//@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                         @PathVariable("reviewId") Long reviewId) {
-        FacilityReviewCommentListResponse response = facilityReviewCommentService.getFacilityReviewComments(reviewId);
+    public ResponseEntity<FacilityReviewCommentListResponse> getFacilityReviewComments(Authentication authentication,
+                                                                                       @PathVariable("reviewId") Long reviewId) {
+        FacilityReviewCommentListResponse response = facilityReviewCommentService.getFacilityReviewComments(authentication.getName(), reviewId);
         return ResponseEntity.ok(response);
     }
 
     // 시설 리뷰 댓글 작성
     @PostMapping
-    public ResponseEntity<FacilityReviewCommentResponse> createFacilityReviewComment(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<FacilityReviewCommentResponse> createFacilityReviewComment(Authentication authentication,
                                                                                      @PathVariable("reviewId") Long reviewId,
                                                                                      @RequestBody @Valid FacilityReviewCommentRequest request) {
-        //User user = userDetails.getUser();
-        User mockUser = userRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
-
-        FacilityReviewCommentResponse response = facilityReviewCommentService.createFacilityReviewComment(mockUser, reviewId, request);
+        FacilityReviewCommentResponse response = facilityReviewCommentService.createFacilityReviewComment(authentication.getName(), reviewId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 시설 리뷰 댓글 수정
     @PatchMapping("/{commentId}")
-    public ResponseEntity<FacilityReviewCommentResponse> updateFacilityReviewComment(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<FacilityReviewCommentResponse> updateFacilityReviewComment(Authentication authentication,
                                                                                      @PathVariable("reviewId") Long reviewId,
                                                                                      @PathVariable("commentId") Long commentId,
                                                                                      @RequestBody @Valid FacilityReviewCommentUpdateRequest request) {
-        FacilityReviewCommentResponse response = facilityReviewCommentService.updateFacilityReviewComment(reviewId, commentId, request);
+        FacilityReviewCommentResponse response = facilityReviewCommentService.updateFacilityReviewComment(authentication.getName(), reviewId, commentId, request);
         return ResponseEntity.ok(response);
     }
 
     // 시설 리뷰 댓글 삭제
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteFacilityReviewComment(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<Void> deleteFacilityReviewComment(Authentication authentication,
                                             @PathVariable("reviewId") Long reviewId,
                                             @PathVariable("commentId") Long commentId) {
-        facilityReviewCommentService.deleteFacilityReviewComment(commentId);
+        facilityReviewCommentService.deleteFacilityReviewComment(authentication.getName(), reviewId, commentId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface FacilityReviewLikeRepository extends JpaRepository<FacilityReviewLike, Long> {
-    Optional<FacilityReviewLike> findByFacilityReviewLikeId(Long facilityReviewLikeId);
-
     boolean existsByFacilityReviewAndUser(FacilityReview review, User user);
+
+    Optional<FacilityReviewLike> findByFacilityReviewAndUser(FacilityReview facilityReview, User user);
 }
