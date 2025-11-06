@@ -14,6 +14,9 @@ public enum ExceptionCode {
     SCHOOL_ALREADY_BOOKMARKED(HttpStatus.CONFLICT, ClientExceptionCode.SCHOOL_ALREADY_BOOKMARKED, "이미 즐겨찾기 한 학교입니다."),
     SCHOOL_BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.SCHOOL_BOOKMARK_NOT_FOUND, "즐겨찾기하지 않은 학교입니다."),
     EDULEVEL_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.EDULEVEL_NOT_FOUND, "데이터 중 찾을 수 없는 학교급이 있습니다."),
+    SCHOOL_VIEW_ALREADY_APPROVED(HttpStatus.BAD_REQUEST, ClientExceptionCode.SCHOOL_VIEW_ALREADY_APPROVED, "이미 열람 권한이 있는 학교입니다."),
+    SCHOOL_VIEW_REQUEST_PENDING(HttpStatus.FORBIDDEN, ClientExceptionCode.SCHOOL_VIEW_REQUEST_PENDING, "열람 신청이 진행 중입니다. 승인되면 확인할 수 있습니다."),
+
 
     // 층
     FLOOR_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND, "존재하지 않는 층입니다."),

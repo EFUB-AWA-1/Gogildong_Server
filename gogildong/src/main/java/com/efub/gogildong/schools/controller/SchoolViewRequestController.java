@@ -1,5 +1,6 @@
 package com.efub.gogildong.schools.controller;
 
+import com.efub.gogildong.auth.dto.CustomUserDetails;
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
 import com.efub.gogildong.schools.service.SchoolViewRequestService;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +27,9 @@ public class SchoolViewRequestController {
 
     // 학교 정보 열람 신청
     @PostMapping
-    public ResponseEntity<SchoolViewRequestResponse> createSchoolViewRequest(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<SchoolViewRequestResponse> createSchoolViewRequest(Authentication authentication,
                                                                              @RequestBody @Valid SchoolViewRequestRequest request) {
-        //User user = userDetails.getUser();
-        User mockUser = userRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
-
-        SchoolViewRequestResponse response = schoolViewRequestService.createSchoolViewRequest(mockUser, request);
+        SchoolViewRequestResponse response = schoolViewRequestService.createSchoolViewRequest(authentication.getName(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
