@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,39 +29,35 @@ public class FacilityReviewController {
 
     // 시설 리뷰 조회
     @GetMapping("/{facilityId}")
-    public ResponseEntity<FacilityReviewListResponse> getFacilityReviews(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<FacilityReviewListResponse> getFacilityReviews(Authentication authentication,
                                                                          @PathVariable("facilityId") Long facilityId,
                                                                          @RequestParam(defaultValue = "0") int page) {
-        FacilityReviewListResponse response = facilityReviewService.getFacilityReviews(facilityId, page);
+        FacilityReviewListResponse response = facilityReviewService.getFacilityReviews(authentication.getName(), facilityId, page);
         return ResponseEntity.ok(response);
     }
 
     // 시설 리뷰 작성
     @PostMapping
-    public ResponseEntity<FacilityReviewResponse> createFacilityReview(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<FacilityReviewResponse> createFacilityReview(Authentication authentication,
                                                                        @RequestBody @Valid FacilityReviewRequest request) {
-        //User user = userDetails.getUser();
-        User mockUser = userRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
-
-        FacilityReviewResponse response = facilityReviewService.createFacilityReview(mockUser, request);
+        FacilityReviewResponse response = facilityReviewService.createFacilityReview(authentication.getName(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 시설 리뷰 수정
     @PatchMapping("/{reviewId}")
-    public ResponseEntity<FacilityReviewResponse> updateFacilityReview(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<FacilityReviewResponse> updateFacilityReview(Authentication authentication,
                                                                        @PathVariable("reviewId") Long reviewId,
                                                                        @RequestBody @Valid FacilityReviewUpdateRequest request) {
-        FacilityReviewResponse response = facilityReviewService.updateFacilityReview(reviewId, request);
+        FacilityReviewResponse response = facilityReviewService.updateFacilityReview(authentication.getName(), reviewId, request);
         return ResponseEntity.ok(response);
     }
 
     // 시설 리뷰 삭제
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteFacilityReview(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<Void> deleteFacilityReview(Authentication authentication,
                                                                         @PathVariable("reviewId") Long reviewId) {
-        facilityReviewService.deleteFacilityReview(reviewId);
+        facilityReviewService.deleteFacilityReview(authentication.getName(), reviewId);
         return ResponseEntity.noContent().build();
     }
 }

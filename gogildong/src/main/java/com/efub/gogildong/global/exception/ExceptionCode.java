@@ -17,7 +17,6 @@ public enum ExceptionCode {
     SCHOOL_VIEW_ALREADY_APPROVED(HttpStatus.BAD_REQUEST, ClientExceptionCode.SCHOOL_VIEW_ALREADY_APPROVED, "이미 열람 권한이 있는 학교입니다."),
     SCHOOL_VIEW_REQUEST_PENDING(HttpStatus.FORBIDDEN, ClientExceptionCode.SCHOOL_VIEW_REQUEST_PENDING, "열람 신청이 진행 중입니다. 승인되면 확인할 수 있습니다."),
 
-
     // 층
     FLOOR_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND, "존재하지 않는 층입니다."),
     FLOOR_NOT_FOUND_IN_SCHOOL(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND_IN_SCHOOL, "해당 학교에는 해당 층이 존재하지 않습니다."),
@@ -30,6 +29,7 @@ public enum ExceptionCode {
     FACILITY_REVIEW_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FACILITY_REVIEW_COMMENT_NOT_FOUND,"존재하지 않는 시설 리뷰 댓글입니다."),
     FACILITY_REVIEW_LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, ClientExceptionCode.FACILITY_REVIEW_LIKE_ALREADY_EXISTS, "이미 해당 시설 리뷰에 좋아요를 누르셨습니다."),
     FACILITY_REVIEW_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FACILITY_REVIEW_LIKE_NOT_FOUND, "존재하지 않는 시설 리뷰 좋아요입니다."),
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, ClientExceptionCode.UNAUTHORIZED_ACCESS, "권한이 없습니다."),
 
     // 제보
     DOOR_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST, ClientExceptionCode.DOOR_TYPE_BAD_REQUEST, "유효하지 않은 문 타입입니다."),

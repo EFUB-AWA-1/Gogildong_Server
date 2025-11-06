@@ -7,6 +7,7 @@ import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,22 +20,17 @@ public class FacilityReviewLikeController {
 
     // 시설 리뷰 좋아요 생성
     @PostMapping
-    public ResponseEntity<FacilityReviewLikeResponse> createFacilityReviewLike(//@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<FacilityReviewLikeResponse> createFacilityReviewLike(Authentication authentication,
                                                                                @PathVariable("reviewId") Long reviewId) {
-        //User user = userDetails.getUser();
-        User mockUser = userRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
-
-        FacilityReviewLikeResponse response = facilityReviewLikeService.createFacilityReviewLike(reviewId, mockUser);
+        FacilityReviewLikeResponse response = facilityReviewLikeService.createFacilityReviewLike(authentication.getName(), reviewId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 시설 리뷰 좋아요 취소
     @DeleteMapping("/{likeId}")
-    public ResponseEntity<Void> deleteFacilityReviewLike(//@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                         @PathVariable("reviewId") Long reviewId,
-                                                         @PathVariable("likeId") Long likeId) {
-        facilityReviewLikeService.deleteFacilityReviewLike(likeId);
+    public ResponseEntity<Void> deleteFacilityReviewLike(Authentication authentication,
+                                                         @PathVariable("reviewId") Long reviewId) {
+        facilityReviewLikeService.deleteFacilityReviewLike(authentication.getName(), reviewId);
         return ResponseEntity.noContent().build();
     }
 }

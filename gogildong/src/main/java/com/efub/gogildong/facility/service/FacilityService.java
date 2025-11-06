@@ -3,9 +3,10 @@ package com.efub.gogildong.facility.service;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.dto.response.FacilityDetailResponse;
 import com.efub.gogildong.facility.dto.response.RestroomResponse;
-import com.efub.gogildong.facility.respository.FacilityRepository;
-import com.efub.gogildong.global.exception.ExceptionCode;
-import com.efub.gogildong.global.exception.GoGildongException;
+import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.schools.domain.School;
+import com.efub.gogildong.schools.service.SchoolViewRequestService;
+import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FacilityService {
 
-    private final FacilityRepository facilityRepository;
+    private final EntityFinder entityFinder;
+    private final SchoolViewRequestService schoolViewRequestService;
 
     // 시설 상세 조회
     @Transactional(readOnly = true)
-    public Object getFacilityDetail(Long facilityId) {
-        Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_NOT_FOUND));
+    public Object getFacilityDetail(String loginId, Long facilityId) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        Facility facility = entityFinder.getFacilityById(facilityId);
+        School school = entityFinder.getSchoolByFacility(facility);
+
+        // 열람 권한 여부 확인
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
 
         // facilityType으로 분기
         // 각 타입별 Dto 변환 메서드 호출
