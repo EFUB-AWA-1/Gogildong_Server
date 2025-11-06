@@ -2,11 +2,13 @@ package com.efub.gogildong.schools.service;
 
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
+import com.efub.gogildong.global.util.EntityFinder;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.constants.TagCategory;
 import com.efub.gogildong.schools.dto.response.SchoolListResponse;
 import com.efub.gogildong.schools.dto.response.SchoolSummaryResponse;
 import com.efub.gogildong.schools.repository.SchoolRepository;
+import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,16 +21,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SchoolService {
     private final SchoolRepository schoolRepository;
+    private final EntityFinder finder;
+    private final SchoolBookmarkService schoolBookmarkService;
 
     /*
     * 위도 경도 기반 반경 n 미터 학교 정보를 조회합니다.
     * */
     @Transactional(readOnly = true)
-    public SchoolListResponse getNearbySchools(double latitude,
+    public SchoolListResponse getNearbySchools(String loginId,
+                                               double latitude,
                                                double longitude,
                                                TagCategory tagCategory,
                                                double radius,
                                                Pageable pageable) {
+        User user = finder.getUserByLoginId(loginId);
         // param으로 들어온 tag category 값을 tag 이름으로 변환
         String tagFilter = tagCategory == TagCategory.all ? null : tagCategory.toTagName().name();
 
@@ -39,7 +45,7 @@ public class SchoolService {
         ensureSchoolExists(schools);
 
         // 학교를 DTO로 변환
-        List<SchoolSummaryResponse> schoolSummaryResponses = SchoolSummaryResponse.fromEntityList(schools);
+        List<SchoolSummaryResponse> schoolSummaryResponses = toSummaryListWithBookmark(schools, user);
 
         return SchoolListResponse.builder()
                 .totalPages(pageOfSchools.getTotalPages())
@@ -53,11 +59,12 @@ public class SchoolService {
     * 검색어 기반 학교 정보를 조회합니다.
     * */
     @Transactional(readOnly = true)
-    public SchoolListResponse getSchoolsByQuery(String query, Pageable pageable) {
+    public SchoolListResponse getSchoolsByQuery(String loginId, String query, Pageable pageable) {
+        User user = finder.getUserByLoginId(loginId);
         Page<School> pageOfSchools = schoolRepository.searchByQuery(query, pageable);
         List<School> schools = pageOfSchools.getContent();
         ensureSchoolExists(schools);
-        List<SchoolSummaryResponse> schoolSummaryResponses = SchoolSummaryResponse.fromEntityList(schools);
+        List<SchoolSummaryResponse> schoolSummaryResponses = toSummaryListWithBookmark(schools, user);
 
         return SchoolListResponse.builder()
                 .last(pageOfSchools.isLast())
@@ -80,9 +87,11 @@ public class SchoolService {
     * 학교 id로 상세 정보를 조회합니다.
     * */
     @Transactional(readOnly = true)
-    public SchoolSummaryResponse getSchoolInfoById(Long schoolId) {
+    public SchoolSummaryResponse getSchoolInfoById(String loginId, Long schoolId) {
+        User user = finder.getUserByLoginId(loginId);
         School school = getSchoolById(schoolId);
-        return SchoolSummaryResponse.fromEntity(school);
+        boolean bookmarked = schoolBookmarkService.existsBookmarkBySchoolAndUser(school, user);
+        return SchoolSummaryResponse.fromEntity(school, bookmarked);
     }
 
     /*
@@ -92,5 +101,12 @@ public class SchoolService {
     public School getSchoolById(Long schoolId) {
         return schoolRepository.findBySchoolId(schoolId)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+    }
+
+    private List<SchoolSummaryResponse> toSummaryListWithBookmark(List<School> schools, User user) {
+        return schools.stream().map(school -> {
+            boolean bookmarked = schoolBookmarkService.existsBookmarkBySchoolAndUser(school, user);
+            return SchoolSummaryResponse.fromEntity(school, bookmarked);
+        }).toList();
     }
 }

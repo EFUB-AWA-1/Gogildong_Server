@@ -2,6 +2,7 @@ package com.efub.gogildong.schools.service;
 
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
+import com.efub.gogildong.global.util.EntityFinder;
 import com.efub.gogildong.schools.domain.RequestStatus;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.SchoolViewRequest;
@@ -18,17 +19,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SchoolViewRequestService {
 
-    private final SchoolRepository schoolRepository;
     private final SchoolViewRequestRepository schoolViewRequestRepository;
-    private final UserRepository userRepository;
+    private final EntityFinder finder;
 
     // 학교 정보 열람 신청
     public SchoolViewRequestResponse createSchoolViewRequest(String loginId, SchoolViewRequestRequest request) {
-       User user = userRepository.findByLoginId(loginId)
-               .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));
+       User user = finder.getUserByLoginId(loginId);
 
-        School school = schoolRepository.findBySchoolId(request.getSchoolId())
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+        School school = finder.getSchoolById(request.getSchoolId());
 
         // 기존 신청 여부 확인
         SchoolViewRequest existingRequest = schoolViewRequestRepository.findBySchoolAndUser(school, user).orElse(null);
