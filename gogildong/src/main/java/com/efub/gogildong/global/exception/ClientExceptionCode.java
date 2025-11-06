@@ -29,6 +29,7 @@ public enum ClientExceptionCode {
 
     // 제보
     DOOR_TYPE_BAD_REQUEST,
+    REPORT_NOT_FOUND,
 
     // 허가
     UNAUTHORIZED_SCHOOL_ACCESS,

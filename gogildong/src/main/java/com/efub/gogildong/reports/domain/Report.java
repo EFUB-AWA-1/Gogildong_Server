@@ -1,5 +1,6 @@
 package com.efub.gogildong.reports.domain;
 
+import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.global.domain.BaseEntity;
 import com.efub.gogildong.user.domain.User;
@@ -17,6 +18,10 @@ public class Report extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "facility_id", nullable = false)
+    private Facility facility;
+
     @Column(nullable = false)
     private int flagCount = 0;
 
@@ -32,10 +37,23 @@ public class Report extends BaseEntity {
     @Setter
     private User user;
 
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private RestRoomReport restRoomReport;
+
     @Builder
     public Report(Boolean isPublic, FacilityType reportType, User user) {
         this.isPublic = isPublic;
         this.reportType = reportType;
         this.user = user;
+    }
+
+    // 신고 횟수 추가
+    public void addFlag() {
+        flagCount++;
+    }
+
+    // 공개 여부 변경
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 }
