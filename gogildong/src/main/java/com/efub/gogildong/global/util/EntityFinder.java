@@ -38,6 +38,11 @@ public class EntityFinder {
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_NOT_FOUND));
     }
 
+    public School getSchoolById(Long schoolId) {
+        return schoolRepository.findBySchoolId(schoolId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
+    }
+
     public School getSchoolByFacility(Facility facility) {
         return schoolRepository.findBySchoolId(
                         facility.getFloor().getBuilding().getSchool().getSchoolId())
