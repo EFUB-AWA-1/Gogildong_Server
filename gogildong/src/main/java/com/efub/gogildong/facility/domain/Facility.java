@@ -2,6 +2,7 @@ package com.efub.gogildong.facility.domain;
 
 import com.efub.gogildong.global.domain.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,5 +63,10 @@ public class Facility extends BaseEntity {
     // 리뷰 삭제
     public void removeReview(FacilityReview review) {
         reviews.remove(review);
+    }
+
+    // 시설 별칭 업데이트
+    public void updateNickname(String facilityName) {
+        this.facilityNickname = facilityNickname;
     }
 }

@@ -1,6 +1,7 @@
 package com.efub.gogildong.facility.domain;
 
 import com.efub.gogildong.reports.domain.RestRoomReport;
+import com.efub.gogildong.reports.dto.response.RestRoomAggregateStat;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,8 +73,21 @@ public class Restroom {
         this.facility = facility;
     }
 
+    // 화장실 제보 추가
     public void addRestRoomReport(RestRoomReport restRoomReport) {
         this.restRoomReports.add(restRoomReport);
         restRoomReport.setRestroom(this);
+    }
+
+    // 제보 추가 시 화장실 값 업데이트
+    public void updateAggregate(RestRoomAggregateStat stat) {
+        this.gender = stat.getMajorityGender();
+        this.doorWidth = stat.getAvgDoorWidth();
+        this.doorHeight = stat.getAvgDoorHeight();
+        this.toiletHeight = stat.getAvgToiletHeight();
+        this.minDoorWidth = stat.getMinDoorWidth();
+        this.maxDoorWidth = stat.getMaxDoorWidth();
+        this.grabBar = stat.getAvgGrabBar() >= 0.5;
+        this.isAccessible = stat.getAvgIsAccessible() >= 0.5;
     }
 }

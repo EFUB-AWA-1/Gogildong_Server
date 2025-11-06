@@ -41,11 +41,11 @@ public class RestRoomReport {
     private Boolean grabBar;
 
     @OneToOne
-    @JoinColumn(name = "report_id")
+    @JoinColumn(name = "report_id", nullable = false)
     private Report report;
 
     @ManyToOne
-    @JoinColumn(name = "restroom_id")
+    @JoinColumn(name = "restroom_id", nullable = false)
     @Setter
     private Restroom restroom;
 
