@@ -61,8 +61,12 @@ public class SchoolBookmarkService {
     * 해당 사용자가 학교를 이미 즐겨찾기 했는지 확인
     * */
     private void validateNoBookmarked(School school, User user) {
-        if(!schoolBookmarkRepository.existsBySchoolAndUser(school, user)) {
+        if(schoolBookmarkRepository.existsBySchoolAndUser(school, user)) {
             throw new GoGildongException(ExceptionCode.SCHOOL_ALREADY_BOOKMARKED);
         }
+    }
+
+    public boolean existsBookmarkBySchoolAndUser(School school, User user) {
+        return schoolBookmarkRepository.existsBySchoolAndUser(school, user);
     }
 }

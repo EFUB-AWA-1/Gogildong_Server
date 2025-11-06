@@ -20,7 +20,7 @@ public class SchoolSummaryResponse {
     private List<String> tag;
     private boolean bookmarked;
 
-    public static SchoolSummaryResponse fromEntity(School school) {
+    public static SchoolSummaryResponse fromEntity(School school, boolean bookmarked) {
         List<String> tagList = school.getSchoolTags().stream()
                 .map(st -> String.valueOf(st.getTagName()))
                 .toList();
@@ -32,12 +32,8 @@ public class SchoolSummaryResponse {
                 .latitude(school.getLocation().getY())
                 .longitude(school.getLocation().getX())
                 .tag(tagList)
+                .bookmarked(bookmarked)
                 .build();
     }
 
-    public static List<SchoolSummaryResponse> fromEntityList(List<School> schools) {
-        return schools.stream()
-                .map(SchoolSummaryResponse::fromEntity)
-                .toList();
-    }
 }

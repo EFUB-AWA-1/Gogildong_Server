@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,28 +25,30 @@ public class SchoolController {
     * 반경의 단위는 m
     * */
     @GetMapping("/nearby")
-    public ResponseEntity<SchoolListResponse> getSchoolsByNear(@RequestParam(name = "lat", defaultValue = NearbySearchDefaults.LATITUDE + "") double latitude,
+    public ResponseEntity<SchoolListResponse> getSchoolsByNear(Authentication authentication,
+                                                               @RequestParam(name = "lat", defaultValue = NearbySearchDefaults.LATITUDE + "") double latitude,
                                                                @RequestParam(name = "lng", defaultValue = NearbySearchDefaults.LONGITUDE + "") double longitude,
                                                                @RequestParam(name = "tag", defaultValue = "all") TagCategory tagCategory,
                                                                @RequestParam(name = "radius", defaultValue = NearbySearchDefaults.RADIUS + "") double radius,
                                                                @PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(schoolService.getNearbySchools(latitude, longitude, tagCategory, radius, pageable));
+        return ResponseEntity.ok(schoolService.getNearbySchools(authentication.getName(), latitude, longitude, tagCategory, radius, pageable));
     }
 
     /*
     * 검색어 기반 학교 리스트 조회
     * */
     @GetMapping("/search")
-    public ResponseEntity<SchoolListResponse> getSchoolsByQuery(@RequestParam("query") String query,
+    public ResponseEntity<SchoolListResponse> getSchoolsByQuery(Authentication authentication,
+                                                                @RequestParam("query") String query,
                                                                 @PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(schoolService.getSchoolsByQuery(query, pageable));
+        return ResponseEntity.ok(schoolService.getSchoolsByQuery(authentication.getName(), query, pageable));
     }
 
     /*
     * 학교 정보 상세 조회
     * */
     @GetMapping("/{schoolId}")
-    public ResponseEntity<SchoolSummaryResponse> getSchoolInfo(@PathVariable long schoolId) {
-        return ResponseEntity.ok(schoolService.getSchoolInfoById(schoolId));
+    public ResponseEntity<SchoolSummaryResponse> getSchoolInfo(Authentication authentication, @PathVariable long schoolId) {
+        return ResponseEntity.ok(schoolService.getSchoolInfoById(authentication.getName(), schoolId));
     }
 }
