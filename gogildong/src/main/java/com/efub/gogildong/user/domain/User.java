@@ -2,6 +2,7 @@ package com.efub.gogildong.user.domain;
 
 import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.schools.domain.School;
+import com.efub.gogildong.schools.domain.SchoolBookmark;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -54,6 +55,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Report> reports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SchoolBookmark> schoolBookmarks = new ArrayList<>();
 
     @Builder
     public User(String loginId, String password, String username, String email, String phone, UserRole role) {

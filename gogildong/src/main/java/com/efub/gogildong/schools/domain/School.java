@@ -67,6 +67,9 @@ public class School {
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Building> buildings = new ArrayList<>();
 
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SchoolBookmark> schoolBookmarks = new ArrayList<>();
+
     @Builder
     public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode) {
         this.schoolCode = schoolCode;
