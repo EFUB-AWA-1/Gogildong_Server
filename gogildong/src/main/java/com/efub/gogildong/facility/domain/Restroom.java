@@ -1,9 +1,13 @@
 package com.efub.gogildong.facility.domain;
 
+import com.efub.gogildong.reports.domain.RestRoomReport;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,10 +23,12 @@ public class Restroom {
     private Boolean isAccessible;
 
     @Column(nullable = false)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private GenderType gender;
 
     @Column(nullable = false)
-    private String doorType;
+    @Enumerated(EnumType.STRING)
+    private DoorType doorType;
 
     @Column(nullable = false)
     private Float doorWidth;
@@ -47,8 +53,11 @@ public class Restroom {
     @JoinColumn(name = "facility_id")
     private Facility facility;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restroom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestRoomReport> restRoomReports = new ArrayList<>();
+
     @Builder
-    public Restroom(Boolean isAccessible, String gender, String doorType,
+    public Restroom(Boolean isAccessible, GenderType gender, DoorType doorType,
                     Float doorWidth, Float minDoorWidth, Float maxDoorWidth,
                     Float doorHeight, Float toiletHeight, Boolean grabBar,  Facility facility) {
         this.isAccessible = isAccessible;
@@ -61,5 +70,10 @@ public class Restroom {
         this.toiletHeight = toiletHeight;
         this.grabBar = grabBar;
         this.facility = facility;
+    }
+
+    public void addRestRoomReport(RestRoomReport restRoomReport) {
+        this.restRoomReports.add(restRoomReport);
+        restRoomReport.setRestroom(this);
     }
 }

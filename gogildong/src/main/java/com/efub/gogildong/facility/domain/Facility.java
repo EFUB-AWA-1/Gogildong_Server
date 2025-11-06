@@ -25,7 +25,8 @@ public class Facility extends BaseEntity {
     private String facilityNickname;
 
     @Column(nullable = false)
-    private String facilityType;
+    @Enumerated(EnumType.STRING)
+    private FacilityType facilityType;
 
     @Column(nullable = true)
     private String reviewSummary;
@@ -44,7 +45,7 @@ public class Facility extends BaseEntity {
     private List<FacilityReview> reviews = new ArrayList<>();
 
     @Builder
-    public Facility(String facilityName, String facilityNickname, String facilityType,
+    public Facility(String facilityName, String facilityNickname, FacilityType facilityType,
         String reviewSummary, Floor floor) {
         this.facilityName = facilityName;
         this.facilityNickname = facilityNickname;
