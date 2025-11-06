@@ -26,7 +26,7 @@ public class FacilityDetailResponse {
                 .facilityId(facility.getFacilityId())
                 .facilityName(facility.getFacilityName())
                 .facilityNiceName(facility.getFacilityNickname())
-                .facilityType(facility.getFacilityType())
+                .facilityType(facility.getFacilityType().name())
                 .reviewSummary(facility.getReviewSummary())
                 .createdAt(facility.getCreatedAt())
                 .build();
