@@ -3,9 +3,11 @@ package com.efub.gogildong.global.util;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityReview;
 import com.efub.gogildong.facility.domain.FacilityReviewComment;
+import com.efub.gogildong.facility.domain.Floor;
 import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewCommentRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewRepository;
+import com.efub.gogildong.facility.respository.FloorRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
@@ -24,6 +26,7 @@ public class EntityFinder {
     private final SchoolRepository schoolRepository;
     private final FacilityReviewRepository facilityReviewRepository;
     private final FacilityReviewCommentRepository facilityReviewCommentRepository;
+    private final FloorRepository floorRepository;
 
     public User getUserByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId)
@@ -49,5 +52,10 @@ public class EntityFinder {
     public FacilityReviewComment getReviewCommentById(Long reviewId) {
         return facilityReviewCommentRepository.findById(reviewId)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_COMMENT_NOT_FOUND));
+    }
+
+    public Floor getFloorById(Long floorId) {
+        return floorRepository.findByFloorId(floorId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
     }
 }

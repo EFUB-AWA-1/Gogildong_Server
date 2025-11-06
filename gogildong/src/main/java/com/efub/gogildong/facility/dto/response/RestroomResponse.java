@@ -20,9 +20,9 @@ public class RestroomResponse {
         return RestroomResponse.builder()
                 .facilityDetail(FacilityDetailResponse.from(facility))
                 .doorWidth(restroom.getDoorWidth())
-                .gender(restroom.getGender())
+                .gender(restroom.getGender().name())
                 .isAccessible(restroom.getIsAccessible())
-                .doorType(restroom.getDoorType())
+                .doorType(restroom.getDoorType().name())
                 .build();
     }
 }

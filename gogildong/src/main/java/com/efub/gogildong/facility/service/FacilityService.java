@@ -1,6 +1,7 @@
 package com.efub.gogildong.facility.service;
 
 import com.efub.gogildong.facility.domain.Facility;
+import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.facility.dto.response.FacilityDetailResponse;
 import com.efub.gogildong.facility.dto.response.RestroomResponse;
 import com.efub.gogildong.global.util.EntityFinder;
@@ -31,7 +32,7 @@ public class FacilityService {
         // facilityType으로 분기
         // 각 타입별 Dto 변환 메서드 호출
         switch (facility.getFacilityType()) {
-            case "restroom":
+            case RESTROOM :
                 return RestroomResponse.from(facility.getRestroom());
             default:
                 return FacilityDetailResponse.from(facility);

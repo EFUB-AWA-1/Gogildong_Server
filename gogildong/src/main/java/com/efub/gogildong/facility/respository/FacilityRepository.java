@@ -19,4 +19,5 @@ public interface FacilityRepository extends JpaRepository <Facility, Long> {
 
     Optional<Facility> findByFacilityId(Long facilityId);
 
+    Long countByFloor(Floor floor);
 }

@@ -26,7 +26,7 @@ public class FacilitySummaryResponse {
                 .facilityId(facility.getFacilityId())
                 .facilityName(facility.getFacilityName())
                 .facilityNickname(facility.getFacilityNickname())
-                .facilityType(facility.getFacilityType())
+                .facilityType(facility.getFacilityType().name())
                 .build();
     }
 }

@@ -1,10 +1,14 @@
 package com.efub.gogildong.user.domain;
 
+import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.schools.domain.School;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -48,6 +52,9 @@ public class User {
     @Column(nullable = false)
     private int total_score = 0;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Report> reports = new ArrayList<>();
+
     @Builder
     public User(String loginId, String password, String username, String email, String phone, UserRole role) {
         this.loginId = loginId;
@@ -66,6 +73,11 @@ public class User {
         this.username = username;
         this.email = email;
         this.phone = phone;
+    }
+
+    public void addReport(Report report) {
+        this.reports.add(report);
+        report.setUser(this);
     }
 
 }
