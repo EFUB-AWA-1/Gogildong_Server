@@ -2,16 +2,14 @@ package com.efub.gogildong.reports.controller;
 
 import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
+import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
 import com.efub.gogildong.reports.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reports")
@@ -40,5 +38,14 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /*
+     * 화장실 제보를 상세 조회합니다. (학교 관리인)
+     * */
+    @GetMapping("/restroom/{restRoomReportId}")
+    public ResponseEntity<RestRoomReportResponse> getRestRoomReport(@PathVariable("restRoomReportId") Long restRoomReportId,
+                                                                    Authentication authentication) {
+        reportService.getRestRoomReport(restRoomReportId);
+        return ResponseEntity.ok(reportService.getRestRoomReport(restRoomReportId));
+    }
 
 }
