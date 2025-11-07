@@ -33,6 +33,7 @@ public enum ExceptionCode {
 
     // 제보
     DOOR_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST, ClientExceptionCode.DOOR_TYPE_BAD_REQUEST, "유효하지 않은 문 타입입니다."),
+    RESTROOMREPORT_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RESTROOMREPORT_NOT_FOUND, "존재하지 않는 화장실 제보입니다."),
     REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.REPORT_NOT_FOUND, "존재하지 않는 제보입니다."),
 
     // 허가
