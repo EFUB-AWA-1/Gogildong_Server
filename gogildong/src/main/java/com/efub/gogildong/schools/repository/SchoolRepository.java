@@ -39,19 +39,22 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
     * 검색어를 기준으로 학교를 반환합니다.
     * */
     @Query(value = """
-                    SELECT *
-                    FROM school
-                    WHERE school_name ILIKE %:query%
-                    OR address ILIKE %:query%
-                    ORDER BY
-                    CASE WHEN school_name ILIKE :query||'%' THEN 1
-                    WHEN school_name ILIKE '%'||:query||'%' THEN 2
-                    WHEN address ILIKE '% '||:query||' %' THEN 3
-                    ELSE 4 END
-                    """, nativeQuery = true)
-   Page<School> searchByQuery(@Param("query") String query, Pageable pageable);
-           
-   Optional<School> findBySchoolCode(String schoolCode);
+        SELECT *
+        FROM school
+        WHERE school_name ILIKE CONCAT('%', :query, '%')
+           OR address ILIKE CONCAT('%', :query, '%')
+        ORDER BY
+            CASE
+                WHEN school_name ILIKE CONCAT(:query, '%') THEN 1
+                WHEN school_name ILIKE CONCAT('%', :query, '%') THEN 2
+                WHEN address ILIKE CONCAT('% ', :query, ' %') THEN 3
+                ELSE 4
+            END
+        """, nativeQuery = true)
+    Page<School> searchByQuery(@Param("query") String query, Pageable pageable);
+
+
+    Optional<School> findBySchoolCode(String schoolCode);
 
    Optional<School> findBySchoolId(Long schoolId);
 

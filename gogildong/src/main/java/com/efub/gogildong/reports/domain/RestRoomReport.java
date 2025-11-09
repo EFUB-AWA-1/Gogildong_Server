@@ -41,6 +41,7 @@ public class RestRoomReport {
     private Boolean grabBar;
 
     @OneToOne
+    @Setter
     @JoinColumn(name = "report_id", nullable = false)
     private Report report;
 
