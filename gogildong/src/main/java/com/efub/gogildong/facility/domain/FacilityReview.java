@@ -59,24 +59,4 @@ public class FacilityReview extends BaseEntity {
     public void updateReviewText(String reviewText) {
         this.reviewText = reviewText;
     }
-
-    // 리뷰댓글 추가
-    public void addComment(FacilityReviewComment comment) {
-        comments.add(comment);
-    }
-
-    // 리뷰댓글 삭제
-    public void removeComment(FacilityReviewComment comment) {
-        comments.remove(comment);
-    }
-
-    // 리뷰좋아요 추가
-    public void addLike(FacilityReviewLike like) {
-        likes.add(like);
-    }
-
-    // 리뷰좋아요 삭제
-    public void removeLike(FacilityReviewLike like) {
-        likes.remove(like);
-    }
 }
