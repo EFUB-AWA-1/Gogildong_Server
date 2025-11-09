@@ -30,6 +30,8 @@ public enum ClientExceptionCode {
     // 제보
     DOOR_TYPE_BAD_REQUEST,
     RESTROOMREPORT_NOT_FOUND,
+    REPORT_NOT_FOUND,
+
 
     // 허가
     UNAUTHORIZED_SCHOOL_ACCESS,
@@ -37,5 +39,12 @@ public enum ClientExceptionCode {
     // 사용자
     USER_NOT_FOUND,
     ACCESS_DENIED,
-    INVALID_PASSWORD
+    INVALID_PASSWORD,
+
+    // 랭크
+    RANK_NOT_FOUND,
+    USER_HAS_NO_SCHOOL,
+
+    // Redis
+    REDIS_OPERATION_FAILED
 }

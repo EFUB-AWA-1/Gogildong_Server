@@ -19,3 +19,9 @@ spring:
     redis:
       host: localhost
       port: ${REDIS_PORT}
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG
+    com.efub.gogildong: DEBUG

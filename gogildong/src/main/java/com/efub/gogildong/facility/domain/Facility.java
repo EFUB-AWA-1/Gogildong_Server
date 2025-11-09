@@ -55,16 +55,6 @@ public class Facility extends BaseEntity {
         this.floor = floor;
     }
 
-    // 리뷰 추가
-    public void addReview(FacilityReview review) {
-        reviews.add(review);
-    }
-
-    // 리뷰 삭제
-    public void removeReview(FacilityReview review) {
-        reviews.remove(review);
-    }
-
     // 시설 별칭 업데이트
     public void updateNickname(String facilityName) {
         this.facilityNickname = facilityNickname;
