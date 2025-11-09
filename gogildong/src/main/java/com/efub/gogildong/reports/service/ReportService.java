@@ -56,12 +56,13 @@ public class ReportService {
 
         // 연관관계 생성
         user.addReport(report);
+        restRoomReport.setReport(report);
+        restRoomReport.setRestroom(newRestroom);
+        facility.setRestroom(newRestroom);
 
         // 관련 엔티티 저장
-        facilityRepository.save(facility);
         reportRepository.save(report);
-        restRoomReportRepository.save(restRoomReport);
-        restroomRespository.save(newRestroom);
+        facilityRepository.save(facility);
     }
 
     /*

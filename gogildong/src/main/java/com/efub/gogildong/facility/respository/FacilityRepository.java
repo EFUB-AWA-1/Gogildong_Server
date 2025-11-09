@@ -14,10 +14,18 @@ import java.util.Optional;
 @Repository
 public interface FacilityRepository extends JpaRepository <Facility, Long> {
 
-    @Query("SELECT f FROM Facility f WHERE f.floor = :floor AND (:type = 'all' OR f.facilityType = :type)")
+    @Query("""
+    SELECT f
+    FROM Facility f
+    WHERE f.floor = :floor
+      AND (:type = 'all' OR lower(f.facilityType) = lower(:type))
+""")
     List<Facility> findAllByFloorAndType(@Param("floor") Floor floor, @Param("type") String type);
+
 
     Optional<Facility> findByFacilityId(Long facilityId);
 
     Long countByFloor(Floor floor);
+
+    List<Facility> findAllByFloor(Floor floor);
 }

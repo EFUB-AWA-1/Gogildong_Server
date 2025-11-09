@@ -56,7 +56,6 @@ public class NewRestRoomReportRequest {
                 .doorHeight(request.getDoorHeight())
                 .toiletHeight(request.getToiletHeight())
                 .grabBar(request.getGrabBar())
-                .report(report)
                 .build();
     }
 
