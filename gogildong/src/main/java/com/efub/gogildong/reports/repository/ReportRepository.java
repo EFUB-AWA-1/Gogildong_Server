@@ -8,5 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
+    List<Report> findByOrderByCreatedAtDesc();
     List<Report> findAllByFacility(Facility facility);
+
 }

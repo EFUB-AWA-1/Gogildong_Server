@@ -11,7 +11,10 @@ import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.reports.domain.RestRoomReport;
 import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
+import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.RestRoomAggregateStat;
+import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.repository.ReportRepository;
 import com.efub.gogildong.reports.repository.RestRoomReportRepository;
 import com.efub.gogildong.user.domain.User;
@@ -152,5 +155,25 @@ public class ReportService {
 
         // 4) Restroom update
         restroom.updateAggregate(stat);
+    }
+
+    /*
+    화장실 제보 조회 (학교 관리자)
+     */
+    @Transactional(readOnly = true)
+    public RestRoomReportResponse getRestRoomReport(Long restRoomReportId) {
+        RestRoomReport restRoomReport = restRoomReportRepository.findById(restRoomReportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.RESTROOMREPORT_NOT_FOUND));
+        return RestRoomReportResponse.from(restRoomReport);
+    }
+
+    /*
+    제보 목록 조회 (학교 관리자)
+     */
+    @Transactional(readOnly = true)
+    public ReportListResponse getAllReports() {
+        List<ReportSummary> reportSummaries = reportRepository.findByOrderByCreatedAtDesc().stream()
+                .map(ReportSummary::from).toList();
+        return new ReportListResponse(reportSummaries);
     }
 }
