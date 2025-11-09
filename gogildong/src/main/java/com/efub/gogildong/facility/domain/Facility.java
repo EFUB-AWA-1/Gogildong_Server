@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class Facility extends BaseEntity {
 
     // Restroom과 1:1 매핑, 지연로딩 + 고아객체제거
     @OneToOne(mappedBy = "facility", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Setter
     private Restroom restroom;
 
     // FacilityReview과 1:n 매핑, 지연로딩 + 고아객체제거
