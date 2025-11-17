@@ -12,6 +12,7 @@ public enum ClientExceptionCode {
     EDULEVEL_NOT_FOUND,
     SCHOOL_VIEW_ALREADY_APPROVED,
     SCHOOL_VIEW_REQUEST_PENDING,
+    REQUEST_NOT_FOUND,
 
     // 층
     FLOOR_NOT_FOUND,

@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface SchoolViewRequestRepository extends JpaRepository<SchoolViewRequest, Long> {
     Optional<SchoolViewRequest> findBySchoolAndUser(School school, User user);
+    Optional<SchoolViewRequest> findByRequestId(Long requestId);
 }
