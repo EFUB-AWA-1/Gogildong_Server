@@ -11,6 +11,7 @@ import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.reports.domain.RestRoomReport;
 import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
+import com.efub.gogildong.reports.dto.request.UpdateReportPublicStatusRequest;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.RestRoomAggregateStat;
 import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
@@ -176,5 +177,18 @@ public class ReportService {
         List<ReportSummary> reportSummaries = reportRepository.findByOrderByCreatedAtDesc().stream()
                 .map(ReportSummary::from).toList();
         return new ReportListResponse(reportSummaries);
+    }
+
+    /*
+    제보 공개 여부 수정 (학교 관리자)
+     */
+    @Transactional
+    public ReportSummary updateReportPublicStatus(Long reportId, UpdateReportPublicStatusRequest requestDto) {
+
+        Report report = reportRepository.findByReportId(reportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+
+        report.setIsPublic(requestDto.getIsPublic());
+        return ReportSummary.from(report);
     }
 }

@@ -14,4 +14,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     // 최신순으로 모든 제보 불러오기
     List<Report> findByOrderByCreatedAtDesc();
     List<Report> findAllByFacility(Facility facility);
+    Optional<Report> findByReportId(Long reportId);
 }
