@@ -1,21 +1,16 @@
 package com.efub.gogildong.schools.controller;
 
-import com.efub.gogildong.auth.dto.CustomUserDetails;
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
+import com.efub.gogildong.schools.dto.response.SchoolViewRequestDetailResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
 import com.efub.gogildong.schools.service.SchoolViewRequestService;
-import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/view-requests")
@@ -31,5 +26,14 @@ public class SchoolViewRequestController {
                                                                              @RequestBody @Valid SchoolViewRequestRequest request) {
         SchoolViewRequestResponse response = schoolViewRequestService.createSchoolViewRequest(authentication.getName(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // 학교 정보 열람 신청 상세 보기 (학교 관리자)
+    @GetMapping("/{requestId}")
+    public ResponseEntity<SchoolViewRequestDetailResponse> getRequestDetail(Authentication authentication,
+                                                                            @PathVariable final Long requestId) {
+
+        SchoolViewRequestDetailResponse response = schoolViewRequestService.getRequestDetail(requestId);
+        return ResponseEntity.ok(response);
     }
 }

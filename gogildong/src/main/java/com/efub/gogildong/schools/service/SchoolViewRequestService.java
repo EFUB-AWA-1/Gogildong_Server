@@ -7,6 +7,7 @@ import com.efub.gogildong.schools.domain.RequestStatus;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.SchoolViewRequest;
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
+import com.efub.gogildong.schools.dto.response.SchoolViewRequestDetailResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import com.efub.gogildong.schools.repository.SchoolViewRequestRepository;
@@ -67,5 +68,14 @@ public class SchoolViewRequestService {
         if (!isSameSchool && !isApproved) {
             throw new GoGildongException(ExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS);
         }
+    }
+
+    // 학교 정보 열람 신청 세부 조회 (학교 관리자)
+    public SchoolViewRequestDetailResponse getRequestDetail(Long requestId) {
+
+        SchoolViewRequest request = schoolViewRequestRepository.findByRequestId(requestId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REQUEST_NOT_FOUND));
+
+        return SchoolViewRequestDetailResponse.from(request);
     }
 }
