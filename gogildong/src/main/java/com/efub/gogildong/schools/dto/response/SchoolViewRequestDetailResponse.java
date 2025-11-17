@@ -7,6 +7,8 @@ import com.efub.gogildong.user.dto.response.RequesterSummaryResponse;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class SchoolViewRequestDetailResponse {
@@ -17,6 +19,7 @@ public class SchoolViewRequestDetailResponse {
     private final ReasonCategory reasonCategory;
     private final String requestReason;
     private final RequestStatus status;
+    private final LocalDateTime createdAt;
 
     public static SchoolViewRequestDetailResponse from(SchoolViewRequest request) {
         return SchoolViewRequestDetailResponse.builder()
@@ -26,6 +29,7 @@ public class SchoolViewRequestDetailResponse {
                 .reasonCategory(request.getReasonCategory())
                 .requestReason(request.getReason())
                 .status(request.getStatus())
+                .createdAt(request.getRequestedAt())
                 .build();
     }
 }
