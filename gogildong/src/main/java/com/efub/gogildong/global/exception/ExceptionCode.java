@@ -48,6 +48,9 @@ public enum ExceptionCode {
     RANK_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RANK_NOT_FOUND, "랭킹 정보를 찾을 수 없습니다."),
     USER_HAS_NO_SCHOOL(HttpStatus.BAD_REQUEST, ClientExceptionCode.USER_HAS_NO_SCHOOL, "소속된 학교가 없습니다."),
 
+    // 관리자
+    REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.REQUEST_NOT_FOUND, "요청 정보를 찾을 수 없습니다."),
+
     // Redis
     REDIS_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, ClientExceptionCode.REDIS_OPERATION_FAILED, "Redis 연산 중 오류가 발생했습니다.");
 

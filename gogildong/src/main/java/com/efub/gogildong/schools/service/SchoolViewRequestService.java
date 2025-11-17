@@ -7,13 +7,19 @@ import com.efub.gogildong.schools.domain.RequestStatus;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.SchoolViewRequest;
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
+import com.efub.gogildong.schools.dto.response.SchoolViewRequestDetailResponse;
+import com.efub.gogildong.schools.dto.response.SchoolViewRequestListResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
+import com.efub.gogildong.schools.dto.response.SchoolViewRequestSummaryResponse;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import com.efub.gogildong.schools.repository.SchoolViewRequestRepository;
 import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,4 +74,27 @@ public class SchoolViewRequestService {
             throw new GoGildongException(ExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS);
         }
     }
+
+    // 학교 정보 열람 신청 세부 조회 (학교 관리자)
+    public SchoolViewRequestDetailResponse getRequestDetail(Long requestId) {
+
+        SchoolViewRequest request = schoolViewRequestRepository.findByRequestId(requestId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REQUEST_NOT_FOUND));
+
+        return SchoolViewRequestDetailResponse.from(request);
+    }
+
+    // 학교 정보 열람 신청 목록 조회 (학교 관리자)
+    public SchoolViewRequestListResponse getAllRequests() {
+
+        // 모든 열람 요청을 최신순으로 조회
+        List<SchoolViewRequest> requests = schoolViewRequestRepository.findAllByOrderByRequestedAtDesc();
+
+        List<SchoolViewRequestSummaryResponse> summaryList = requests.stream()
+                .map(SchoolViewRequestSummaryResponse::from)
+                .collect(Collectors.toList());
+
+        return SchoolViewRequestListResponse.of(summaryList);
+    }
+
 }
