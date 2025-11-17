@@ -2,6 +2,7 @@ package com.efub.gogildong.schools.controller;
 
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestDetailResponse;
+import com.efub.gogildong.schools.dto.response.SchoolViewRequestListResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
 import com.efub.gogildong.schools.service.SchoolViewRequestService;
 import com.efub.gogildong.user.repository.UserRepository;
@@ -28,12 +29,19 @@ public class SchoolViewRequestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // 학교 정보 열람 신청 상세 보기 (학교 관리자)
+    // 학교 정보 열람 신청 상세 조회 (학교 관리자)
     @GetMapping("/{requestId}")
     public ResponseEntity<SchoolViewRequestDetailResponse> getRequestDetail(Authentication authentication,
                                                                             @PathVariable final Long requestId) {
 
         SchoolViewRequestDetailResponse response = schoolViewRequestService.getRequestDetail(requestId);
+        return ResponseEntity.ok(response);
+    }
+
+    // 학교 정보 열람 신청 목록 조회 (학교 관리자)
+    @GetMapping
+    public ResponseEntity<SchoolViewRequestListResponse> getAllRequests(Authentication authentication) {
+        SchoolViewRequestListResponse response = schoolViewRequestService.getAllRequests();
         return ResponseEntity.ok(response);
     }
 }
