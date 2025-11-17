@@ -1,9 +1,12 @@
 package com.efub.gogildong.reports.controller;
 
+import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
+import com.efub.gogildong.reports.dto.request.UpdateReportPublicStatusRequest;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +60,15 @@ public class ReportController {
         return ResponseEntity.ok(reportService.getAllReports());
     }
 
+    /*
+    제보 공개 여부를 수정합니다. (학교 관리자)
+     */
+    @PatchMapping("/{reportId}")
+    public ResponseEntity<ReportSummary> updateReportPublicStatus(@PathVariable Long reportId,
+                                                                  @RequestBody @Valid UpdateReportPublicStatusRequest requestDto,
+                                                                  Authentication authentication) {
 
+        ReportSummary responseDto = reportService.updateReportPublicStatus(reportId, requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 }
