@@ -7,16 +7,16 @@ import com.efub.gogildong.schools.domain.RequestStatus;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.SchoolViewRequest;
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
+import com.efub.gogildong.schools.dto.request.UpdateSchoolViewRequestStatusRequest;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestDetailResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestListResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestSummaryResponse;
-import com.efub.gogildong.schools.repository.SchoolRepository;
 import com.efub.gogildong.schools.repository.SchoolViewRequestRepository;
 import com.efub.gogildong.user.domain.User;
-import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,6 +95,16 @@ public class SchoolViewRequestService {
                 .collect(Collectors.toList());
 
         return SchoolViewRequestListResponse.of(summaryList);
+    }
+
+    // 학교 정보 열람 신청 처리 (학교 관리자)
+    @Transactional
+    public void updateSchoolViewRequestStatus(Long requestId, UpdateSchoolViewRequestStatusRequest requestDto) {
+
+        SchoolViewRequest request = schoolViewRequestRepository.findByRequestId(requestId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REQUEST_NOT_FOUND));
+
+        request.update(requestDto.getStatus());
     }
 
 }
