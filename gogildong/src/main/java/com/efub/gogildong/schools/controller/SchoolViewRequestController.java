@@ -1,6 +1,7 @@
 package com.efub.gogildong.schools.controller;
 
 import com.efub.gogildong.schools.dto.request.SchoolViewRequestRequest;
+import com.efub.gogildong.schools.dto.request.UpdateSchoolViewRequestStatusRequest;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestDetailResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestListResponse;
 import com.efub.gogildong.schools.dto.response.SchoolViewRequestResponse;
@@ -43,5 +44,15 @@ public class SchoolViewRequestController {
     public ResponseEntity<SchoolViewRequestListResponse> getAllRequests(Authentication authentication) {
         SchoolViewRequestListResponse response = schoolViewRequestService.getAllRequests();
         return ResponseEntity.ok(response);
+    }
+
+    // 학교 정보 열람 요청 상태 수정 (학교 관리자)
+    @PatchMapping("/{requestId}")
+    public ResponseEntity<Void> updateRequestStatus(Authentication authentication,
+                                                    @PathVariable final Long requestId,
+                                                    @RequestBody @Valid final UpdateSchoolViewRequestStatusRequest requestDto) {
+
+        schoolViewRequestService.updateSchoolViewRequestStatus(requestId, requestDto);
+        return ResponseEntity.noContent().build();
     }
 }
