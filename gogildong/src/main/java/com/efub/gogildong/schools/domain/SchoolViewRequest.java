@@ -55,4 +55,9 @@ public class SchoolViewRequest {
         this.user = user;
         this.school = school;
     }
+
+    // 열람 요청 처리
+    public void update(RequestStatus status) {
+        this.status = status;
+    }
 }
