@@ -1,8 +1,6 @@
 package com.efub.gogildong.reports.controller;
 
-import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
-import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
-import com.efub.gogildong.reports.dto.request.UpdateReportPublicStatusRequest;
+import com.efub.gogildong.reports.dto.request.*;
 import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
@@ -39,6 +37,26 @@ public class ReportController {
     public ResponseEntity<Void> createReportAboutExistingRestroom(@RequestBody @Valid RestRoomReportRequest restRoomReportRequest,
                                                                   Authentication authentication) {
         reportService.createReportAboutExistingRestroom(authentication.getName(), restRoomReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
+     * 새 엘리베이터를 추가하고 해당 엘리베이터에 대해 제보합니다.
+     * */
+    @PostMapping("/elevator/new-facility")
+    public ResponseEntity<Void> createReportAboutNewElevator(@RequestBody @Valid NewElevatorReportRequest newFacilityReportRequest,
+                                                             Authentication authentication) {
+        reportService.createReportAboutNewElevator(authentication.getName(), newFacilityReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
+     * 기존 엘리베이터에 대해 제보합니다.
+     * */
+    @PostMapping("/elevator")
+    public ResponseEntity<Void> createReportAboutExistingElevator(@RequestBody @Valid ElevatorReportRequest elevatorReportRequest,
+                                                                  Authentication authentication) {
+        reportService.createReportAboutExistingElevator(authentication.getName(), elevatorReportRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
