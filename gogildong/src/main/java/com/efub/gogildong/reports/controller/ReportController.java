@@ -1,9 +1,9 @@
 package com.efub.gogildong.reports.controller;
 
-import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.UpdateReportPublicStatusRequest;
+import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
@@ -70,5 +70,15 @@ public class ReportController {
 
         ReportSummary responseDto = reportService.updateReportPublicStatus(reportId, requestDto);
         return ResponseEntity.ok(responseDto);
+    }
+
+    /*
+    제보 신고 내역을 조회합니다. (학교 관리자)
+     */
+    @GetMapping("/flags/{reportId}")
+    public ResponseEntity<ReportFlagListResponse> getReportFlags(@PathVariable Long reportId,
+                                                 Authentication authentication) {
+
+        return ResponseEntity.ok(reportService.findReportFlagsByReportId(reportId));
     }
 }

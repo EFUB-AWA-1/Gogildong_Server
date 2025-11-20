@@ -8,14 +8,18 @@ import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
 import com.efub.gogildong.reports.domain.Report;
+import com.efub.gogildong.reports.domain.ReportFlag;
 import com.efub.gogildong.reports.domain.RestRoomReport;
 import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.UpdateReportPublicStatusRequest;
+import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.RestRoomAggregateStat;
 import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.summary.ReportFlagSummary;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
+import com.efub.gogildong.reports.repository.ReportFlagRepository;
 import com.efub.gogildong.reports.repository.ReportRepository;
 import com.efub.gogildong.reports.repository.RestRoomReportRepository;
 import com.efub.gogildong.user.domain.User;
@@ -36,6 +40,7 @@ public class ReportService {
     private final EntityFinder finder;
     private final FacilityRepository facilityRepository;
     private final RestroomRespository restroomRespository;
+    private final ReportFlagRepository reportFlagRepository;
 
     /*
     * 시설을 생성하고 해당 시설에 대한 제보를 생성합니다.
@@ -190,5 +195,19 @@ public class ReportService {
 
         report.setIsPublic(requestDto.getIsPublic());
         return ReportSummary.from(report);
+    }
+
+    /*
+    이미지 제보 신고 조회 (학교 관리자)
+     */
+    public ReportFlagListResponse findReportFlagsByReportId(Long reportId) {
+
+        List<ReportFlag> reportFlags = reportFlagRepository.findAllByReport_ReportId(reportId);
+
+        List<ReportFlagSummary> flags = reportFlags.stream()
+                .map(ReportFlagSummary::of)
+                .collect(Collectors.toList());
+
+        return ReportFlagListResponse.of(reportId, flags);
     }
 }
