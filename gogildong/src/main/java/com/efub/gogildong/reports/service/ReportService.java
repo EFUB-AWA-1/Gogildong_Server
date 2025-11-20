@@ -7,18 +7,15 @@ import com.efub.gogildong.facility.service.FacilityNameGenerator;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.reports.domain.ElevatorReport;
 import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.reports.domain.ReportFlag;
 import com.efub.gogildong.reports.domain.RestRoomReport;
-import com.efub.gogildong.reports.dto.request.NewRestRoomReportRequest;
-import com.efub.gogildong.reports.dto.request.RestRoomReportRequest;
-import com.efub.gogildong.reports.dto.request.UpdateReportPublicStatusRequest;
-import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
-import com.efub.gogildong.reports.dto.response.ReportListResponse;
-import com.efub.gogildong.reports.dto.response.RestRoomAggregateStat;
-import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.request.*;
+import com.efub.gogildong.reports.dto.response.*;
 import com.efub.gogildong.reports.dto.summary.ReportFlagSummary;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
+import com.efub.gogildong.reports.repository.ElevatorReportRepository;
 import com.efub.gogildong.reports.repository.ReportFlagRepository;
 import com.efub.gogildong.reports.repository.ReportRepository;
 import com.efub.gogildong.reports.repository.RestRoomReportRepository;
@@ -41,6 +38,7 @@ public class ReportService {
     private final FacilityRepository facilityRepository;
     private final RestroomRespository restroomRespository;
     private final ReportFlagRepository reportFlagRepository;
+    private final ElevatorReportRepository elevatorReportRepository;
 
     /*
     * 시설을 생성하고 해당 시설에 대한 제보를 생성합니다.
@@ -56,7 +54,7 @@ public class ReportService {
 
         // 관련 엔티티 생성
         Facility facility = NewRestRoomReportRequest.toFacilityEntity(request, facilityName, floor);
-        Report report = createReport();
+        Report report = createRestroomReport();
         RestRoomReport restRoomReport = NewRestRoomReportRequest.toRestRoomReportEntity(request, report);
         Restroom newRestroom = NewRestRoomReportRequest.toRestroomEntity(request, facility, restRoomReport);
 
@@ -81,7 +79,7 @@ public class ReportService {
         User user = validateReportWriterByFloorAndGet(loginId, facility.getFloor().getFloorId());
 
         // 관련 엔티티 생성
-        Report report = createReport();
+        Report report = createRestroomReport();
         RestRoomReport restRoomReport = NewRestRoomReportRequest.toRestRoomReportEntity(request, report);
         facility.getRestroom().addRestRoomReport(restRoomReport);
 
@@ -96,13 +94,81 @@ public class ReportService {
     }
 
     /*
-    * 제보를 생성합니다.
+    * 화장실 제보를 생성합니다.
     * */
-    private Report createReport(){
+    private Report createRestroomReport(){
         return Report.builder()
                 .isPublic(true)
                 .reportType(FacilityType.RESTROOM)
                 .build();
+    }
+
+    /*
+     * 엘리베이터를 생성하고 해당 시설에 대한 제보를 생성합니다.
+     * */
+    @Transactional
+    public void createReportAboutNewElevator(String loginId, NewElevatorReportRequest request){
+        // 작성자 권한 확인
+        User user = validateReportWriterByFloorAndGet(loginId, request.getFloorId());
+        Floor floor = finder.getFloorById(request.getFloorId());
+
+        // 시설 이름 생성
+        String facilityName = generateFacilityName(floor);
+
+        // 관련 엔티티 생성
+        Facility facility = NewElevatorReportRequest.toFacilityEntity(request, facilityName, floor);
+        Facility savedFacility = facilityRepository.save(facility);
+        Report report = Report.builder()
+                .isPublic(true)
+                .reportType(FacilityType.ELEVATOR)
+                .facility(savedFacility)
+                .user(user)
+                .build();
+        Report savedReport = reportRepository.save(report);
+
+
+        ElevatorReport elevatorReport = NewElevatorReportRequest.toElevatorReportEntity(request, report);
+        Elevator newElevator = NewElevatorReportRequest.toElevatorEntity(request, facility, elevatorReport);
+
+        // 연관관계 생성
+        user.addReport(report);
+        elevatorReport.setReport(savedReport);
+        elevatorReport.setElevator(newElevator);
+        facility.setElevator(newElevator);
+
+        // 관련 엔티티 저장
+        reportRepository.save(report);
+        facilityRepository.save(facility);
+    }
+
+    /*
+     * 기존 엘리베이터에 대한 제보를 생성합니다.
+     * */
+    @Transactional
+    public void createReportAboutExistingElevator(String loginId, ElevatorReportRequest request){
+        // 작성자 권한 확인
+        Facility facility = finder.getFacilityById(request.getFacilityId());
+        User user = validateReportWriterByFloorAndGet(loginId, facility.getFloor().getFloorId());
+
+        // 관련 엔티티 생성
+        Report report = Report.builder()
+                .isPublic(true)
+                .reportType(FacilityType.ELEVATOR)
+                .facility(facility)
+                .user(user)
+                .build();
+        ElevatorReport elevatorReport = NewElevatorReportRequest.toElevatorReportEntity(request, report);
+        elevatorReport.setReport(report);
+        facility.getElevator().addElevatorReport(elevatorReport);
+
+        user.addReport(report);
+
+        facility.updateNickname(request.getFacilityName());
+
+        reportRepository.save(report);
+        elevatorReportRepository.save(elevatorReport);
+
+        updateElevatorAggregate(facility.getElevator());
     }
 
     /*
@@ -162,6 +228,31 @@ public class ReportService {
 
         // 4) Restroom update
         restroom.updateAggregate(stat);
+    }
+
+    /*
+     * 최근 데이터를 기반으로 화장실 정보를 재구성합니다.
+     * */
+    private void updateElevatorAggregate(Elevator elevator){
+        List<ElevatorReport> reports = elevatorReportRepository.findPublicByElevator(elevator);
+
+        // 숫자 평균, min, max
+        Float avgDoorWidth = (float) reports.stream().mapToDouble(ElevatorReport::getDoorWidth).average().orElse(elevator.getDoorWidth());
+        Float avgDoorHeight = (float) reports.stream().mapToDouble(ElevatorReport::getDoorHeight).average().orElse(elevator.getDoorHeight());
+        Float avgMaxControlPanelHeight = (float) reports.stream().mapToDouble(ElevatorReport::getMaxControlPanelHeight).average().orElse(elevator.getMaxControlPanelHeight());
+        Float minDoorWidth = (float) reports.stream().mapToDouble(ElevatorReport::getDoorWidth).min().orElse(elevator.getMinDoorWidth());
+        Float maxDoorWidth = (float) reports.stream().mapToDouble(ElevatorReport::getDoorWidth).max().orElse(elevator.getMaxDoorWidth());
+
+        ElevatorAggregateStat stat = ElevatorAggregateStat.builder()
+                .avgDoorWidth(avgDoorWidth)
+                .avgDoorHeight(avgDoorHeight)
+                .avgMaxControlPanelHeight(avgMaxControlPanelHeight)
+                .minDoorWidth(minDoorWidth)
+                .maxDoorWidth(maxDoorWidth)
+                .build();
+
+        // Elevator update
+        elevator.updateAggregate(stat);
     }
 
     /*
