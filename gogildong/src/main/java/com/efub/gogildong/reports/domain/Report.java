@@ -40,11 +40,15 @@ public class Report extends BaseEntity {
     @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private RestRoomReport restRoomReport;
 
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private ElevatorReport elevatorReport;
+
     @Builder
-    public Report(Boolean isPublic, FacilityType reportType, User user) {
+    public Report(Boolean isPublic, FacilityType reportType, User user, Facility facility) {
         this.isPublic = isPublic;
         this.reportType = reportType;
         this.user = user;
+        this.facility = facility;
     }
 
     // 신고 횟수 추가
