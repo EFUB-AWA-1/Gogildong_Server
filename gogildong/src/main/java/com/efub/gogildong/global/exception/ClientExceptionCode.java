@@ -12,6 +12,7 @@ public enum ClientExceptionCode {
     EDULEVEL_NOT_FOUND,
     SCHOOL_VIEW_ALREADY_APPROVED,
     SCHOOL_VIEW_REQUEST_PENDING,
+    REQUEST_NOT_FOUND,
 
     // 층
     FLOOR_NOT_FOUND,
@@ -29,7 +30,9 @@ public enum ClientExceptionCode {
 
     // 제보
     DOOR_TYPE_BAD_REQUEST,
+    RESTROOMREPORT_NOT_FOUND,
     REPORT_NOT_FOUND,
+
 
     // 허가
     UNAUTHORIZED_SCHOOL_ACCESS,
@@ -37,5 +40,12 @@ public enum ClientExceptionCode {
     // 사용자
     USER_NOT_FOUND,
     ACCESS_DENIED,
-    INVALID_PASSWORD
+    INVALID_PASSWORD,
+
+    // 랭크
+    RANK_NOT_FOUND,
+    USER_HAS_NO_SCHOOL,
+
+    // Redis
+    REDIS_OPERATION_FAILED
 }
