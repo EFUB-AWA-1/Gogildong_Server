@@ -1,4 +1,4 @@
-package com.efub.gogildong.reports.dto.request;
+package com.efub.gogildong.reports.dto.request.restroom;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

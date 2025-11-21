@@ -1,9 +1,15 @@
 package com.efub.gogildong.reports.controller;
 
 import com.efub.gogildong.reports.dto.request.*;
+import com.efub.gogildong.reports.dto.request.classroom.ClassroomReportRequest;
+import com.efub.gogildong.reports.dto.request.classroom.NewClassroomReportRequest;
+import com.efub.gogildong.reports.dto.request.elevator.ElevatorReportRequest;
+import com.efub.gogildong.reports.dto.request.elevator.NewElevatorReportRequest;
+import com.efub.gogildong.reports.dto.request.restroom.NewRestRoomReportRequest;
+import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
-import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.service.ReportService;
 import jakarta.validation.Valid;
@@ -57,6 +63,26 @@ public class ReportController {
     public ResponseEntity<Void> createReportAboutExistingElevator(@RequestBody @Valid ElevatorReportRequest elevatorReportRequest,
                                                                   Authentication authentication) {
         reportService.createReportAboutExistingElevator(authentication.getName(), elevatorReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
+     * 새 교실을 추가하고 해당 교실에 대해 제보합니다.
+     * */
+    @PostMapping("/classroom/new-facility")
+    public ResponseEntity<Void> createReportAboutNewClassroom(@RequestBody @Valid NewClassroomReportRequest newFacilityReportRequest,
+                                                             Authentication authentication) {
+        reportService.createReportAboutNewClassroom(authentication.getName(), newFacilityReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
+     * 기존 엘리베이터에 대해 제보합니다.
+     * */
+    @PostMapping("/classroom")
+    public ResponseEntity<Void> createReportAboutExistingClassroom(@RequestBody @Valid ClassroomReportRequest classroomReportRequest,
+                                                                  Authentication authentication) {
+        reportService.createReportAboutExistingClassroom(authentication.getName(), classroomReportRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
