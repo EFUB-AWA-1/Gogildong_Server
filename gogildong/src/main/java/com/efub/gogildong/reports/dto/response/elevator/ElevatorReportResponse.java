@@ -1,4 +1,4 @@
-package com.efub.gogildong.reports.dto.response;
+package com.efub.gogildong.reports.dto.response.elevator;
 
 import com.efub.gogildong.reports.domain.ElevatorReport;
 import com.efub.gogildong.user.dto.response.UserResponseDto;

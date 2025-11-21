@@ -1,7 +1,7 @@
 package com.efub.gogildong.facility.domain;
 
 import com.efub.gogildong.reports.domain.RestRoomReport;
-import com.efub.gogildong.reports.dto.response.RestRoomAggregateStat;
+import com.efub.gogildong.reports.dto.response.restroom.RestRoomAggregateStat;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

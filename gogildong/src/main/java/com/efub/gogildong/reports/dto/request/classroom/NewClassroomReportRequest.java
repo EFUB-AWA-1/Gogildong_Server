@@ -1,4 +1,4 @@
-package com.efub.gogildong.reports.dto.request;
+package com.efub.gogildong.reports.dto.request.classroom;
 
 import com.efub.gogildong.facility.domain.*;
 import com.efub.gogildong.reports.domain.ClassroomReport;

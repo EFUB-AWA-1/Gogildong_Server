@@ -1,9 +1,15 @@
 package com.efub.gogildong.reports.controller;
 
 import com.efub.gogildong.reports.dto.request.*;
+import com.efub.gogildong.reports.dto.request.classroom.ClassroomReportRequest;
+import com.efub.gogildong.reports.dto.request.classroom.NewClassroomReportRequest;
+import com.efub.gogildong.reports.dto.request.elevator.ElevatorReportRequest;
+import com.efub.gogildong.reports.dto.request.elevator.NewElevatorReportRequest;
+import com.efub.gogildong.reports.dto.request.restroom.NewRestRoomReportRequest;
+import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
-import com.efub.gogildong.reports.dto.response.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.service.ReportService;
 import jakarta.validation.Valid;
