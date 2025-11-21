@@ -1,4 +1,4 @@
-package com.efub.gogildong.reports.dto.response;
+package com.efub.gogildong.reports.dto.response.classroom;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

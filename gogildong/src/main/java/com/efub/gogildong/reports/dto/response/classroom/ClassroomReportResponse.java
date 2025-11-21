@@ -1,4 +1,4 @@
-package com.efub.gogildong.reports.dto.response;
+package com.efub.gogildong.reports.dto.response.classroom;
 
 import com.efub.gogildong.facility.domain.DoorType;
 import com.efub.gogildong.reports.domain.ClassroomReport;

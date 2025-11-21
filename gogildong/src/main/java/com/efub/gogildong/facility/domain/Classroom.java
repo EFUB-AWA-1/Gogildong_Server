@@ -1,7 +1,7 @@
 package com.efub.gogildong.facility.domain;
 
 import com.efub.gogildong.reports.domain.ClassroomReport;
-import com.efub.gogildong.reports.dto.response.ClassroomAggregateStat;
+import com.efub.gogildong.reports.dto.response.classroom.ClassroomAggregateStat;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
