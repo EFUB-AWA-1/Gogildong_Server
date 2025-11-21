@@ -25,3 +25,9 @@ logging:
     root: DEBUG
     org.springframework: DEBUG
     com.efub.gogildong: DEBUG
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always

@@ -40,9 +40,14 @@ public class School {
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SchoolTag> SchoolTags = new ArrayList<>();
 
-
     @Column(nullable = false, unique = true, length = 10)
     String adminCode;
+
+    @Column(nullable = false)
+    Boolean hasSpecialClass;
+
+    @Column(nullable = false)
+    String region;
 
     private static final ThreadLocalRandom RND = ThreadLocalRandom.current();
 
@@ -71,12 +76,13 @@ public class School {
     List<SchoolBookmark> schoolBookmarks = new ArrayList<>();
 
     @Builder
-    public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode) {
+    public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode, Boolean hasSpecialClass) {
         this.schoolCode = schoolCode;
         this.schoolName = schoolName;
         this.address = address;
         this.location = location;
         this.eduLevel = eduLevel;
         this.adminCode = adminCode;
+        this.hasSpecialClass = hasSpecialClass;
     }
 }
