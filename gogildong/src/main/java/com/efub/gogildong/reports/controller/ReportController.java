@@ -61,6 +61,26 @@ public class ReportController {
     }
 
     /*
+     * 새 교실을 추가하고 해당 교실에 대해 제보합니다.
+     * */
+    @PostMapping("/classroom/new-facility")
+    public ResponseEntity<Void> createReportAboutNewClassroom(@RequestBody @Valid NewClassroomReportRequest newFacilityReportRequest,
+                                                             Authentication authentication) {
+        reportService.createReportAboutNewClassroom(authentication.getName(), newFacilityReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
+     * 기존 엘리베이터에 대해 제보합니다.
+     * */
+    @PostMapping("/classroom")
+    public ResponseEntity<Void> createReportAboutExistingClassroom(@RequestBody @Valid ClassroomReportRequest classroomReportRequest,
+                                                                  Authentication authentication) {
+        reportService.createReportAboutExistingClassroom(authentication.getName(), classroomReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
     화장실 제보를 상세 조회합니다. (학교 관리자)
      */
     @GetMapping("/restroom/{restRoomReportId}")

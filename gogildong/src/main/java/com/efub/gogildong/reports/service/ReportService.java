@@ -7,18 +7,12 @@ import com.efub.gogildong.facility.service.FacilityNameGenerator;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
-import com.efub.gogildong.reports.domain.ElevatorReport;
-import com.efub.gogildong.reports.domain.Report;
-import com.efub.gogildong.reports.domain.ReportFlag;
-import com.efub.gogildong.reports.domain.RestRoomReport;
+import com.efub.gogildong.reports.domain.*;
 import com.efub.gogildong.reports.dto.request.*;
 import com.efub.gogildong.reports.dto.response.*;
 import com.efub.gogildong.reports.dto.summary.ReportFlagSummary;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
-import com.efub.gogildong.reports.repository.ElevatorReportRepository;
-import com.efub.gogildong.reports.repository.ReportFlagRepository;
-import com.efub.gogildong.reports.repository.ReportRepository;
-import com.efub.gogildong.reports.repository.RestRoomReportRepository;
+import com.efub.gogildong.reports.repository.*;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +33,7 @@ public class ReportService {
     private final RestroomRespository restroomRespository;
     private final ReportFlagRepository reportFlagRepository;
     private final ElevatorReportRepository elevatorReportRepository;
+    private final ClassroomReportRepository classroomReportRepository;
 
     /*
     * 시설을 생성하고 해당 시설에 대한 제보를 생성합니다.
@@ -172,6 +167,73 @@ public class ReportService {
     }
 
     /*
+    새 교실에 대한 제보를 생성합니다.
+     */
+    @Transactional
+    public void createReportAboutNewClassroom(String loginId, NewClassroomReportRequest request){
+        // 작성자 권한 확인
+        User user = validateReportWriterByFloorAndGet(loginId, request.getFloorId());
+        Floor floor = finder.getFloorById(request.getFloorId());
+
+        // 시설 이름 생성
+        String facilityName = generateFacilityName(floor);
+
+        // 관련 엔티티 생성
+        Facility facility = NewClassroomReportRequest.toFacilityEntity(request, facilityName, floor);
+        Facility savedFacility = facilityRepository.save(facility);
+        Report report = Report.builder()
+                .isPublic(true)
+                .reportType(FacilityType.CLASSROOM)
+                .facility(savedFacility)
+                .user(user)
+                .build();
+        Report savedReport = reportRepository.save(report);
+
+        ClassroomReport classroomReport = NewClassroomReportRequest.toClassroomReportEntity(request, report);
+        Classroom newClassroom = NewClassroomReportRequest.toClassroomEntity(request, facility, classroomReport);
+
+        // 연관관계 생성
+        user.addReport(report);
+        classroomReport.setReport(savedReport);
+        classroomReport.setClassroom(newClassroom);
+        facility.setClassroom(newClassroom);
+
+        // 관련 엔티티 저장
+        reportRepository.save(report);
+        facilityRepository.save(facility);
+    }
+
+    /*
+     * 기존 교실에 대한 제보를 생성합니다.
+     * */
+    @Transactional
+    public void createReportAboutExistingClassroom(String loginId, ClassroomReportRequest request){
+        // 작성자 권한 확인
+        Facility facility = finder.getFacilityById(request.getFacilityId());
+        User user = validateReportWriterByFloorAndGet(loginId, facility.getFloor().getFloorId());
+
+        // 관련 엔티티 생성
+        Report report = Report.builder()
+                .isPublic(true)
+                .reportType(FacilityType.CLASSROOM)
+                .facility(facility)
+                .user(user)
+                .build();
+        ClassroomReport classroomReport = NewClassroomReportRequest.toClassroomReportEntity(request, report);
+        classroomReport.setReport(report);
+        facility.getClassroom().addClassroomReport(classroomReport);
+
+        user.addReport(report);
+
+        facility.updateNickname(request.getFacilityName());
+
+        reportRepository.save(report);
+        classroomReportRepository.save(classroomReport);
+
+        updateClassroomAggregate(facility.getClassroom());
+    }
+
+    /*
     * 층을 통해 작성자가 해당 학교 소속인지 확인하고 반환합니다.
     * */
     private User validateReportWriterByFloorAndGet(String loginId, Long floorId){
@@ -231,7 +293,7 @@ public class ReportService {
     }
 
     /*
-     * 최근 데이터를 기반으로 화장실 정보를 재구성합니다.
+     * 최근 데이터를 기반으로 엘리베이터 정보를 재구성합니다.
      * */
     private void updateElevatorAggregate(Elevator elevator){
         List<ElevatorReport> reports = elevatorReportRepository.findPublicByElevator(elevator);
@@ -253,6 +315,35 @@ public class ReportService {
 
         // Elevator update
         elevator.updateAggregate(stat);
+    }
+
+    /*
+     * 최근 데이터를 기반으로 교실 정보를 재구성합니다.
+     * */
+    private void updateClassroomAggregate(Classroom classroom){
+        List<ClassroomReport> reports = classroomReportRepository.findPublicByClassroom(classroom);
+
+        // boolean = 비율
+        float avgHasThreshold = reports.stream().filter(ClassroomReport::getHasThreshold).count() / (float) reports.size();
+
+        // 숫자 평균, min, max
+        Float avgDoorWidth = (float) reports.stream().mapToDouble(ClassroomReport::getDoorWidth).average().orElse(classroom.getDoorWidth());
+        Float avgDoorHeight = (float) reports.stream().mapToDouble(ClassroomReport::getDoorHeight).average().orElse(classroom.getDoorHeight());
+        Float avgMinAisleWidth = (float) reports.stream().mapToDouble(ClassroomReport::getMinAisleWidth).average().orElse(classroom.getMinAisleWidth());
+        Float minDoorWidth = (float) reports.stream().mapToDouble(ClassroomReport::getDoorWidth).min().orElse(classroom.getMinDoorWidth());
+        Float maxDoorWidth = (float) reports.stream().mapToDouble(ClassroomReport::getDoorWidth).max().orElse(classroom.getMaxDoorWidth());
+
+        ClassroomAggregateStat stat = ClassroomAggregateStat.builder()
+                .avgDoorWidth(avgDoorWidth)
+                .avgDoorHeight(avgDoorHeight)
+                .avgMinAisleWidth(avgMinAisleWidth)
+                .avgHasThreshold(avgHasThreshold)
+                .minDoorWidth(minDoorWidth)
+                .maxDoorWidth(maxDoorWidth)
+                .build();
+
+        // Classroom update
+        classroom.updateAggregate(stat);
     }
 
     /*
