@@ -1,5 +1,6 @@
 package com.efub.gogildong.statistics.dto;
 
+import com.efub.gogildong.schools.domain.EduLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class SchoolStatsDto {
     private Long schoolId;
     private String schoolName;
-    private String schoolLevel;
+    private EduLevel schoolLevel;
     private String region;
     private Boolean hasSpecialClass;
     private Integer studentCount;

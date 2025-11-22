@@ -1,5 +1,6 @@
 package com.efub.gogildong.statistics.dto;
 
+import com.efub.gogildong.schools.domain.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class ReadRequestStatsDto {
     private Long readRequestId;
     private Long schoolId;
     private String region;
-    private String status;
+    private RequestStatus status;
     private String reason;
     private LocalDateTime createdAt;
 }

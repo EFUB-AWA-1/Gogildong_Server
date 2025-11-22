@@ -126,6 +126,7 @@ public class ReportService {
         Report report = Report.builder()
                 .isPublic(true)
                 .reportType(FacilityType.ELEVATOR)
+                .status(ReportStatus.PENDING)
                 .facility(savedFacility)
                 .user(user)
                 .build();
@@ -160,6 +161,7 @@ public class ReportService {
                 .isPublic(true)
                 .reportType(FacilityType.ELEVATOR)
                 .facility(facility)
+                .status(ReportStatus.PENDING)
                 .user(user)
                 .build();
         ElevatorReport elevatorReport = NewElevatorReportRequest.toElevatorReportEntity(request, report);
@@ -195,6 +197,7 @@ public class ReportService {
                 .isPublic(true)
                 .reportType(FacilityType.CLASSROOM)
                 .facility(savedFacility)
+                .status(ReportStatus.PENDING)
                 .user(user)
                 .build();
         Report savedReport = reportRepository.save(report);
@@ -227,6 +230,7 @@ public class ReportService {
                 .isPublic(true)
                 .reportType(FacilityType.CLASSROOM)
                 .facility(facility)
+                .status(ReportStatus.PENDING)
                 .user(user)
                 .build();
         ClassroomReport classroomReport = NewClassroomReportRequest.toClassroomReportEntity(request, report);

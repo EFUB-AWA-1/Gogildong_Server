@@ -3,6 +3,8 @@ package com.efub.gogildong.statistics.repository;
 import com.efub.gogildong.facility.domain.*;
 import com.efub.gogildong.schools.domain.QSchool;
 import com.efub.gogildong.schools.domain.School;
+import com.efub.gogildong.statistics.dto.ClassroomStatsDto;
+import com.efub.gogildong.statistics.dto.ElevatorStatsDto;
 import com.efub.gogildong.statistics.dto.FacilityStatsDto;
 import com.efub.gogildong.statistics.dto.RestroomStatsDto;
 import com.efub.gogildong.statistics.dto.request.StatisticsFilterRequest;
@@ -115,12 +117,15 @@ public class FacilityStatisticsRepository {
                         .floorName(floorName)
                         .region(region)
                         .lastActivityAt(f.getUpdatedAt())
+
                         .doorType(r != null ? r.getDoorType() : null)
                         .doorWidth(r != null ? r.getDoorWidth() : null)
                         .doorHeight(r != null ? r.getDoorHeight() : null)
                         .grabBar(r != null ? r.getGrabBar() : null)
                         .isAccessible(r != null ? r.getIsAccessible() : null)
+
                         .build();
+
             } else {
                 return FacilityStatsDto.builder()
                         .facilityId(f.getFacilityId())

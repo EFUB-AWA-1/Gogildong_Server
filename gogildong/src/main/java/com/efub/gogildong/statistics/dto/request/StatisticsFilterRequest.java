@@ -2,6 +2,7 @@ package com.efub.gogildong.statistics.dto.request;
 
 import com.efub.gogildong.facility.domain.DoorType;
 import com.efub.gogildong.facility.domain.FacilityType;
+import com.efub.gogildong.reports.domain.ReportStatus;
 import com.efub.gogildong.schools.domain.RequestStatus;
 import lombok.Data;
 
@@ -31,12 +32,13 @@ public class StatisticsFilterRequest {
     private Integer doorHeightMin;
 
     // report
-    private List<String> status;
+    private List<ReportStatus> reportStatus;
+    private List<FacilityType> reportType;
     private Boolean isPublic;
 
     // readRequest
-    private List<RequestStatus> requestStatus;
-    private List<FacilityType> requestType;
+    private List<RequestStatus> readRequestStatus;
+    private List<FacilityType> readRequestType;
     private List<String> reason;
 
     private List<String> columns;

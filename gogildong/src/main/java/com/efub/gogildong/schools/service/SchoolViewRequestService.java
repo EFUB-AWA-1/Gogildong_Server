@@ -38,6 +38,10 @@ public class SchoolViewRequestService {
         SchoolViewRequest existingRequest = schoolViewRequestRepository.findBySchoolAndUser(school, user).orElse(null);
 
         if (existingRequest != null) {
+            // 차단된 사용자는 재신청 불가
+            if (existingRequest.getStatus() == RequestStatus.BLOCKED) {
+                throw new GoGildongException(ExceptionCode.SCHOOL_VIEW_REQUEST_BLOCKED);
+            }
             // 이미 승인된 경우
             if (existingRequest.getStatus() == RequestStatus.APPROVED) {
                 throw new GoGildongException(ExceptionCode.SCHOOL_VIEW_ALREADY_APPROVED);

@@ -1,5 +1,6 @@
 package com.efub.gogildong.statistics.dto;
 
+import com.efub.gogildong.reports.domain.ReportStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class ReportStatsDto {
     private Long schoolId;
     private String region;
     private String type;
-    private String status;
+    private ReportStatus status;
     private Boolean isPublic;
     private LocalDateTime createdAt;
 }

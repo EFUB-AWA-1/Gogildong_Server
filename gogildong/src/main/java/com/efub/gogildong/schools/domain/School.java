@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -76,7 +77,7 @@ public class School {
     List<SchoolBookmark> schoolBookmarks = new ArrayList<>();
 
     @Builder
-    public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode, Boolean hasSpecialClass) {
+    public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode, Boolean hasSpecialClass, String region) {
         this.schoolCode = schoolCode;
         this.schoolName = schoolName;
         this.address = address;
@@ -84,5 +85,6 @@ public class School {
         this.eduLevel = eduLevel;
         this.adminCode = adminCode;
         this.hasSpecialClass = hasSpecialClass;
+        this.region = region;
     }
 }
