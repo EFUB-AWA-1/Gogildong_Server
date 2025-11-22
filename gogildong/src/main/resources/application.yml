@@ -1,33 +1,5 @@
 spring:
   application:
     name: gogildong
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  jwt:
-    secret: ${JWT_SECRET}
-    access-ttl: 900000
-    refresh-ttl: 604800000
-
-  data:
-    redis:
-      host: localhost
-      port: ${REDIS_PORT}
-
-logging:
-  level:
-    root: DEBUG
-    org.springframework: DEBUG
-    com.efub.gogildong: DEBUG
-
-server:
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-stacktrace: always
+  profiles:
+    default: dev
