@@ -1,5 +1,5 @@
 package com.efub.gogildong.facility.domain;
 
 public enum FacilityType {
-    RESTROOM, ELEVATOR, RAMP, ETC
+    RESTROOM, ELEVATOR, CLASSROOM, ETC
 }
