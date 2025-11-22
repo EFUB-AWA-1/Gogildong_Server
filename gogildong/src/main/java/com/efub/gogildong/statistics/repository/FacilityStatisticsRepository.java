@@ -32,7 +32,6 @@ public class FacilityStatisticsRepository {
             Pageable pageable
     ) {
         QFacility facility = QFacility.facility;
-        QRestroom restroom = QRestroom.restroom;
         QFloor floor = QFloor.floor;
         QBuilding building = QBuilding.building;
         QSchool school = QSchool.school;
@@ -41,8 +40,7 @@ public class FacilityStatisticsRepository {
         var query = queryFactory.selectFrom(facility)
                 .leftJoin(facility.floor, floor).fetchJoin()
                 .leftJoin(floor.building, building).fetchJoin()
-                .leftJoin(building.school, school).fetchJoin()
-                .leftJoin(restroom).on(restroom.facility.eq(facility)).fetchJoin();
+                .leftJoin(building.school, school).fetchJoin();
 
         BooleanBuilder where = new BooleanBuilder();
 
@@ -81,12 +79,56 @@ public class FacilityStatisticsRepository {
                 filter.getFacilityType().contains(FacilityType.RESTROOM);
 
         if (isRestroom) {
-            if (filter.getDoorType() != null)
-                where.and(restroom.doorType.in(filter.getDoorType()));
-            if (filter.getDoorWidthMin() != null)
-                where.and(restroom.doorWidth.goe(filter.getDoorWidthMin()));
-            if (filter.getDoorHeightMin() != null)
-                where.and(restroom.doorHeight.goe(filter.getDoorHeightMin()));
+            QRestroom restroom = QRestroom.restroom;
+            query.leftJoin(restroom).on(restroom.facility.eq(facility)).fetchJoin();
+
+            if (filter.getRestroomDoorType() != null)
+                where.and(restroom.doorType.in(filter.getRestroomDoorType()));
+            if (filter.getRestroomDoorWidthMin() != null)
+                where.and(restroom.doorWidth.goe(filter.getRestroomDoorWidthMin()));
+            if (filter.getRestroomDoorHeightMin() != null)
+                where.and(restroom.doorHeight.goe(filter.getRestroomDoorHeightMin()));
+        }
+
+        // ELEVATOR 전용 필터
+        boolean isElevator = filter.getFacilityType() != null &&
+                filter.getFacilityType().contains(FacilityType.ELEVATOR);
+
+        if (isElevator) {
+            QElevator elevator = QElevator.elevator;
+            query.leftJoin(elevator).on(elevator.facility.eq(facility)).fetchJoin();
+
+            if (filter.getElevatorDoorHeightMin() != null) {
+                where.and(elevator.doorHeight.goe(filter.getElevatorDoorHeightMin()));
+            }
+            if (filter.getElevatorDoorWidthMin() != null) {
+                where.and(elevator.doorWidth.goe(filter.getElevatorDoorWidthMin()));
+            }
+            if (filter.getMaxControlPanelHeightMax() != null) {
+                where.and(elevator.maxControlPanelHeight.loe(filter.getMaxControlPanelHeightMax()));
+            }
+        }
+
+        // CLASSROOM 전용 필터
+        boolean isClassroom = filter.getFacilityType() != null &&
+                filter.getFacilityType().contains(FacilityType.CLASSROOM);
+
+        if (isClassroom) {
+            QClassroom classroom = QClassroom.classroom;
+            query.leftJoin(classroom).on(classroom.facility.eq(facility)).fetchJoin();
+
+            if (filter.getClassroomDoorHeightMin() != null) {
+                where.and(classroom.doorHeight.goe(filter.getClassroomDoorHeightMin()));
+            }
+            if (filter.getClassroomDoorWidthMin() != null) {
+                where.and(classroom.doorWidth.goe(filter.getClassroomDoorWidthMin()));
+            }
+            if (filter.getMinAisleWidthMin() != null) {
+                where.and(classroom.minAisleWidth.goe(filter.getMinAisleWidthMin()));
+            }
+            if (filter.getHasThreshold() != null) {
+                where.and(classroom.hasThreshold.eq(filter.getHasThreshold()));
+            }
         }
 
         // where 적용 후 fetch
@@ -126,6 +168,47 @@ public class FacilityStatisticsRepository {
 
                         .build();
 
+            } else if (f.getFacilityType() == FacilityType.ELEVATOR) {
+                Elevator e = f.getElevator();
+                return ElevatorStatsDto.builder()
+                        .facilityId(f.getFacilityId())
+                        .facilityType(f.getFacilityType())
+                        .schoolId(s != null ? s.getSchoolId() : null)
+                        .schoolName(schoolName)
+                        .buildingName(buildingName)
+                        .floorName(floorName)
+                        .region(region)
+                        .lastActivityAt(f.getUpdatedAt())
+
+                        .doorWidth(e != null ? e.getDoorWidth() : null)
+                        .minDoorWidth(e != null ? e.getMinDoorWidth() : null)
+                        .maxDoorWidth(e != null ? e.getMaxDoorWidth() : null)
+                        .doorHeight(e != null ? e.getDoorHeight() : null)
+                        .maxControlPanelHeight(e != null ? e.getMaxControlPanelHeight() : null)
+
+                        .build();
+
+            } else if (f.getFacilityType() == FacilityType.CLASSROOM) {
+                Classroom c = f.getClassroom();
+                return ClassroomStatsDto.builder()
+                        .facilityId(f.getFacilityId())
+                        .facilityType(f.getFacilityType())
+                        .schoolId(s != null ? s.getSchoolId() : null)
+                        .schoolName(schoolName)
+                        .buildingName(buildingName)
+                        .floorName(floorName)
+                        .region(region)
+                        .lastActivityAt(f.getUpdatedAt())
+
+                        .doorWidth(c != null ? c.getDoorWidth() : null)
+                        .minDoorWidth(c != null ? c.getMinDoorWidth() : null)
+                        .maxDoorWidth(c != null ? c.getMaxDoorWidth() : null)
+                        .doorHeight(c != null ? c.getDoorHeight() : null)
+                        .minAisleWidth(c != null ? c.getMinAisleWidth() : null)
+                        .hasThreshold(c != null ? c.getHasThreshold() : null)
+                        .doorType(c != null ? c.getDoorType() : null)
+
+                        .build();
             } else {
                 return FacilityStatsDto.builder()
                         .facilityId(f.getFacilityId())

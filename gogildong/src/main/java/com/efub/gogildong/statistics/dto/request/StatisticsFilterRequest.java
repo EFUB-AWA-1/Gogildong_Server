@@ -27,9 +27,20 @@ public class StatisticsFilterRequest {
     private List<Long> floorId;
 
     // restroom
-    private List<DoorType> doorType;
-    private Integer doorWidthMin;
-    private Integer doorHeightMin;
+    private List<DoorType> restroomDoorType;
+    private Integer restroomDoorWidthMin;
+    private Integer restroomDoorHeightMin;
+
+    // elevator
+    private Integer elevatorDoorHeightMin;
+    private Integer elevatorDoorWidthMin;
+    private Integer maxControlPanelHeightMax;
+
+    // classroom
+    private Integer classroomDoorHeightMin;
+    private Integer classroomDoorWidthMin;
+    private Integer minAisleWidthMin;
+    private Boolean hasThreshold;
 
     // report
     private List<ReportStatus> reportStatus;
