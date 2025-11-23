@@ -49,7 +49,6 @@ public class StatisticsFilterRequest {
 
     // readRequest
     private List<RequestStatus> readRequestStatus;
-    private List<FacilityType> readRequestType;
     private List<String> reason;
 
     private List<String> columns;

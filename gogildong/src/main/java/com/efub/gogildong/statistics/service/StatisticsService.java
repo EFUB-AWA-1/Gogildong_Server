@@ -37,8 +37,8 @@ public class StatisticsService {
 //            case "report":
 //                return reportStatisticsRepository.findStatistics(filter, pageable);
 //
-//            case "readrequest":
-//                return reportStatisticsRepository.findStatistics(filter, pageable);
+            case "readrequest":
+                return readRequestStatisticsRepository.findStatistics(filter, pageable);
 
             default:
                 throw new GoGildongException(ExceptionCode.ILLEGAL_ARGUMENT);
