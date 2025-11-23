@@ -3,6 +3,7 @@ package com.efub.gogildong.schools.service;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.EduLevel;
+import com.efub.gogildong.schools.domain.Region;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import jakarta.annotation.PostConstruct;
@@ -76,6 +77,7 @@ public class SchoolDataLoader {
                         .address(address)
                         .location(location)
                         .eduLevel(eduLevel)
+                        .region(Region.fromAddress(address))
                         .build();
                 result.add(newSchool);
             }
@@ -110,6 +112,7 @@ public class SchoolDataLoader {
                         .address(address)
                         .location(location)
                         .eduLevel(EduLevel.uni)
+                        .region(Region.fromAddress(address))
                         .build();
                 result.add(newSchool);
             }

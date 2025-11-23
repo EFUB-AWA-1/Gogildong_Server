@@ -42,6 +42,7 @@ public class School extends BaseEntity {
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SchoolTag> SchoolTags = new ArrayList<>();
 
+
     @Column(nullable = false, unique = true, length = 10)
     String adminCode;
 
