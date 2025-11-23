@@ -1,6 +1,7 @@
 package com.efub.gogildong.schools.domain;
 
 import com.efub.gogildong.facility.domain.Building;
+import com.efub.gogildong.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Entity
 @Getter
 @NoArgsConstructor
-public class School {
+public class School extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +32,6 @@ public class School {
     @Column(nullable = false)
     String address;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    Region region;
-
     @Column(columnDefinition = "geography(Point,4326)", nullable = false)
     Point location;
 
@@ -47,6 +45,12 @@ public class School {
 
     @Column(nullable = false, unique = true, length = 10)
     String adminCode;
+
+    @Column(nullable = false)
+    Boolean hasSpecialClass;
+
+    @Column(nullable = false)
+    String region;
 
     private static final ThreadLocalRandom RND = ThreadLocalRandom.current();
 
@@ -75,13 +79,14 @@ public class School {
     List<SchoolBookmark> schoolBookmarks = new ArrayList<>();
 
     @Builder
-    public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode, Region region) {
+    public School(String schoolCode, String schoolName, String address, Point location, EduLevel eduLevel, String adminCode, Boolean hasSpecialClass, String region) {
         this.schoolCode = schoolCode;
         this.schoolName = schoolName;
         this.address = address;
         this.location = location;
         this.eduLevel = eduLevel;
         this.adminCode = adminCode;
+        this.hasSpecialClass = hasSpecialClass;
         this.region = region;
     }
 }

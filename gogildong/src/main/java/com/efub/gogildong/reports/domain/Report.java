@@ -3,6 +3,7 @@ package com.efub.gogildong.reports.domain;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.global.domain.BaseEntity;
+import com.efub.gogildong.schools.domain.RequestStatus;
 import com.efub.gogildong.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -32,6 +33,10 @@ public class Report extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private FacilityType reportType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReportStatus status;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @Setter
@@ -47,9 +52,10 @@ public class Report extends BaseEntity {
     private ClassroomReport classroomReport;
 
     @Builder
-    public Report(Boolean isPublic, FacilityType reportType, User user, Facility facility) {
+    public Report(Boolean isPublic, FacilityType reportType, ReportStatus status, User user, Facility facility) {
         this.isPublic = isPublic;
         this.reportType = reportType;
+        this.status = status;
         this.user = user;
         this.facility = facility;
     }

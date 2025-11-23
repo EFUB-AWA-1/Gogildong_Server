@@ -10,6 +10,7 @@ import com.efub.gogildong.facility.respository.FacilityReviewCommentRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.point.service.PointService;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.service.SchoolViewRequestService;
 import com.efub.gogildong.user.domain.User;
@@ -26,6 +27,9 @@ public class FacilityReviewCommentService {
     private final FacilityReviewCommentRepository facilityReviewCommentRepository;
     private final EntityFinder entityFinder;
     private final SchoolViewRequestService schoolViewRequestService;
+    private final PointService pointService;
+
+    private static final int REVIEW_COMMENT_POINTS = 5;
 
     // 시설 리뷰 댓글 조회
     @Transactional(readOnly = true)
@@ -59,6 +63,9 @@ public class FacilityReviewCommentService {
 
         FacilityReviewComment comment = request.toEntity(review, user);
         facilityReviewCommentRepository.save(comment);
+
+        pointService.addPoints(user.getUserId(), REVIEW_COMMENT_POINTS);
+
         return FacilityReviewCommentResponse.from(comment);
     }
 

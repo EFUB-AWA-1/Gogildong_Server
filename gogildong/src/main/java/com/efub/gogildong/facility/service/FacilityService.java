@@ -11,6 +11,7 @@ import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.point.service.PointService;
 import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.reports.domain.ReportFlag;
 import com.efub.gogildong.reports.repository.ReportFlagRepository;
@@ -32,6 +33,9 @@ public class FacilityService {
     private final SchoolViewRequestService schoolViewRequestService;
     private final ReportRepository reportRepository;
     private final ReportFlagRepository reportFlagRepository;
+    private final PointService pointService;
+
+    private static final int FLAG_FACILITY_IMG_POINTS = 5;
 
     // 시설 상세 조회
     @Transactional(readOnly = true)
@@ -95,6 +99,9 @@ public class FacilityService {
         if (report.getFlagCount() >= 3) { report.setIsPublic(false);  }
 
         ReportFlag flag = request.toEntity(report, user);
+
+        pointService.addPoints(user.getUserId(), FLAG_FACILITY_IMG_POINTS);
+
         reportFlagRepository.save(flag);
     }
 }
