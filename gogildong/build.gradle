@@ -55,6 +55,9 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+
+    // 엑셀파일
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
