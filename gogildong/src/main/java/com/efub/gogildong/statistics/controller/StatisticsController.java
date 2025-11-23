@@ -8,6 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/statistics")
@@ -16,14 +20,17 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @GetMapping("/data")
-    public ResponseEntity<StatisticsDataResponse<?>> getStatisticsData(
-            @RequestParam String entity,
+    public ResponseEntity<?> getStatisticsData(
+            @RequestParam List<String> entity,
             @ModelAttribute StatisticsFilterRequest filterRequest,
             Pageable pageable
     ) {
-        StatisticsDataResponse<?> response =
-                statisticsService.getStatisticsData(entity, filterRequest, pageable);
+        Map<String, StatisticsDataResponse<?>> result = new LinkedHashMap<>();
 
-        return ResponseEntity.ok(response);
+        for (String e : entity) {
+            result.put(e.toLowerCase(), statisticsService.getStatisticsData(e, filterRequest, pageable));
+        }
+
+        return ResponseEntity.ok(result);
     }
 }
