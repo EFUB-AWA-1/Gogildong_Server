@@ -52,7 +52,7 @@ public class ReadRequestStatisticsRepository {
             where.and(read.reason.in(filter.getReason()));
 
         // 페이징 + 정렬 + 조회
-        List<ReadRequestStatsDto> result = queryFactory
+        List<ReadRequestStatsDto> items = queryFactory
                 .select(new QReadRequestStatsDto(
                         read.requestId,
                         read.school.schoolId,
@@ -65,26 +65,26 @@ public class ReadRequestStatisticsRepository {
                 .where(where)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(read.requestedAt.desc())
+                .orderBy(read.requestedAt.desc()) // 최신순 정렬
                 .fetch();
 
         // total count
-        Long totalCount = queryFactory
+        Long total = queryFactory
                 .select(read.count())
                 .from(read)
                 .where(where)
                 .fetchOne();
 
-        if (totalCount == null)
-            totalCount = 0L;
+        if (total == null)
+            total = 0L;
 
         return StatisticsDataResponse.<ReadRequestStatsDto>builder()
                 .entity("readRequest")
                 .page(pageable.getPageNumber())
                 .size(pageable.getPageSize())
-                .totalElements(totalCount)
-                .totalPages((int) Math.ceil((double) totalCount / pageable.getPageSize()))
-                .items(result)
+                .totalElements(total)
+                .totalPages((int) Math.ceil((double) total / pageable.getPageSize()))
+                .items(items)
                 .exportToken(UUID.randomUUID().toString())
                 .build();
     }

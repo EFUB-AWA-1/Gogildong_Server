@@ -28,15 +28,15 @@ public class StatisticsService {
             Pageable pageable
     ) {
         switch (entity.toLowerCase()) {
-//            case "school":
-//                return schoolStatisticsRepository.findStatistics(filter, pageable);
+            case "school":
+                return schoolStatisticsRepository.findStatistics(filter, pageable);
 
             case "facility":
                 return facilityStatisticsRepository.findStatistics(filter, pageable);
 
-//            case "report":
-//                return reportStatisticsRepository.findStatistics(filter, pageable);
-//
+            case "report":
+                return reportStatisticsRepository.findStatistics(filter, pageable);
+
             case "readrequest":
                 return readRequestStatisticsRepository.findStatistics(filter, pageable);
 

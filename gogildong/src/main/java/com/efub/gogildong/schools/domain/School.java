@@ -1,6 +1,7 @@
 package com.efub.gogildong.schools.domain;
 
 import com.efub.gogildong.facility.domain.Building;
+import com.efub.gogildong.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Entity
 @Getter
 @NoArgsConstructor
-public class School {
+public class School extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

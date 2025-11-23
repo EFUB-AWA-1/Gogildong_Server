@@ -224,13 +224,16 @@ public class FacilityStatisticsRepository {
         }).collect(Collectors.toList());
 
         // total count
-        long total = queryFactory.select(facility.count())
+        Long total = queryFactory.select(facility.count())
                 .from(facility)
                 .leftJoin(facility.floor, floor)
                 .leftJoin(floor.building, building)
                 .leftJoin(building.school, school)
                 .where(where)
                 .fetchOne();
+
+        if (total == null)
+            total = 0L;
 
         return StatisticsDataResponse.<FacilityStatsDto>builder()
                 .entity("facility")

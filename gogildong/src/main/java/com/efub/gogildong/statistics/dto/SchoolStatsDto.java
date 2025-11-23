@@ -1,16 +1,12 @@
 package com.efub.gogildong.statistics.dto;
 
 import com.efub.gogildong.schools.domain.EduLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 @Builder
 public class SchoolStatsDto {
     private Long schoolId;
@@ -20,4 +16,16 @@ public class SchoolStatsDto {
     private Boolean hasSpecialClass;
     private Integer studentCount;
     private LocalDateTime lastActivityAt;
+
+    @QueryProjection
+    public SchoolStatsDto(Long schoolId, String schoolName, EduLevel eduLevel,
+                          String region, Boolean hasSpecialClass, Integer studentCount, LocalDateTime lastActivityAt) {
+        this.schoolId = schoolId;
+        this.schoolName = schoolName;
+        this.schoolLevel = eduLevel;
+        this.region = region;
+        this.hasSpecialClass = hasSpecialClass;
+        this.studentCount = studentCount;
+        this.lastActivityAt = lastActivityAt;
+    }
 }

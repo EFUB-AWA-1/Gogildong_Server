@@ -3,6 +3,7 @@ package com.efub.gogildong.statistics.dto.request;
 import com.efub.gogildong.facility.domain.DoorType;
 import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.reports.domain.ReportStatus;
+import com.efub.gogildong.schools.domain.EduLevel;
 import com.efub.gogildong.schools.domain.RequestStatus;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class StatisticsFilterRequest {
     private List<Long> schoolIds;
 
     // school
-    private String schoolLevel;
+    private EduLevel schoolLevel;
     private Integer minStudentCount;
 
     // facility
