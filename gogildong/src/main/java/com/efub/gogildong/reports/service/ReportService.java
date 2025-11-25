@@ -47,7 +47,7 @@ public class ReportService {
     private final ClassroomReportRepository classroomReportRepository;
     private final CoinService coinService;
     private final PointService pointService;
-    private final int REPORT_POINT = 20;
+    private final static int REPORT_POINT = 20;
     /*
     * 시설을 생성하고 해당 시설에 대한 제보를 생성합니다.
     * */
