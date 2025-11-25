@@ -57,5 +57,13 @@ public enum ClientExceptionCode {
     USER_HAS_NO_SCHOOL,
 
     // Redis
-    REDIS_OPERATION_FAILED
+    REDIS_OPERATION_FAILED,
+
+    // 엽전
+    COIN_INSUFFICIENT_BALANCE,
+
+    // 상점
+    SHOP_ITEM_NOT_FOUND,
+    SHOP_ITEM_ALREADY_HAVE,
+    SHOP_ITEM_NOT_OWNED,
 }

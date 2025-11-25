@@ -1,5 +1,6 @@
 package com.efub.gogildong.user.service;
 
+import com.efub.gogildong.shops.service.UserItemService;
 import com.efub.gogildong.email.service.EmailVerificationService;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -28,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final SchoolRepository schoolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserItemService userItemService;
     private final EmailVerificationService emailVerificationService;
 
     // 내부인 생성
@@ -56,7 +58,11 @@ public class UserService {
         // 학교 매핑
         user.changeSchool(school);
 
-        return InternalUserResponseDto.from(userRepository.save(user));
+        // 유저 캐릭터에 기본 아이템 장착
+        User savedUser = userRepository.save(user);
+        userItemService.wearDefaultItemsForUser(savedUser);
+
+        return InternalUserResponseDto.from(savedUser);
     }
 
     // 내부인 학교 변경
@@ -92,7 +98,11 @@ public class UserService {
         User user = request.toEntity();
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return CreateUserResponseDto.from(userRepository.save(user));
+        // 유저 캐릭터에 기본 아이템 장착
+        User savedUser = userRepository.save(user);
+        userItemService.wearDefaultItemsForUser(savedUser);
+
+        return CreateUserResponseDto.from(savedUser);
     }
 
     // 학교 관리자 생성

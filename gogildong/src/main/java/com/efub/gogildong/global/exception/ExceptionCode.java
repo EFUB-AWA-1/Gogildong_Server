@@ -60,7 +60,15 @@ public enum ExceptionCode {
     REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.REQUEST_NOT_FOUND, "요청 정보를 찾을 수 없습니다."),
 
     // Redis
-    REDIS_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, ClientExceptionCode.REDIS_OPERATION_FAILED, "Redis 연산 중 오류가 발생했습니다.");
+    REDIS_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, ClientExceptionCode.REDIS_OPERATION_FAILED, "Redis 연산 중 오류가 발생했습니다."),
+
+    // 엽전
+    COIN_INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, ClientExceptionCode.COIN_INSUFFICIENT_BALANCE, "보유 코인보다 사용하려는 금액이 더 큽니다."),
+
+    // 상점
+    SHOP_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.SHOP_ITEM_NOT_FOUND, "해당되는 아이템을 찾을 수 없습니다."),
+    SHOP_ITEM_ALREADY_HAVE(HttpStatus.CONFLICT, ClientExceptionCode.SHOP_ITEM_ALREADY_HAVE, "이미 구매한 아이템입니다."),
+    SHOP_ITEM_NOT_OWNED(HttpStatus.CONFLICT, ClientExceptionCode.SHOP_ITEM_NOT_OWNED, "사용자가 구매한 아이템이 아닙니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;
