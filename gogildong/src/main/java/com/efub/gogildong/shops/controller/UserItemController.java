@@ -17,11 +17,17 @@ public class UserItemController {
 
     private final UserItemService userItemService;
 
+    /*
+    * 사용자가 착용한 아이템 조회
+    * */
     @GetMapping("/me")
     public ResponseEntity<EquippedItemListResponse> getMyEquippedItems(Authentication authentication) {
         return ResponseEntity.ok(userItemService.getMyEquippedItems(authentication.getName()));
     }
 
+    /*
+    * 아이템 착용
+    * */
     @PostMapping("/me")
     public ResponseEntity<ItemResponse> wearMyItem(Authentication authentication, @Valid @RequestBody ItemRequest request){
         return ResponseEntity.ok(userItemService.wearMyItem(authentication.getName(), request));
