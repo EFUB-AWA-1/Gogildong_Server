@@ -7,6 +7,7 @@ import com.efub.gogildong.facility.service.FacilityNameGenerator;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
+import com.efub.gogildong.point.service.PointService;
 import com.efub.gogildong.reports.domain.*;
 import com.efub.gogildong.reports.dto.request.*;
 import com.efub.gogildong.reports.dto.request.classroom.ClassroomReportRequest;
@@ -23,6 +24,7 @@ import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.summary.ReportFlagSummary;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.repository.*;
+import com.efub.gogildong.shops.service.CoinService;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,11 +42,12 @@ public class ReportService {
     private final RestRoomReportRepository restRoomReportRepository;
     private final EntityFinder finder;
     private final FacilityRepository facilityRepository;
-    private final RestroomRespository restroomRespository;
     private final ReportFlagRepository reportFlagRepository;
     private final ElevatorReportRepository elevatorReportRepository;
     private final ClassroomReportRepository classroomReportRepository;
-
+    private final CoinService coinService;
+    private final PointService pointService;
+    private final static int REPORT_POINT = 20;
     /*
     * 시설을 생성하고 해당 시설에 대한 제보를 생성합니다.
     * */
@@ -74,6 +77,9 @@ public class ReportService {
         // 관련 엔티티 저장
         reportRepository.save(report);
         facilityRepository.save(facility);
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
     }
 
     /*
@@ -98,6 +104,9 @@ public class ReportService {
         restRoomReportRepository.save(restRoomReport);
 
         updateRestroomAggregate(facility.getRestroom());
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
     }
 
     /*
@@ -150,6 +159,9 @@ public class ReportService {
         // 관련 엔티티 저장
         reportRepository.save(report);
         facilityRepository.save(facility);
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
     }
 
     /*
@@ -181,6 +193,9 @@ public class ReportService {
         elevatorReportRepository.save(elevatorReport);
 
         updateElevatorAggregate(facility.getElevator());
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
     }
 
     /*
@@ -219,6 +234,9 @@ public class ReportService {
         // 관련 엔티티 저장
         reportRepository.save(report);
         facilityRepository.save(facility);
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
     }
 
     /*
@@ -250,6 +268,9 @@ public class ReportService {
         classroomReportRepository.save(classroomReport);
 
         updateClassroomAggregate(facility.getClassroom());
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
     }
 
     /*
@@ -410,5 +431,13 @@ public class ReportService {
                 .collect(Collectors.toList());
 
         return ReportFlagListResponse.of(reportId, flags);
+    }
+
+    /*
+     * 제보 시 20 포인트 지급, 20 엽전 지급
+     * */
+    private void getPointAndCoinByReport(User user) {
+        coinService.earnCoin(user, REPORT_POINT);
+        pointService.addPoints(user.getUserId(), REPORT_POINT);
     }
 }
