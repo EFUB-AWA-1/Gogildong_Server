@@ -45,6 +45,13 @@ public enum ExceptionCode {
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.ACCESS_DENIED, "접근이 허용되지 않습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,ClientExceptionCode.INVALID_PASSWORD, "비밀번호가 일치하지 않습니다."),
 
+    // 이메일 인증
+    EMAIL_FORMAT_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_FORMAT_INVALID, "이메일 형식이 올바르지 않습니다."),
+    EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, ClientExceptionCode.EMAIL_ALREADY_EXISTS, "이미 가입된 이메일입니다."),
+    EMAIL_VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_CODE_INVALID, "이메일 인증번호가 올바르지 않습니다."),
+    EMAIL_VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_CODE_EXPIRED, "이메일 인증번호가 만료되었습니다."),
+    EMAIL_VERIFICATION_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_REQUIRED,  "이메일 인증이 필요합니다."),
+
     // 랭크
     RANK_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RANK_NOT_FOUND, "랭킹 정보를 찾을 수 없습니다."),
     USER_HAS_NO_SCHOOL(HttpStatus.BAD_REQUEST, ClientExceptionCode.USER_HAS_NO_SCHOOL, "소속된 학교가 없습니다."),

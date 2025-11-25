@@ -58,6 +58,9 @@ dependencies {
 
     // 엑셀파일
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+    // Email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
