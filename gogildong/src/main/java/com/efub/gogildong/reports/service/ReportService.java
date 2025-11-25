@@ -59,8 +59,10 @@ public class ReportService {
 
         // 관련 엔티티 생성
         Facility facility = NewRestRoomReportRequest.toFacilityEntity(request, facilityName, floor);
-        Report report = createRestroomReport();
-        RestRoomReport restRoomReport = NewRestRoomReportRequest.toRestRoomReportEntity(request, report);
+        Facility savedFacility = facilityRepository.save(facility);
+        Report report = createRestroomReport(savedFacility, user);
+        Report savedReport = reportRepository.save(report);
+        RestRoomReport restRoomReport = NewRestRoomReportRequest.toRestRoomReportEntity(request, savedReport);
         Restroom newRestroom = NewRestRoomReportRequest.toRestroomEntity(request, facility, restRoomReport);
 
         // 연관관계 생성
@@ -84,15 +86,15 @@ public class ReportService {
         User user = validateReportWriterByFloorAndGet(loginId, facility.getFloor().getFloorId());
 
         // 관련 엔티티 생성
-        Report report = createRestroomReport();
-        RestRoomReport restRoomReport = NewRestRoomReportRequest.toRestRoomReportEntity(request, report);
+        Report report = createRestroomReport(facility, user);
+        Report savedReport = reportRepository.save(report);
+        RestRoomReport restRoomReport = NewRestRoomReportRequest.toRestRoomReportEntity(request, savedReport);
+        restRoomReport.setReport(report);
         facility.getRestroom().addRestRoomReport(restRoomReport);
 
         user.addReport(report);
 
         facility.updateNickname(request.getFacilityName());
-
-        reportRepository.save(report);
         restRoomReportRepository.save(restRoomReport);
 
         updateRestroomAggregate(facility.getRestroom());
@@ -101,9 +103,12 @@ public class ReportService {
     /*
     * 화장실 제보를 생성합니다.
     * */
-    private Report createRestroomReport(){
+    private Report createRestroomReport(Facility facility, User user) {
         return Report.builder()
                 .isPublic(true)
+                .status(ReportStatus.PENDING)
+                .facility(facility)
+                .user(user)
                 .reportType(FacilityType.RESTROOM)
                 .build();
     }
