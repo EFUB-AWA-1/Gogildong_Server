@@ -1,5 +1,6 @@
 package com.efub.gogildong.user.domain;
 
+import com.efub.gogildong.shops.domain.UserItem;
 import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.domain.SchoolBookmark;
@@ -53,11 +54,17 @@ public class User {
     @Column(nullable = false)
     private int total_score = 0;
 
+    @Column(nullable = false)
+    private int coin = 0;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Report> reports = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SchoolBookmark> schoolBookmarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserItem> userItems = new ArrayList<>();
 
     @Builder
     public User(String loginId, String password, String username, String email, String phone, UserRole role) {
@@ -82,6 +89,11 @@ public class User {
     public void addReport(Report report) {
         this.reports.add(report);
         report.setUser(this);
+    }
+
+    public void addUserItem(UserItem item) {
+        this.userItems.add(item);
+        item.setUser(this);
     }
 
 }

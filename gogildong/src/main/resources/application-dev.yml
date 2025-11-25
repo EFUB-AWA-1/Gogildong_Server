@@ -19,6 +19,8 @@ spring:
     redis:
       host: localhost
       port: ${REDIS_PORT:6379}
+item:
+  image-base-url: https://mycdn.com/items/
 
 logging:
   level:
