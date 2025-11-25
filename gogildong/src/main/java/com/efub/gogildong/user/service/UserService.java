@@ -1,5 +1,6 @@
 package com.efub.gogildong.user.service;
 
+import com.efub.gogildong.email.service.EmailVerificationService;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.schools.domain.School;
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final SchoolRepository schoolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailVerificationService emailVerificationService;
 
     // 내부인 생성
     @Transactional
@@ -34,6 +36,12 @@ public class UserService {
 
         // 이메일 형식 체크
         EmailValidator.validateOrThrow(request.getEmail());
+
+        // 이메일 중복 체크
+        validateEmailNotDuplicate(request.getEmail());
+
+        // 이메일 인증번호 검증
+        emailVerificationService.ensureVerified(request.getEmail());
 
         // schoolCode로 학교 조회
         School school = schoolRepository.findBySchoolCode(request.getSchoolCode())
@@ -72,7 +80,14 @@ public class UserService {
     @Transactional
     public CreateUserResponseDto createExternalUser(CreateExternalUserRequestDto request) {
 
+        // 이메일 형식 체크
         EmailValidator.validateOrThrow(request.getEmail());
+
+        // 이메일 중복 체크
+        validateEmailNotDuplicate(request.getEmail());
+
+        // 이메일 인증번호 검증
+        emailVerificationService.ensureVerified(request.getEmail());
 
         User user = request.toEntity();
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -83,7 +98,14 @@ public class UserService {
     // 학교 관리자 생성
     public InternalUserResponseDto createAdminUser(CreateAdminUserRequestDto request) {
 
+        // 이메일 형식 체크
         EmailValidator.validateOrThrow(request.getEmail());
+
+        // 이메일 중복 체크
+        validateEmailNotDuplicate(request.getEmail());
+
+        // 이메일 인증번호 검증
+        emailVerificationService.ensureVerified(request.getEmail());
 
         School school = schoolRepository.findBySchoolCode(request.getSchoolCode())
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.SCHOOL_NOT_FOUND));
@@ -140,7 +162,13 @@ public class UserService {
         }
     }
 
-    // login id로 유저 반환
+    private void validateEmailNotDuplicate(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new GoGildongException(ExceptionCode.EMAIL_ALREADY_EXISTS);
+        }
+    }
+
+        // login id로 유저 반환
     public User getUserByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.USER_NOT_FOUND));

@@ -22,4 +22,7 @@ public abstract class BaseUserRequestDto {
 
     @NotBlank
     private String phone;
+
+    @NotBlank
+    private String verificationCode;
 }
