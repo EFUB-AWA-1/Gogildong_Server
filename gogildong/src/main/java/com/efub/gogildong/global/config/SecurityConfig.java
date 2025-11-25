@@ -108,7 +108,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/auth/login", "/auth/refresh", "/users/signup/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/refresh", "/users/signup/**", "/auth/email/**").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/users/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/users/me").authenticated()

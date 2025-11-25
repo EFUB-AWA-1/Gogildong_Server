@@ -1,5 +1,7 @@
 package com.efub.gogildong.global.exception;
 
+import org.springframework.http.HttpStatus;
+
 public enum ClientExceptionCode {
     // 전체
     INTERNAL_SERVER_ERROR,
@@ -14,6 +16,13 @@ public enum ClientExceptionCode {
     SCHOOL_VIEW_ALREADY_APPROVED,
     SCHOOL_VIEW_REQUEST_PENDING,
     REQUEST_NOT_FOUND,
+
+    // 이메일 인증
+    EMAIL_FORMAT_INVALID,
+    EMAIL_ALREADY_EXISTS,
+    EMAIL_VERIFICATION_CODE_INVALID,
+    EMAIL_VERIFICATION_CODE_EXPIRED,
+    EMAIL_VERIFICATION_REQUIRED,
 
     // 층
     FLOOR_NOT_FOUND,
