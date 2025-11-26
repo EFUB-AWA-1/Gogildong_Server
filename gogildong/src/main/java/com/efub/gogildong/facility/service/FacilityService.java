@@ -18,6 +18,7 @@ import com.efub.gogildong.reports.repository.ReportFlagRepository;
 import com.efub.gogildong.reports.repository.ReportRepository;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.service.SchoolViewRequestService;
+import com.efub.gogildong.shops.service.CoinService;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class FacilityService {
     private final PointService pointService;
 
     private static final int FLAG_FACILITY_IMG_POINTS = 5;
+    private final CoinService coinService;
 
     // 시설 상세 조회
     @Transactional(readOnly = true)
@@ -101,6 +103,7 @@ public class FacilityService {
         ReportFlag flag = request.toEntity(report, user);
 
         pointService.addPoints(user.getUserId(), FLAG_FACILITY_IMG_POINTS);
+        coinService.earnCoin(user, FLAG_FACILITY_IMG_POINTS);
 
         reportFlagRepository.save(flag);
     }

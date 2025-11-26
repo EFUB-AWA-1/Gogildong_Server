@@ -10,6 +10,7 @@ import com.efub.gogildong.quiz.dto.request.SubmitQuizRequest;
 import com.efub.gogildong.quiz.repository.QuizAttemptRepository;
 import com.efub.gogildong.quiz.repository.QuizChoiceRepository;
 import com.efub.gogildong.quiz.repository.QuizRepository;
+import com.efub.gogildong.shops.service.CoinService;
 import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ public class QuizCommandService {
     private final QuizChoiceRepository quizChoiceRepository;
     private final PointService pointService;
 
-    private static final int CORRECT_POINT = 20;
+    private static final int CORRECT_POINT = 3;
+    private final CoinService coinService;
 
     @Transactional
     public Map<String, Object> submit(Long quizId, Long userId, SubmitQuizRequest req) {
@@ -69,6 +71,9 @@ public class QuizCommandService {
         Map<String, Object> resp = new LinkedHashMap<>();
         if (isCorrect) {
             int total = pointService.addPoints(userId, CORRECT_POINT);
+
+            // 퀴즈 정답 제출 시 3 엽전 획득
+            coinService.earnCoin(user, CORRECT_POINT);
             resp.put("isCorrect", true);
             resp.put("point", CORRECT_POINT);
             resp.put("totalPoints", total);

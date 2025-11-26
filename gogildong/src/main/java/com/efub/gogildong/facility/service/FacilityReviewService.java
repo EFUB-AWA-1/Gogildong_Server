@@ -14,6 +14,7 @@ import com.efub.gogildong.global.util.EntityFinder;
 import com.efub.gogildong.point.service.PointService;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.service.SchoolViewRequestService;
+import com.efub.gogildong.shops.service.CoinService;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ public class FacilityReviewService {
     private final PointService pointService;
 
     private static final int REVIEW_POINTS = 5;
+    private final CoinService coinService;
 
     // 시설 리뷰 조회
     @Transactional(readOnly = true)
@@ -71,6 +73,7 @@ public class FacilityReviewService {
         facilityReviewRepository.save(review);
 
         pointService.addPoints(user.getUserId(), REVIEW_POINTS);
+        coinService.earnCoin(user, REVIEW_POINTS);
 
         return FacilityReviewResponse.from(review);
     }
