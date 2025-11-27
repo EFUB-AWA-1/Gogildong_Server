@@ -40,6 +40,11 @@ public enum ExceptionCode {
     // 허가
     UNAUTHORIZED_SCHOOL_ACCESS(HttpStatus.UNAUTHORIZED, ClientExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS, "허가되지 않은 사용자가 학교 정보에 접근했습니다."),
 
+    //Spring AI
+    AI_REQUEST_FAILED(HttpStatus.BAD_GATEWAY, ClientExceptionCode.AI_REQUEST_FAILED, "AI 요청 중 오류가 발생했습니다."),
+    AI_RESPONSE_PARSE_ERROR(HttpStatus.BAD_GATEWAY, ClientExceptionCode.AI_RESPONSE_PARSE_ERROR, "AI 응답이 올바른 JSON 구조가 아니어서 처리할 수 없습니다."),
+
+
     // 사용자
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.USER_NOT_FOUND, "존재하지 않는 회원입니다."),
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.ACCESS_DENIED, "접근이 허용되지 않습니다."),
