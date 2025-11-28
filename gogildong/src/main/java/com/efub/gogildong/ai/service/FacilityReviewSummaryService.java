@@ -3,10 +3,12 @@ package com.efub.gogildong.ai.service;
 import com.efub.gogildong.ai.dto.response.FacilityReviewSummaryResponse;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityReview;
+import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
@@ -21,16 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FacilityReviewSummaryService {
     private final OpenAiChatModel openAiChatModel;
+    private final FacilityRepository facilityRepository;
 
     /*
     * 시설 AI 요약 - 비동기
     * */
     @Async
-    @Transactional
     public void summarizeFacilityReview(Facility facility) {
         List<FacilityReview> reviews = facility.getReviews();
         // 리뷰가 세개 이하면 ai 요약 X
@@ -91,7 +94,7 @@ public class FacilityReviewSummaryService {
 
         // 시설 리뷰 업데이트
         facility.updateSummary(response.getSummary());
-
+        facilityRepository.save(facility);
         } catch (OpenAiApiClientErrorException e) {
             // 모델 호출 실패
             throw new GoGildongException(ExceptionCode.AI_REQUEST_FAILED);
