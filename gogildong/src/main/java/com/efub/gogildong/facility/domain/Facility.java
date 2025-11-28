@@ -70,4 +70,7 @@ public class Facility extends BaseEntity {
     public void updateNickname(String facilityName) {
         this.facilityNickname = facilityNickname;
     }
+
+    // 시설 리뷰 바탕 요약 업데이트
+    public void updateSummary(String reviewSummary) { this.reviewSummary = reviewSummary; }
 }
