@@ -132,6 +132,11 @@ public class FacilityReviewCommentService {
 
         FacilityReviewComment comment = entityFinder.getReviewCommentById(commentId);
 
+        // 댓글이 해당 리뷰에 속하는지 확인
+        if (!comment.getFacilityReview().getFacilityReviewId().equals(reviewId)) {
+            throw new GoGildongException(ExceptionCode.INVALID_COMMENT_FOR_REVIEW);
+        }
+
         // 중복 신고 체크
         boolean alreadyFlagged = facilityReviewCommentFlagRepository.existsByUserAndComment(user, comment);
         if (alreadyFlagged) {
