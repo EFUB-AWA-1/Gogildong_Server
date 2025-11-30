@@ -1,13 +1,13 @@
 package com.efub.gogildong.facility.service;
 
 import com.efub.gogildong.ai.service.FacilityReviewSummaryService;
-import com.efub.gogildong.facility.domain.Facility;
-import com.efub.gogildong.facility.domain.FacilityReview;
+import com.efub.gogildong.facility.domain.*;
 import com.efub.gogildong.facility.dto.request.FacilityReviewRequest;
 import com.efub.gogildong.facility.dto.request.FacilityReviewUpdateRequest;
 import com.efub.gogildong.facility.dto.response.FacilityReviewListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewSummaryResponse;
+import com.efub.gogildong.facility.respository.FacilityReviewFlagRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -30,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FacilityReviewService {
 
+    private final FacilityReviewFlagRepository facilityReviewFlagRepository;
     private final EntityFinder entityFinder;
     private final FacilityReviewRepository facilityReviewRepository;
     private final SchoolViewRequestService schoolViewRequestService;
@@ -112,6 +113,37 @@ public class FacilityReviewService {
     private void validateReviewAuthor(FacilityReview review, User user) {
         if (!review.getUser().getUserId().equals(user.getUserId())) {
             throw new GoGildongException(ExceptionCode.UNAUTHORIZED_ACCESS);
+        }
+    }
+
+    // 리뷰 신고
+    @Transactional
+    public void flagFacilityReview(String loginId, Long reviewId) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+
+        // 중복 신고 체크
+        boolean alreadyFlagged = facilityReviewFlagRepository.existsByUserAndReview(user, review);
+        if (alreadyFlagged) {
+            throw new GoGildongException(ExceptionCode.DUPLICATE_FLAG);
+        }
+
+        // 신고 기록 생성
+        FacilityReviewFlag reviewFlag = FacilityReviewFlag.builder()
+                .review(review)
+                .user(user)
+                .build();
+        facilityReviewFlagRepository.save(reviewFlag);
+
+        // 리뷰 신고 횟수 갱신
+        review.addFlag();
+
+        // 신고 3회 이상이면 리뷰 삭제 처리
+        if (review.getFlagCount() >= 3) {
+            deleteFacilityReview(loginId, reviewId);
         }
     }
 }

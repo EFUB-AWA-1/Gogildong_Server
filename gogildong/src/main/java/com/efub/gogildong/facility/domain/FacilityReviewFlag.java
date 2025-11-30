@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class FacilityReviewFlag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentFlagId;
+    private Long reviewFlagId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private FacilityReview review;

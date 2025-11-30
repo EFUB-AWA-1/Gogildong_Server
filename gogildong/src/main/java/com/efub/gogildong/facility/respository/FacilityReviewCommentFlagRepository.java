@@ -6,5 +6,5 @@ import com.efub.gogildong.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FacilityReviewCommentFlagRepository extends JpaRepository<FacilityReviewCommentFlag, Long> {
-    boolean existsByUserAndComment(User reporter, FacilityReviewComment comment);
+    boolean existsByUserAndComment(User user, FacilityReviewComment comment);
 }
