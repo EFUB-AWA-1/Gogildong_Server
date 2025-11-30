@@ -28,6 +28,9 @@ public class FacilityReview extends BaseEntity {
     @Column(nullable = false)
     private Integer commentCount;
 
+//    @Column(nullable = false)
+//    private Integer flag = 0;
+
     // facility와 n:1 매핑, 주인, 지연로딩
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_id", nullable = false)

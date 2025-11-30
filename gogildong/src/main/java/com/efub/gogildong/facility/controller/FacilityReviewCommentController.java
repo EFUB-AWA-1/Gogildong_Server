@@ -5,11 +5,9 @@ import com.efub.gogildong.facility.dto.request.FacilityReviewCommentUpdateReques
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentResponse;
 import com.efub.gogildong.facility.service.FacilityReviewCommentService;
-import com.efub.gogildong.user.domain.User;
 import com.efub.gogildong.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -58,4 +56,13 @@ public class FacilityReviewCommentController {
         facilityReviewCommentService.deleteFacilityReviewComment(authentication.getName(), reviewId, commentId);
         return ResponseEntity.noContent().build();
     }
+
+//    // 시설 리뷰 댓글 신고
+//    @PostMapping("/flag")
+//    public ResponseEntity<Void> flagFacilityImage (Authentication authentication,
+//                                                   @PathVariable Long review_id,
+//                                                   @PathVariable Long comment_id) {
+//        facilityReviewCommentService.flagFacilityReviewComment(authentication.getName(), review_id, comment_id);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+//    }
 }

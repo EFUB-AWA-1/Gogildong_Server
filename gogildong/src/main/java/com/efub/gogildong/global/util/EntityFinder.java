@@ -65,8 +65,8 @@ public class EntityFinder {
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_NOT_FOUND));
     }
 
-    public FacilityReviewComment getReviewCommentById(Long reviewId) {
-        return facilityReviewCommentRepository.findById(reviewId)
+    public FacilityReviewComment getReviewCommentById(Long commentId) {
+        return facilityReviewCommentRepository.findByFacilityReviewCommentId(commentId)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_COMMENT_NOT_FOUND));
     }
 
