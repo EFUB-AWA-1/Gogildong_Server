@@ -19,7 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/facilities/reviews")
+@RequestMapping("/reviews")
 @RequiredArgsConstructor
 public class FacilityReviewController {
 
