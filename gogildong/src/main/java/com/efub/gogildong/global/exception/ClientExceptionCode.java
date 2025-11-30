@@ -55,6 +55,7 @@ public enum ClientExceptionCode {
     USER_NOT_FOUND,
     ACCESS_DENIED,
     INVALID_PASSWORD,
+    DUPLICATE_LOGIN_ID,
 
     // 랭크
     RANK_NOT_FOUND,

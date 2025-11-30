@@ -12,6 +12,7 @@ import lombok.Getter;
 public class InternalUserResponseDto {
 
     private Long userId;
+    private String username;
     private UserRole role;
     private Long schoolId;
     private String schoolCode;
@@ -20,6 +21,7 @@ public class InternalUserResponseDto {
     public static InternalUserResponseDto of(User user, School school) {
         return InternalUserResponseDto.builder()
                 .userId(user.getUserId())
+                .username(user.getUsername())
                 .role(user.getRole())
                 .schoolId(school != null ? school.getSchoolId() : null)
                 .schoolCode(school != null ? school.getSchoolCode() : null)
