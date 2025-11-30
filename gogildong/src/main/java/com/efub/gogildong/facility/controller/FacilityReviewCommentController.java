@@ -57,12 +57,12 @@ public class FacilityReviewCommentController {
         return ResponseEntity.noContent().build();
     }
 
-//    // 시설 리뷰 댓글 신고
-//    @PostMapping("/flag")
-//    public ResponseEntity<Void> flagFacilityImage (Authentication authentication,
-//                                                   @PathVariable Long review_id,
-//                                                   @PathVariable Long comment_id) {
-//        facilityReviewCommentService.flagFacilityReviewComment(authentication.getName(), review_id, comment_id);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(null);
-//    }
+    // 시설 리뷰 댓글 신고
+    @PostMapping("/{commentId}/flag")
+    public ResponseEntity<Void> flagFacilityComment (Authentication authentication,
+                                                   @PathVariable Long reviewId,
+                                                   @PathVariable Long commentId) {
+        facilityReviewCommentService.flagFacilityReviewComment(authentication.getName(), reviewId, commentId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    }
 }

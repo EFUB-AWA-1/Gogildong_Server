@@ -2,10 +2,12 @@ package com.efub.gogildong.facility.service;
 
 import com.efub.gogildong.facility.domain.FacilityReview;
 import com.efub.gogildong.facility.domain.FacilityReviewComment;
+import com.efub.gogildong.facility.domain.FacilityReviewCommentFlag;
 import com.efub.gogildong.facility.dto.request.FacilityReviewCommentRequest;
 import com.efub.gogildong.facility.dto.request.FacilityReviewCommentUpdateRequest;
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentResponse;
+import com.efub.gogildong.facility.respository.FacilityReviewCommentFlagRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewCommentRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FacilityReviewCommentService {
 
+    private final FacilityReviewCommentFlagRepository facilityReviewCommentFlagRepository;
     private final FacilityReviewCommentRepository facilityReviewCommentRepository;
     private final EntityFinder entityFinder;
     private final SchoolViewRequestService schoolViewRequestService;
@@ -118,11 +121,37 @@ public class FacilityReviewCommentService {
         }
     }
 
-//    // 댓글 신고
-//    private void flagFacilityReviewComment(String loginId, Long reviewId, Long commentId) {
-//        User user = entityFinder.getUserByLoginId(loginId);
-//        FacilityReview review = entityFinder.getReviewById(reviewId);
-//        FacilityReviewComment comment = entityFinder.getReviewCommentById(commentId);
-//    }
+    // 댓글 신고
+    @Transactional
+    public void flagFacilityReviewComment(String loginId, Long reviewId, Long commentId) {
+        User user = entityFinder.getUserByLoginId(loginId);
+        FacilityReview review = entityFinder.getReviewById(reviewId);
+        School school = entityFinder.getSchoolByFacility(review.getFacility());
+
+        schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+
+        FacilityReviewComment comment = entityFinder.getReviewCommentById(commentId);
+
+        // 중복 신고 체크
+        boolean alreadyFlagged = facilityReviewCommentFlagRepository.existsByUserAndComment(user, comment);
+        if (alreadyFlagged) {
+            throw new GoGildongException(ExceptionCode.DUPLICATE_FLAG);
+        }
+
+        // 신고 기록 생성
+        FacilityReviewCommentFlag commentFlag = FacilityReviewCommentFlag.builder()
+                .comment(comment)
+                .user(user)
+                .build();
+        facilityReviewCommentFlagRepository.save(commentFlag);
+
+        // 댓글 신고 횟수 갱신
+        comment.addFlag();
+
+        // 신고 3회 이상이면 댓글 삭제 처리
+        if (comment.getFlagCount() >= 3) {
+            deleteFacilityReviewComment(loginId, reviewId, commentId);
+        }
+    }
 
 }
