@@ -54,7 +54,7 @@ public class FacilityReviewCommentService {
                 .map(FacilityReviewCommentResponse::from)
                 .toList();
 
-        return FacilityReviewCommentListResponse.from(comments);
+        return FacilityReviewCommentListResponse.from(review, comments);
     }
 
     // 시설 리뷰 댓글 작성
