@@ -1,5 +1,6 @@
 package com.efub.gogildong.user.domain;
 
+import com.efub.gogildong.global.domain.BaseEntity;
 import com.efub.gogildong.shops.domain.UserItem;
 import com.efub.gogildong.reports.domain.Report;
 import com.efub.gogildong.schools.domain.School;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
