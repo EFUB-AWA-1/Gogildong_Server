@@ -1,5 +1,7 @@
 package com.efub.gogildong.schools.service;
 
+import com.efub.gogildong.ai.dto.response.AccessDecisionResponse;
+import com.efub.gogildong.ai.service.ReportApprovalService;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
@@ -15,6 +17,7 @@ import com.efub.gogildong.schools.dto.response.SchoolViewRequestSummaryResponse;
 import com.efub.gogildong.schools.repository.SchoolViewRequestRepository;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +26,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SchoolViewRequestService {
 
     private final SchoolViewRequestRepository schoolViewRequestRepository;
     private final EntityFinder finder;
+    private final ReportApprovalService reportApprovalService;
 
     // 학교 정보 열람 신청
     public SchoolViewRequestResponse createSchoolViewRequest(String loginId, SchoolViewRequestRequest request) {
@@ -58,8 +63,16 @@ public class SchoolViewRequestService {
             throw new GoGildongException(ExceptionCode.SCHOOL_VIEW_ALREADY_APPROVED);
         }
 
+        // AI 승인
+        AccessDecisionResponse aiResponse = reportApprovalService.decide(request);
+
+        RequestStatus status = RequestStatus.APPROVED;
+        if (!aiResponse.isApproved()) {
+            status = RequestStatus.REJECTED;
+        }
+
         // 새로운 신청 생성
-        SchoolViewRequest viewRequest = request.toEntity(school, user);
+        SchoolViewRequest viewRequest = request.toEntity(school, user, status);
         schoolViewRequestRepository.save(viewRequest);
         return SchoolViewRequestResponse.from(viewRequest);
     }

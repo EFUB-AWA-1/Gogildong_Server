@@ -6,6 +6,7 @@ plugins {
 
 ext {
     queryDslVersion = "5.0.0"
+	springAiVersion = "1.1.0"
 }
 
 group = 'com.efub'
@@ -61,6 +62,9 @@ dependencies {
 
     // Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// spring AI
+	implementation 'org.springframework.ai:spring-ai-starter-model-openai'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
@@ -71,6 +75,12 @@ sourceSets {
             srcDirs += [querydslDir]
         }
     }
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {

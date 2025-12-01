@@ -19,9 +19,9 @@ public class SchoolViewRequestRequest {
     private ReasonCategory reasonCategory;
     private String requestReason;
 
-    public SchoolViewRequest toEntity(School school, User user) {
+    public SchoolViewRequest toEntity(School school, User user, RequestStatus status) {
         return SchoolViewRequest.builder()
-                .status(RequestStatus.PENDING)
+                .status(status)
                 .reasonCategory(this.getReasonCategory())
                 .reason(this.requestReason)
                 .phoneNumber(this.phoneNumber)
