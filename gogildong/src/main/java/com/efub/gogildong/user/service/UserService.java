@@ -223,7 +223,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUserInfo(String loginId) {
         User user = getUserByLoginId(loginId);
-        return UserResponseDto.from(user);
+        return UserResponseDto.userInfo(user);
     }
 
     // user 정보 수정
