@@ -3,3 +3,8 @@ spring:
     name: gogildong
   profiles:
     default: dev
+
+app:
+  s3:
+    bucket: gogildong-s3
+    region: ${AWS_REGION:ap-northeast-2}
