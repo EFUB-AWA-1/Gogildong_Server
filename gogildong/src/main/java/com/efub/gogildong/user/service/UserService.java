@@ -14,6 +14,7 @@ import com.efub.gogildong.user.dto.request.UpdateUserRequestDto;
 import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.dto.response.UpdateUserResponseDto;
+import com.efub.gogildong.user.dto.response.UserResponseDto;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -133,6 +134,13 @@ public class UserService {
     }
 
     // 전체 관리자 생성
+
+    // user 정보 조회
+    @Transactional(readOnly = true)
+    public UserResponseDto getUserInfo(String loginId) {
+        User user = getUserByLoginId(loginId);
+        return UserResponseDto.from(user);
+    }
 
     // user 정보 수정
     @Transactional
