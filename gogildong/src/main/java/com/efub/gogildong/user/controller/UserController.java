@@ -4,6 +4,7 @@ import com.efub.gogildong.user.dto.request.*;
 import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.dto.response.UpdateUserResponseDto;
+import com.efub.gogildong.user.dto.response.UserResponseDto;
 import com.efub.gogildong.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,12 @@ public class UserController {
     public ResponseEntity<InternalUserResponseDto> createAdminUser(@RequestBody @Valid CreateAdminUserRequestDto requestDto) {
         InternalUserResponseDto responseDto = userService.createAdminUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    // user 정보 조회 : GET /users/me
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDto> getUserInfo(Authentication authentication) {
+        return ResponseEntity.ok(userService.getUserInfo(authentication.getName()));
     }
 
     // user 정보 수정: PATCH /users/me

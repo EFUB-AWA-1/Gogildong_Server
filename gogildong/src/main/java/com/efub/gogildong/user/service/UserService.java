@@ -16,6 +16,7 @@ import com.efub.gogildong.user.dto.request.UpdateUserRequestDto;
 import com.efub.gogildong.user.dto.response.CreateUserResponseDto;
 import com.efub.gogildong.user.dto.response.InternalUserResponseDto;
 import com.efub.gogildong.user.dto.response.UpdateUserResponseDto;
+import com.efub.gogildong.user.dto.response.UserResponseDto;
 import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -216,6 +217,13 @@ public class UserService {
 
         user.changeSchool(school); // 변경감지로 업데이트
         return InternalUserResponseDto.from(user);
+    }
+
+    // user 정보 조회
+    @Transactional(readOnly = true)
+    public UserResponseDto getUserInfo(String loginId) {
+        User user = getUserByLoginId(loginId);
+        return UserResponseDto.from(user);
     }
 
     // user 정보 수정
