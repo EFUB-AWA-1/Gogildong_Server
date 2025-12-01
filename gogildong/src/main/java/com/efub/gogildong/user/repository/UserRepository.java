@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByLoginId(String loginId);
     boolean existsByEmail(String email);
+    boolean existsByLoginId(String loginId);
 
     // 월 합계용
     long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
