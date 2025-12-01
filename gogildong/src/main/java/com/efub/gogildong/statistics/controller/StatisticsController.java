@@ -181,4 +181,13 @@ public class StatisticsController {
                 .headers(headers)
                 .body(excelBytes);
     }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<?> getDashboard(
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        return ResponseEntity.ok(statisticsService.getDashboard(year, month));
+    }
+
 }

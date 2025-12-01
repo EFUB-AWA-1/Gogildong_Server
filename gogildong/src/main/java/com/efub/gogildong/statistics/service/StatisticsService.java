@@ -1,17 +1,20 @@
 package com.efub.gogildong.statistics.service;
 
+import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
-import com.efub.gogildong.statistics.dto.FacilityStatsDto;
-import com.efub.gogildong.statistics.dto.ReadRequestStatsDto;
-import com.efub.gogildong.statistics.dto.ReportStatsDto;
-import com.efub.gogildong.statistics.dto.SchoolStatsDto;
+import com.efub.gogildong.reports.repository.ReportRepository;
+import com.efub.gogildong.schools.repository.SchoolRepository;
+import com.efub.gogildong.schools.repository.SchoolViewRequestRepository;
+import com.efub.gogildong.statistics.dto.*;
 import com.efub.gogildong.statistics.dto.request.StatisticsFilterRequest;
+import com.efub.gogildong.statistics.dto.response.DashboardResponse;
 import com.efub.gogildong.statistics.dto.response.StatisticsDataResponse;
 import com.efub.gogildong.statistics.repository.FacilityStatisticsRepository;
 import com.efub.gogildong.statistics.repository.ReportStatisticsRepository;
 import com.efub.gogildong.statistics.repository.SchoolStatisticsRepository;
 import com.efub.gogildong.statistics.repository.ReadRequestStatisticsRepository;
+import com.efub.gogildong.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,7 +25,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.LongSupplier;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +44,10 @@ public class StatisticsService {
     private final ReportStatisticsRepository reportStatisticsRepository;
     private final ReadRequestStatisticsRepository readRequestStatisticsRepository;
 
+    private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
+    private final SchoolRepository schoolRepository;
+    private final SchoolViewRequestRepository schoolViewRequestRepository;   // 열람 요청
 
     public StatisticsDataResponse<?> getStatisticsData(
             String entity,
@@ -144,5 +159,195 @@ public class StatisticsService {
         workbook.write(baos);
         workbook.close();
         return baos.toByteArray();
+    }
+
+    public DashboardResponse getDashboard(int year, int month) {
+        YearMonth ym = YearMonth.of(year, month);
+        LocalDate start = ym.atDay(1);
+        LocalDate end = ym.atEndOfMonth();
+
+        YearMonth prevYm = ym.minusMonths(1);
+        LocalDate prevStart = prevYm.atDay(1);
+        LocalDate prevEnd = prevYm.atEndOfMonth();
+
+        LocalDateTime startDt = start.atStartOfDay();
+        LocalDateTime endDt = end.plusDays(1).atStartOfDay();
+        LocalDateTime prevStartDt = prevStart.atStartOfDay();
+        LocalDateTime prevEndDt = prevEnd.plusDays(1).atStartOfDay();
+
+        // --- 1) 월 요약 섹션 ---
+
+        // 제보 수
+        DashSummaryDto reportsSummary = buildDashSummary(
+                () -> reportRepository.countByCreatedAtBetween(startDt, endDt),
+                () -> reportRepository.countByCreatedAtBetween(prevStartDt, prevEndDt)
+        );
+
+        // 열람 요청 수
+        DashSummaryDto viewRequestsSummary = buildDashSummary(
+                () -> schoolViewRequestRepository.countByRequestedAtBetween(startDt, endDt),
+                () -> schoolViewRequestRepository.countByRequestedAtBetween(prevStartDt, prevEndDt)
+        );
+
+        // 신규 사용자 수
+        DashSummaryDto newUsersSummary = buildDashSummary(
+                () -> userRepository.countByCreatedAtBetween(startDt, endDt),
+                () -> userRepository.countByCreatedAtBetween(prevStartDt, prevEndDt)
+        );
+
+        // 참여 학교 수 (누적)
+        DashSummaryDto schoolsSummary = buildParticipatingSchoolsSummary(end, prevEnd);
+
+        // 장소별 제보 (RESTROOM / ELEVATOR / CLASSROOM)
+        Map<String, DashSummaryDto> placeSummary =
+                buildPlaceSummary(startDt, endDt, prevStartDt, prevEndDt);
+
+        // --- 2) 일별 섹션 ---
+
+        // 제보 일별
+        List<DailyCountDto> dailyReports = fillDailyCounts(
+                start, end,
+                reportRepository.countDaily(startDt, endDt)
+        );
+
+        // 열람 요청 일별
+        List<DailyCountDto> dailyViewRequests = fillDailyCounts(
+                start, end,
+                schoolViewRequestRepository.countDaily(startDt, endDt)
+        );
+
+        // 신규 사용자 일별
+        List<DailyCountDto> dailyNewUsers = fillDailyCounts(
+                start, end,
+                userRepository.countDaily(startDt, endDt)
+        );
+
+        // 참여 학교 일별(누적)
+        List<DailyCountDto> dailySchools =
+                buildDailyParticipatingSchools(start, end);
+
+        return DashboardResponse.builder()
+                .year(year)
+                .month(month)
+                .reports(reportsSummary)
+                .viewRequests(viewRequestsSummary)
+                .newUsers(newUsersSummary)
+                .participatingSchools(schoolsSummary)
+                .placeSummary(placeSummary)
+                .daily(DashboardResponse.DailySection.builder()
+                        .reports(dailyReports)
+                        .viewRequests(dailyViewRequests)
+                        .newUsers(dailyNewUsers)
+                        .participatingSchools(dailySchools)
+                        .build())
+                .build();
+    }
+
+    private DashSummaryDto buildDashSummary(LongSupplier currentSupplier, LongSupplier previousSupplier) {
+        long current = currentSupplier.getAsLong();
+        long previous = previousSupplier.getAsLong();
+
+        return DashSummaryDto.builder()
+                .current(current)
+                .previous(previous)
+                .diff(current - previous)
+                .rate(calculateRate(current, previous))
+                .build();
+    }
+
+
+    private String calculateRate(long current, long previous) {
+        if (previous == 0) {
+            if (current == 0) return "0%";
+            return "-%";
+        }
+
+        double value = ((double) (current - previous) / previous) * 100.0;
+        return String.format("%.1f%%", value);  // 예: "25.3%"
+    }
+
+
+    // 참여 학교 월 요약 (누적)
+    private DashSummaryDto buildParticipatingSchoolsSummary(LocalDate end, LocalDate prevEnd) {
+        long previous = schoolRepository.countByCreatedAtBefore(prevEnd.plusDays(1).atStartOfDay());
+        long current = schoolRepository.countByCreatedAtBefore(end.plusDays(1).atStartOfDay());
+
+        return DashSummaryDto.builder()
+                .current(current)
+                .previous(previous)
+                .diff(current - previous)
+                .rate(calculateRate(current, previous))
+                .build();
+    }
+
+    // 장소별 제보 요약 (RESTROOM / ELEVATOR / CLASSROOM)
+    private Map<String, DashSummaryDto> buildPlaceSummary(
+            LocalDateTime startDt, LocalDateTime endDt,
+            LocalDateTime prevStartDt, LocalDateTime prevEndDt
+    ) {
+        Map<FacilityType, Long> currentMap = reportRepository.countByReportTypeBetween(startDt, endDt)
+                .stream()
+                .collect(Collectors.toMap(
+                        ReportRepository.FacilityTypeCountProjection::getReportType,
+                        ReportRepository.FacilityTypeCountProjection::getCount
+                ));
+
+        Map<FacilityType, Long> prevMap = reportRepository.countByReportTypeBetween(prevStartDt, prevEndDt)
+                .stream()
+                .collect(Collectors.toMap(
+                        ReportRepository.FacilityTypeCountProjection::getReportType,
+                        ReportRepository.FacilityTypeCountProjection::getCount
+                ));
+
+        Map<String, DashSummaryDto> result = new HashMap<>();
+
+        for (FacilityType type : FacilityType.values()) {
+            long curr = currentMap.getOrDefault(type, 0L);
+            long prev = prevMap.getOrDefault(type, 0L);
+
+            result.put(type.name(), DashSummaryDto.builder()
+                    .current(curr)
+                    .previous(prev)
+                    .diff(curr - prev)
+                    .rate(calculateRate(curr, prev))
+                    .build());
+        }
+
+        return result;
+    }
+
+    // 공통: raw 일별 결과를 start~end 전체 날짜 리스트로 채우기
+    private List<DailyCountDto> fillDailyCounts(
+            LocalDate start, LocalDate end,
+            List<DailyCountProjection> raw
+    ) {
+        Map<LocalDate, Long> map = raw.stream()
+                .collect(Collectors.toMap(DailyCountProjection::getDate, DailyCountProjection::getCount));
+
+        List<DailyCountDto> result = new ArrayList<>();
+        for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {
+            result.add(new DailyCountDto(d, map.getOrDefault(d, 0L)));
+        }
+        return result;
+    }
+
+    // 참여 학교: 일별 누적 시리즈 만들기
+    private List<DailyCountDto> buildDailyParticipatingSchools(LocalDate start, LocalDate end) {
+        long base = schoolRepository.countByCreatedAtBefore(start.atStartOfDay());
+
+        List<DailyCountProjection> raw =
+                schoolRepository.countDailyNewSchools(start.atStartOfDay(), end.plusDays(1).atStartOfDay());
+
+        Map<LocalDate, Long> newMap = raw.stream()
+                .collect(Collectors.toMap(DailyCountProjection::getDate, DailyCountProjection::getCount));
+
+        List<DailyCountDto> result = new ArrayList<>();
+        long cumulative = base;
+
+        for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {
+            cumulative += newMap.getOrDefault(d, 0L);
+            result.add(new DailyCountDto(d, cumulative));
+        }
+        return result;
     }
 }

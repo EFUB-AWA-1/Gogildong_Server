@@ -1,23 +1,23 @@
 package com.efub.gogildong.schools.repository;
 
 import com.efub.gogildong.schools.domain.School;
+import com.efub.gogildong.statistics.dto.DailyCountProjection; // 🔥 추가
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;                                  // 🔥 추가
 import java.util.List;
 import java.util.Optional;
 
 public interface SchoolRepository extends JpaRepository<School, Long> {
+
     boolean existsBySchoolCode(String schoolCode);
 
-    /*
-    * 위도, 경도 기준으로 태그에 해당되는 반경 이내 학교를 반환합니다.
-    * */
     @Query(value = """
-    SELECT DISTINCT s.*\s
+    SELECT DISTINCT s.* 
     FROM school s
     LEFT JOIN school_tag st ON s.school_id = st.school_id
     WHERE ST_DWithin(
@@ -35,9 +35,6 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
             Pageable pageable
     );
 
-    /*
-    * 검색어를 기준으로 학교를 반환합니다.
-    * */
     @Query(value = """
         SELECT *
         FROM school
@@ -53,9 +50,22 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
         """, nativeQuery = true)
     Page<School> searchByQuery(@Param("query") String query, Pageable pageable);
 
-
     Optional<School> findBySchoolCode(String schoolCode);
+    Optional<School> findBySchoolId(Long schoolId);
 
-   Optional<School> findBySchoolId(Long schoolId);
+    // 특정 시점까지의 참여 학교 누적 수
+    long countByCreatedAtBefore(LocalDateTime before);
 
+    // 기간 내 "새로 참여한 학교"의 일별 개수
+    @Query(value = """
+            SELECT DATE(s.created_at) AS date, COUNT(*) AS count
+            FROM school s
+            WHERE s.created_at >= :start AND s.created_at < :end
+            GROUP BY DATE(s.created_at)
+            """,
+            nativeQuery = true)
+    List<DailyCountProjection> countDailyNewSchools(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
