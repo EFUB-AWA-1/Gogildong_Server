@@ -1,8 +1,10 @@
 package com.efub.gogildong.global.handler;
 
+import com.efub.gogildong.global.exception.BusinessValidationException;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.exception.dto.ExceptionResponse;
+import com.efub.gogildong.user.dto.response.ErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @RestControllerAdvice
@@ -54,5 +57,21 @@ public class GlobalErrorHandler {
                 request.getRequestURI(), ZonedDateTime.now());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
+    }
+
+    // 비즈니스 로직 다중 오류 처리 (회원가입 전용)
+    @ExceptionHandler(BusinessValidationException.class)
+    public ResponseEntity<ErrorResponseDto> handleBusinessValidationException(BusinessValidationException e, HttpServletRequest request) {
+
+        ErrorResponseDto response = new ErrorResponseDto(
+                HttpStatus.BAD_REQUEST.value(),
+                "BUSINESS_VALIDATION_FAILED",
+                "입력값 검증에 실패했습니다. 상세 오류를 확인하세요.",
+                request.getRequestURI(),
+                LocalDateTime.now(),
+                e.getErrors()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

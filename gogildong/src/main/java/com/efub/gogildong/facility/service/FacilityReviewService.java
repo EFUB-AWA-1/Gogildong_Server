@@ -1,5 +1,6 @@
 package com.efub.gogildong.facility.service;
 
+import com.efub.gogildong.ai.service.FacilityReviewSummaryService;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityReview;
 import com.efub.gogildong.facility.dto.request.FacilityReviewRequest;
@@ -23,9 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +37,7 @@ public class FacilityReviewService {
 
     private static final int REVIEW_POINTS = 5;
     private final CoinService coinService;
+    private final FacilityReviewSummaryService facilityReviewSummaryService;
 
     // 시설 리뷰 조회
     @Transactional(readOnly = true)
@@ -71,6 +71,8 @@ public class FacilityReviewService {
 
         FacilityReview review = request.toEntity(facility, user);
         facilityReviewRepository.save(review);
+
+        facilityReviewSummaryService.summarizeFacilityReview(facility);
 
         pointService.addPoints(user.getUserId(), REVIEW_POINTS);
         coinService.earnCoin(user, REVIEW_POINTS);

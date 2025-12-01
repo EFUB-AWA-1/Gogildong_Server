@@ -30,13 +30,6 @@ public class EmailVerificationService {
         String code = generateCode();
 
         EmailVerificationCode entity = new EmailVerificationCode();
-        // 필드 세팅 (생성자 대신 setter 안 쓰려면 여기서 직접 세팅 메서드 만들어도 됨)
-        // Lombok @Setter 안 쓴다는 가정으로, 리플렉션 대신 생성자 사용해도 됨.
-        // 간단하게 new 후 리플렉션 대신 아래처럼 엔티티에 전용 생성자 추가해도 됨.
-        // 여기서는 편의상 엔티티에 생성자를 추가했다고 가정할 수도 있음.
-
-        // ⇒ 엔티티에 이런 생성자를 추가하는게 더 깔끔:
-        // public EmailVerificationCode(String email, String code, LocalDateTime expiresAt) { ... }
 
         entity = new EmailVerificationCode(email, code, LocalDateTime.now().plusMinutes(5));
 
@@ -66,10 +59,6 @@ public class EmailVerificationService {
     public void ensureVerified(String email) {
         EmailVerificationCode entity = codeRepository.findTopByEmailOrderByIdDesc(email)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.EMAIL_VERIFICATION_REQUIRED));
-
-        if (entity.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new GoGildongException(ExceptionCode.EMAIL_VERIFICATION_CODE_EXPIRED);
-        }
 
         if (!entity.isVerified()) {
             throw new GoGildongException(ExceptionCode.EMAIL_VERIFICATION_REQUIRED);

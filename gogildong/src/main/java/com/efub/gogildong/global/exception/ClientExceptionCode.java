@@ -47,10 +47,15 @@ public enum ClientExceptionCode {
     // 허가
     UNAUTHORIZED_SCHOOL_ACCESS,
 
+    //Spring AI
+    AI_REQUEST_FAILED,
+    AI_RESPONSE_PARSE_ERROR,
+
     // 사용자
     USER_NOT_FOUND,
     ACCESS_DENIED,
     INVALID_PASSWORD,
+    DUPLICATE_LOGIN_ID,
 
     // 랭크
     RANK_NOT_FOUND,
