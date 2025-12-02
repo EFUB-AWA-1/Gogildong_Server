@@ -4,6 +4,7 @@ import com.efub.gogildong.email.service.EmailVerificationService;
 import com.efub.gogildong.global.exception.BusinessValidationException;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
+import com.efub.gogildong.rank.service.RankService;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.repository.SchoolRepository;
 import com.efub.gogildong.shops.service.UserItemService;
@@ -36,6 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserItemService userItemService;
     private final EmailVerificationService emailVerificationService;
+    private final RankService rankService;
 
     /* ====================== 회원가입 ====================== */
 
@@ -59,7 +61,9 @@ public class UserService {
         User savedUser = userRepository.save(user);
         userItemService.wearDefaultItemsForUser(savedUser);
 
+        rankService.upsertUserScore(savedUser.getUserId(), 0L);
         return InternalUserResponseDto.from(savedUser);
+
     }
 
     // 외부인 생성
@@ -82,6 +86,7 @@ public class UserService {
         User savedUser = userRepository.save(user);
         userItemService.wearDefaultItemsForUser(savedUser);
 
+        rankService.upsertUserScore(savedUser.getUserId(), 0L);
         return CreateUserResponseDto.from(savedUser);
     }
 
@@ -109,6 +114,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.changeSchool(school);
 
+        rankService.upsertUserScore(user.getUserId(), 0L);
         return InternalUserResponseDto.from(userRepository.save(user));
     }
 
