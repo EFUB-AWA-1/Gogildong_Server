@@ -3,7 +3,6 @@ package com.efub.gogildong.reports.domain;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.global.domain.BaseEntity;
-import com.efub.gogildong.schools.domain.RequestStatus;
 import com.efub.gogildong.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -50,6 +49,9 @@ public class Report extends BaseEntity {
 
     @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private ClassroomReport classroomReport;
+
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private EtcReport etcReport;
 
     @Builder
     public Report(Boolean isPublic, FacilityType reportType, ReportStatus status, User user, Facility facility) {

@@ -5,6 +5,7 @@ import com.efub.gogildong.reports.dto.request.classroom.ClassroomReportRequest;
 import com.efub.gogildong.reports.dto.request.classroom.NewClassroomReportRequest;
 import com.efub.gogildong.reports.dto.request.elevator.ElevatorReportRequest;
 import com.efub.gogildong.reports.dto.request.elevator.NewElevatorReportRequest;
+import com.efub.gogildong.reports.dto.request.etc.NewEtcReportRequest;
 import com.efub.gogildong.reports.dto.request.restroom.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
@@ -83,6 +84,16 @@ public class ReportController {
     public ResponseEntity<Void> createReportAboutExistingClassroom(@RequestBody @Valid ClassroomReportRequest classroomReportRequest,
                                                                   Authentication authentication) {
         reportService.createReportAboutExistingClassroom(authentication.getName(), classroomReportRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
+     * 새 기타 장소을 추가하고 해당 장소에 대해 제보합니다.
+     * */
+    @PostMapping("/etc/new-facility")
+    public ResponseEntity<Void> createReportAboutNewEtc(@RequestBody @Valid NewEtcReportRequest newFacilityReportRequest,
+                                                             Authentication authentication) {
+        reportService.createReportAboutNewEtc(authentication.getName(), newFacilityReportRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

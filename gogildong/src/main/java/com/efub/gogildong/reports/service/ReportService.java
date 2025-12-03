@@ -2,7 +2,7 @@ package com.efub.gogildong.reports.service;
 
 import com.efub.gogildong.facility.domain.*;
 import com.efub.gogildong.facility.respository.FacilityRepository;
-import com.efub.gogildong.facility.respository.RestroomRespository;
+import com.efub.gogildong.facility.respository.FloorRepository;
 import com.efub.gogildong.facility.service.FacilityNameGenerator;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -14,6 +14,7 @@ import com.efub.gogildong.reports.dto.request.classroom.ClassroomReportRequest;
 import com.efub.gogildong.reports.dto.request.classroom.NewClassroomReportRequest;
 import com.efub.gogildong.reports.dto.request.elevator.ElevatorReportRequest;
 import com.efub.gogildong.reports.dto.request.elevator.NewElevatorReportRequest;
+import com.efub.gogildong.reports.dto.request.etc.NewEtcReportRequest;
 import com.efub.gogildong.reports.dto.request.restroom.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.*;
@@ -45,6 +46,7 @@ public class ReportService {
     private final ReportFlagRepository reportFlagRepository;
     private final ElevatorReportRepository elevatorReportRepository;
     private final ClassroomReportRepository classroomReportRepository;
+    private final FloorRepository floorRepository;
     private final CoinService coinService;
     private final PointService pointService;
     private final static int REPORT_POINT = 20;
@@ -268,6 +270,51 @@ public class ReportService {
         classroomReportRepository.save(classroomReport);
 
         updateClassroomAggregate(facility.getClassroom());
+
+        // 제보 시 포인트와 엽전 획득
+        getPointAndCoinByReport(user);
+    }
+
+    /*
+    기타에 대한 제보를 생성합니다.
+     */
+    @Transactional
+    public void createReportAboutNewEtc(String loginId, NewEtcReportRequest request){
+        // 작성자 권한 확인
+        User user = validateReportWriterByFloorAndGet(loginId, request.getFloorId());
+        Floor floor = finder.getFloorById(request.getFloorId());
+        // 원래 floorId로 floor를 가져온 뒤, 같은 건물의 0층 Floor을 강제 사용
+        Floor zeroFloor = floorRepository.findByBuildingAndFloorName(floor.getBuilding(), "0")
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
+
+
+        // 시설 이름 생성
+        String facilityName = generateFacilityName(zeroFloor);
+
+        // 관련 엔티티 생성
+        Facility facility = NewEtcReportRequest.toFacilityEntity(request, facilityName, zeroFloor);
+        Facility savedFacility = facilityRepository.save(facility);
+        Report report = Report.builder()
+                .isPublic(true)
+                .reportType(FacilityType.ETC)
+                .facility(savedFacility)
+                .status(ReportStatus.PENDING)
+                .user(user)
+                .build();
+        Report savedReport = reportRepository.save(report);
+
+        EtcReport etcReport = NewEtcReportRequest.toEtcReportEntity(request, report);
+        Etc newEtc = NewEtcReportRequest.toEtcEntity(request, facility, etcReport);
+
+        // 연관관계 생성
+        user.addReport(report);
+        etcReport.setReport(savedReport);
+        etcReport.setEtc(newEtc);
+        facility.setEtc(newEtc);
+
+        // 관련 엔티티 저장
+        reportRepository.save(report);
+        facilityRepository.save(facility);
 
         // 제보 시 포인트와 엽전 획득
         getPointAndCoinByReport(user);
