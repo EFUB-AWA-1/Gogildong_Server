@@ -19,7 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/facilities/reviews")
+@RequestMapping("/reviews")
 @RequiredArgsConstructor
 public class FacilityReviewController {
 
@@ -59,5 +59,13 @@ public class FacilityReviewController {
                                                                         @PathVariable("reviewId") Long reviewId) {
         facilityReviewService.deleteFacilityReview(authentication.getName(), reviewId);
         return ResponseEntity.noContent().build();
+    }
+
+    // 시설 리뷰 신고
+    @PostMapping("/{reviewId}/flag")
+    public ResponseEntity<Void> flagFacilityComment (Authentication authentication,
+                                                     @PathVariable Long reviewId) {
+        facilityReviewService.flagFacilityReview(authentication.getName(), reviewId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 }

@@ -19,6 +19,9 @@ public class FacilityReviewComment extends BaseEntity {
     @Column(nullable = false)
     private String commentText;
 
+    @Column(nullable = false)
+    private int flagCount = 0;
+
     // 리뷰와 n:1 매핑, 주인, 지연로딩
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_review_id", nullable = false)
@@ -39,5 +42,10 @@ public class FacilityReviewComment extends BaseEntity {
     // 리뷰 댓글 내용 수정
     public void updateCommentText(String commentText) {
         this.commentText = commentText;
+    }
+
+    // 신고 횟수 추가
+    public void addFlag() {
+        flagCount++;
     }
 }

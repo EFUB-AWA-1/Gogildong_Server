@@ -96,6 +96,17 @@ public class FacilityService {
         Report report = reportRepository.findById(request.getReportId())
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
 
+        // 시설과 report 연결 확인
+        if (!report.getFacility().getFacilityId().equals(facilityId)) {
+            throw new GoGildongException(ExceptionCode.INVALID_REPORT_FOR_FACILITY);
+        }
+
+        // 중복 신고 체크
+        boolean alreadyFlagged = reportFlagRepository.existsByUserAndReport(user, report);
+        if (alreadyFlagged) {
+            throw new GoGildongException(ExceptionCode.DUPLICATE_FLAG);
+        }
+
         // 신고 횟수 누적 3회 이상이면 자동 비공개 처리
         report.addFlag();
         if (report.getFlagCount() >= 3) { report.setIsPublic(false);  }
