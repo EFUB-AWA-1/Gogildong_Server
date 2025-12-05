@@ -75,7 +75,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",       // 로컬 개발용
                 "https://localhost:5173",
-                "https://gogildong.vercel.app"     // 배포 프론트
+                "https://gogildong.vercel.app",     // 배포 프론트
+                "https://192.168.35.42:5173"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
