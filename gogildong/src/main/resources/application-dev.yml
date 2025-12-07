@@ -19,6 +19,7 @@ spring:
     redis:
       host: localhost
       port: ${REDIS_PORT:6379}
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -34,9 +35,16 @@ spring:
           timeout: 5000 # 클라이언트가 SMTP 서버로부터 응답을 대기해야 하는 시간
           writetimeout: 5000 # 클라이언트가 작업을 완료하는데 대기해야 하는 시간
     auth-code-expiration-millis: 1800000
+
   ai:
     openai:
       api-key: ${OPEN_API_KEY}
+      api-url: https://api.openai.com/v1/responses
+      model: gpt-4.1-mini
+
+  servlet:
+    multipart:
+      enabled: true
 
 item:
   image-base-url: https://mycdn.com/items/
