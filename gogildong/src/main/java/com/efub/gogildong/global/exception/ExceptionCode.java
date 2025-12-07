@@ -77,7 +77,11 @@ public enum ExceptionCode {
     // 상점
     SHOP_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.SHOP_ITEM_NOT_FOUND, "해당되는 아이템을 찾을 수 없습니다."),
     SHOP_ITEM_ALREADY_HAVE(HttpStatus.CONFLICT, ClientExceptionCode.SHOP_ITEM_ALREADY_HAVE, "이미 구매한 아이템입니다."),
-    SHOP_ITEM_NOT_OWNED(HttpStatus.CONFLICT, ClientExceptionCode.SHOP_ITEM_NOT_OWNED, "사용자가 구매한 아이템이 아닙니다.");
+    SHOP_ITEM_NOT_OWNED(HttpStatus.CONFLICT, ClientExceptionCode.SHOP_ITEM_NOT_OWNED, "사용자가 구매한 아이템이 아닙니다."),
+
+    // 휠체어
+    WHEEL_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.WHEEL_NOT_FOUND, "해당되는 휠체어를 찾을 수 없습니다"),
+    WHEELMARK_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.WHEELMARK_NOT_FOUND, "즐겨찾기 된 휠체어가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;
