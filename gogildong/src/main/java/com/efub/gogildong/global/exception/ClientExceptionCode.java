@@ -74,4 +74,8 @@ public enum ClientExceptionCode {
     SHOP_ITEM_NOT_FOUND,
     SHOP_ITEM_ALREADY_HAVE,
     SHOP_ITEM_NOT_OWNED,
+
+    // 휠체어
+    WHEEL_NOT_FOUND,
+    WHEELMARK_NOT_FOUND,
 }
