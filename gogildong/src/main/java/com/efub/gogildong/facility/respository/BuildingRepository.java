@@ -15,4 +15,6 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
 
     @Query("SELECT b FROM Building b JOIN b.floors f WHERE f = :floor")
     Optional<Building> findByFloor(@Param("floor") Floor floor);
+
+    Optional<Building> findByBuildingId(Long buildingId);
 }

@@ -37,6 +37,11 @@ public class Building {
         floors.add(floor);
     }
 
+    // 건물 이름 변경
+    public void updateBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
     public Building(String buildingName) {
         this.buildingName = buildingName;
     }
