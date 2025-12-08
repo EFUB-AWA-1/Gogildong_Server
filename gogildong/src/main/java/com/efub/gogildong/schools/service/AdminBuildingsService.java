@@ -8,10 +8,14 @@ import com.efub.gogildong.global.util.EntityFinder;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.dto.request.CreateBuildingRequest;
 import com.efub.gogildong.schools.dto.request.UpdateBuildingRequest;
+import com.efub.gogildong.schools.dto.response.BuildingListResponse;
+import com.efub.gogildong.schools.dto.response.BuildingSummaryResponse;
 import com.efub.gogildong.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +46,17 @@ public class AdminBuildingsService {
             throw new GoGildongException(ExceptionCode.NOT_ADMIN);
         }
         building.updateBuildingName(request.getBuildingName());
+    }
+
+    /*
+    * 건물 리스트 조회
+    * */
+    public BuildingListResponse getBuildingList(String loginId) {
+        User user = finder.getUserByLoginId(loginId);
+        School school = user.getSchool();
+        List<Building> buildings = buildingRepository.findBySchool(school);
+        List<BuildingSummaryResponse> summaryResponses = buildings.stream().map(BuildingSummaryResponse::from).toList();
+        return new BuildingListResponse(summaryResponses);
     }
 
     private Building findBuildingByBuildingId(Long buildingId) {
