@@ -66,6 +66,7 @@ public enum ExceptionCode {
     USER_HAS_NO_SCHOOL(HttpStatus.BAD_REQUEST, ClientExceptionCode.USER_HAS_NO_SCHOOL, "소속된 학교가 없습니다."),
 
     // 관리자
+    NOT_ADMIN(HttpStatus.FORBIDDEN, ClientExceptionCode.NOT_ADMIN, "관리자만 접근할 수 있습니다."),
     REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.REQUEST_NOT_FOUND, "요청 정보를 찾을 수 없습니다."),
 
     // Redis

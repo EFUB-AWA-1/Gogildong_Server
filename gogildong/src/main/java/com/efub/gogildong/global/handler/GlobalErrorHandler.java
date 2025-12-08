@@ -8,6 +8,7 @@ import com.efub.gogildong.user.dto.response.ErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,6 +46,17 @@ public class GlobalErrorHandler {
                 request.getRequestURI(), ZonedDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                403,
+                ExceptionCode.NOT_ADMIN.getClientExceptionCode().name(),
+                ExceptionCode.NOT_ADMIN.getMessage(),
+                request.getRequestURI(), ZonedDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(RuntimeException.class)

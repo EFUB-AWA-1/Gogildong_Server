@@ -89,4 +89,9 @@ public class School extends BaseEntity {
         this.hasSpecialClass = hasSpecialClass;
         this.region = region;
     }
+
+    public void addBuilding(Building building) {
+        this.buildings.add(building);
+        building.setSchool(this);
+    }
 }

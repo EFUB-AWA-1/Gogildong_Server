@@ -70,6 +70,9 @@ public enum ClientExceptionCode {
     // 엽전
     COIN_INSUFFICIENT_BALANCE,
 
+    // 관리자
+    NOT_ADMIN,
+
     // 상점
     SHOP_ITEM_NOT_FOUND,
     SHOP_ITEM_ALREADY_HAVE,
