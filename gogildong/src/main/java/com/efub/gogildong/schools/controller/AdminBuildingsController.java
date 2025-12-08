@@ -3,7 +3,7 @@ package com.efub.gogildong.schools.controller;
 import com.efub.gogildong.schools.dto.request.CreateBuildingRequest;
 import com.efub.gogildong.schools.dto.request.UpdateBuildingRequest;
 import com.efub.gogildong.schools.dto.response.BuildingListResponse;
-import com.efub.gogildong.schools.dto.response.BuildingSummaryResponse;
+import com.efub.gogildong.schools.dto.response.FloorPlanListResponse;
 import com.efub.gogildong.schools.service.AdminBuildingsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +46,15 @@ public class AdminBuildingsController {
     @GetMapping
     public ResponseEntity<BuildingListResponse> getBuildings(Authentication authentication) {
         return ResponseEntity.ok(adminBuildingsService.getBuildingList(authentication.getName()));
+    }
+
+    /*
+    * 층 별 도면 리스트 조회
+    * */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{buildingId}")
+    public ResponseEntity<FloorPlanListResponse> getFloorPlansByBuilding(@PathVariable Long buildingId, Authentication authentication) {
+        return ResponseEntity.ok(adminBuildingsService.getFloorPlanList(authentication.getName(), buildingId));
     }
 
 }
