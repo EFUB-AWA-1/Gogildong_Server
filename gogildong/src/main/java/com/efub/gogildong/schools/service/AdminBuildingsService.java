@@ -47,9 +47,7 @@ public class AdminBuildingsService {
         User user = finder.getUserByLoginId(loginId);
         School school = user.getSchool();
         Building building = findBuildingByBuildingId(request.getBuildingId());
-        if(building.getSchool() != school){
-            throw new GoGildongException(ExceptionCode.NOT_ADMIN);
-        }
+        validateBuildingInSchool(building, school);
         building.updateBuildingName(request.getBuildingName());
     }
 
@@ -71,9 +69,16 @@ public class AdminBuildingsService {
         User user = finder.getUserByLoginId(loginId);
         School school = user.getSchool();
         Building building = findBuildingByBuildingId(buildingId);
+        validateBuildingInSchool(building, school);
         List<Floor> floors = floorRepository.findByBuilding(building);
         List<FloorPlanResponse> floorPlanResponses = floors.stream().map(FloorPlanResponse::to).toList();
         return new FloorPlanListResponse(floorPlanResponses);
+    }
+
+    public void validateBuildingInSchool(Building building, School school) {
+        if(building.getSchool() != school){
+            throw new GoGildongException(ExceptionCode.NOT_ADMIN);
+        }
     }
 
     private Building findBuildingByBuildingId(Long buildingId) {
