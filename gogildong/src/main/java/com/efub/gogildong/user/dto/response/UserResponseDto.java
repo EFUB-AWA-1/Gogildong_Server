@@ -19,6 +19,7 @@ public class UserResponseDto {
     private String email;
     private String phone;
     private Long schoolId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String schoolCode;
     private String schoolName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -31,8 +32,8 @@ public class UserResponseDto {
                 .username(user.getUsername())
                 .userId(user.getUserId())
                 .role(user.getRole())
+                .schoolId(school.getSchoolId())
                 .email(user.getEmail())
-                .schoolCode(school.getSchoolCode())
                 .schoolName(school.getSchoolName())
                 .phone(user.getPhone())
                 .createdAt(user.getCreatedAt())
