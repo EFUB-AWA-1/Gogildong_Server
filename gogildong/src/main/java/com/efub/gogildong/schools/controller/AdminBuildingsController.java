@@ -1,9 +1,11 @@
 package com.efub.gogildong.schools.controller;
 
+import com.efub.gogildong.facility.dto.request.UpdateFloorPlanImageRequest;
 import com.efub.gogildong.schools.dto.request.CreateBuildingRequest;
 import com.efub.gogildong.schools.dto.request.UpdateBuildingRequest;
 import com.efub.gogildong.schools.dto.response.BuildingListResponse;
 import com.efub.gogildong.schools.dto.response.FloorPlanListResponse;
+import com.efub.gogildong.schools.dto.response.FloorPlanResponse;
 import com.efub.gogildong.schools.service.AdminBuildingsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +57,25 @@ public class AdminBuildingsController {
     @GetMapping("/{buildingId}")
     public ResponseEntity<FloorPlanListResponse> getFloorPlansByBuilding(@PathVariable Long buildingId, Authentication authentication) {
         return ResponseEntity.ok(adminBuildingsService.getFloorPlanList(authentication.getName(), buildingId));
+    }
+
+    /*
+    * 도면 상세 조회
+    * */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/floorplan/{floorId}")
+    public ResponseEntity<FloorPlanResponse> getFloorPlanByFloorId(@PathVariable Long floorId, Authentication authentication) {
+        return ResponseEntity.ok(adminBuildingsService.getFloorPlan(authentication.getName(), floorId));
+    }
+
+    /*
+    * 도면 수정하기
+    * */
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/floorplan")
+    public ResponseEntity<Void> updateFloorPlan(@RequestBody @Valid UpdateFloorPlanImageRequest request, Authentication authentication){
+
+        return ResponseEntity.ok().build();
     }
 
 }

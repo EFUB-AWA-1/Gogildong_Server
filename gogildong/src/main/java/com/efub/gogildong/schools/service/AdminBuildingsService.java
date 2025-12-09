@@ -2,6 +2,7 @@ package com.efub.gogildong.schools.service;
 
 import com.efub.gogildong.facility.domain.Building;
 import com.efub.gogildong.facility.domain.Floor;
+import com.efub.gogildong.facility.dto.request.UpdateFloorPlanImageRequest;
 import com.efub.gogildong.facility.respository.BuildingRepository;
 import com.efub.gogildong.facility.respository.FloorRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
@@ -54,6 +55,7 @@ public class AdminBuildingsService {
     /*
     * 건물 리스트 조회
     * */
+    @Transactional(readOnly = true)
     public BuildingListResponse getBuildingList(String loginId) {
         User user = finder.getUserByLoginId(loginId);
         School school = user.getSchool();
@@ -65,6 +67,7 @@ public class AdminBuildingsService {
     /*
     * 층별 도면 조회
     * */
+    @Transactional(readOnly = true)
     public FloorPlanListResponse getFloorPlanList(String loginId, Long buildingId) {
         User user = finder.getUserByLoginId(loginId);
         School school = user.getSchool();
@@ -75,7 +78,35 @@ public class AdminBuildingsService {
         return new FloorPlanListResponse(floorPlanResponses);
     }
 
-    public void validateBuildingInSchool(Building building, School school) {
+    /*
+    * 도면 상세 조회
+    * */
+    @Transactional(readOnly = true)
+    public FloorPlanResponse getFloorPlan(String loginId, Long floorId) {
+        User user = finder.getUserByLoginId(loginId);
+        Floor floor = finder.getFloorById(floorId);
+        validateFloorByUser(user, floor);
+        return FloorPlanResponse.to(floor);
+
+    }
+
+    /*
+    * 도면 수정하기
+    * */
+    @Transactional
+    public void updateFloorPlan(String loginId, UpdateFloorPlanImageRequest request){
+        User user = finder.getUserByLoginId(loginId);
+        Floor floor = finder.getFloorById(request.getFloorId());
+        validateFloorByUser(user, floor);
+        floor.updateFloorPlanImage(request.getFloorPlanImage());
+    }
+
+    private void validateFloorByUser(User user, Floor floor) {
+        if(user.getSchool() != floor.getBuilding().getSchool())
+            throw new GoGildongException(ExceptionCode.NOT_ADMIN);
+    }
+
+    private void validateBuildingInSchool(Building building, School school) {
         if(building.getSchool() != school){
             throw new GoGildongException(ExceptionCode.NOT_ADMIN);
         }
