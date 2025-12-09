@@ -29,9 +29,13 @@ public class NewRestRoomReportRequest {
 
     private DoorType doorType;
 
-    private Float doorWidth;
+    private Float entranceDoorWidth;
 
-    private Float doorHeight;
+    private Float entranceDoorHeight;
+
+    private Float innerDoorWidth;
+
+    private Float innerDoorHeight;
 
     private Float toiletHeight;
 
@@ -52,8 +56,10 @@ public class NewRestRoomReportRequest {
                 .gender(request.getGender())
                 .doorType(request.getDoorType())
                 .isAccessible(request.getIsAccessible())
-                .doorWidth(request.getDoorWidth())
-                .doorHeight(request.getDoorHeight())
+                .entranceDoorWidth(request.getEntranceDoorWidth())
+                .entranceDoorHeight(request.getEntranceDoorHeight())
+                .innerDoorWidth(request.getInnerDoorWidth())
+                .innerDoorHeight(request.getInnerDoorHeight())
                 .toiletHeight(request.getToiletHeight())
                 .grabBar(request.getGrabBar())
                 .build();
@@ -62,14 +68,10 @@ public class NewRestRoomReportRequest {
     public static Restroom toRestroomEntity(NewRestRoomReportRequest request, Facility facility, RestRoomReport report) {
         Restroom restroom = Restroom.builder()
                 .isAccessible(request.getIsAccessible())
-                .doorHeight(request.getDoorHeight())
                 .doorType(request.getDoorType())
-                .doorWidth(request.getDoorWidth())
                 .toiletHeight(request.getToiletHeight())
                 .facility(facility)
                 .gender(request.getGender())
-                .maxDoorWidth(request.getDoorWidth())
-                .minDoorWidth(request.getDoorWidth())
                 .grabBar(request.getGrabBar())
                 .build();
 

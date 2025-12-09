@@ -15,6 +15,13 @@ public class RestRoomAggregateStat {
     private Float avgToiletHeight;
     private Float avgGrabBar; // true 비율
     private Float avgIsAccessible; // true 비율
-    private Float minDoorWidth;
-    private Float maxDoorWidth;
+    private Float avgEntranceDoorWidth;
+    private Float avgEntranceDoorHeight;
+    private Float minEntranceDoorWidth;
+    private Float maxEntranceDoorWidth;
+
+    private Float avgInnerDoorWidth;
+    private Float avgInnerDoorHeight;
+    private Float minInnerDoorWidth;
+    private Float maxInnerDoorWidth;
 }

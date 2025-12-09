@@ -29,10 +29,16 @@ public class RestRoomReport {
     private DoorType doorType;
 
     @Column(nullable = false)
-    private Float doorWidth;
+    private Float entranceDoorWidth;
 
     @Column(nullable = false)
-    private Float doorHeight;
+    private Float entranceDoorHeight;
+
+    @Column(nullable = false)
+    private Float innerDoorWidth;
+
+    @Column(nullable = false)
+    private Float innerDoorHeight;
 
     @Column(nullable = false)
     private Float toiletHeight;
@@ -53,12 +59,16 @@ public class RestRoomReport {
     @Builder
     public RestRoomReport(String restroomReportImage, DoorType doorType,
                           GenderType gender, Boolean isAccessible,
-                          Float doorWidth, Float doorHeight, Float toiletHeight, Boolean grabBar, Report report, Restroom restroom) {
+                          Float entranceDoorHeight, Float entranceDoorWidth,
+                          Float innerDoorHeight, Float innerDoorWidth,
+                          Float toiletHeight, Boolean grabBar, Report report, Restroom restroom) {
         this.restroomReportImage = restroomReportImage;
         this.gender = gender;
         this.isAccessible = isAccessible;
-        this.doorWidth = doorWidth;
-        this.doorHeight = doorHeight;
+        this.entranceDoorHeight = entranceDoorHeight;
+        this.entranceDoorWidth = entranceDoorWidth;
+        this.innerDoorHeight = innerDoorHeight;
+        this.innerDoorWidth = innerDoorWidth;
         this.toiletHeight = toiletHeight;
         this.grabBar = grabBar;
         this.report = report;
