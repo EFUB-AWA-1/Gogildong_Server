@@ -39,4 +39,8 @@ public class Floor {
     public void updateFloorPlanImage(String floorPlanImage) {
         this.floorPlanImage = floorPlanImage;
     }
+
+    public void updateFloorName(String floorName) {
+        this.floorName = floorName;
+    }
 }

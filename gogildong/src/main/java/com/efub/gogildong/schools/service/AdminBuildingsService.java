@@ -99,6 +99,7 @@ public class AdminBuildingsService {
         Floor floor = finder.getFloorById(request.getFloorId());
         validateFloorByUser(user, floor);
         floor.updateFloorPlanImage(request.getFloorPlanImage());
+        floor.updateFloorName(request.getFloorName());
     }
 
     private void validateFloorByUser(User user, Floor floor) {

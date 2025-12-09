@@ -12,4 +12,6 @@ public class UpdateFloorPlanImageRequest {
     Long floorId;
     @NotBlank
     String floorPlanImage;
+    @NotBlank
+    String floorName;
 }
