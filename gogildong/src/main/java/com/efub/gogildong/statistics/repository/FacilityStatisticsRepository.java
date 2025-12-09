@@ -84,10 +84,20 @@ public class FacilityStatisticsRepository {
 
             if (filter.getRestroomDoorType() != null)
                 where.and(restroom.doorType.in(filter.getRestroomDoorType()));
-            if (filter.getRestroomDoorWidthMin() != null)
-                where.and(restroom.doorWidth.goe(filter.getRestroomDoorWidthMin()));
-            if (filter.getRestroomDoorHeightMin() != null)
-                where.and(restroom.doorHeight.goe(filter.getRestroomDoorHeightMin()));
+            if (filter.getRestroomDoorWidthMin() != null){
+                int minWidth = filter.getRestroomDoorWidthMin();
+                where.and(
+                        restroom.entranceDoorWidth.goe(minWidth)
+                                .and(restroom.innerDoorWidth.goe(minWidth))
+                );
+            }
+            if (filter.getRestroomDoorHeightMin() != null){
+                int minHeight = filter.getRestroomDoorHeightMin();
+                where.and(
+                        restroom.entranceDoorHeight.goe(minHeight)
+                                .and(restroom.innerDoorHeight.goe(minHeight))
+                );
+            }
         }
 
         // ELEVATOR 전용 필터
@@ -161,8 +171,8 @@ public class FacilityStatisticsRepository {
                         .lastActivityAt(f.getUpdatedAt())
 
                         .doorType(r != null ? r.getDoorType() : null)
-                        .doorWidth(r != null ? r.getDoorWidth() : null)
-                        .doorHeight(r != null ? r.getDoorHeight() : null)
+                        .doorWidth(r != null ? Math.min(r.getInnerDoorWidth(), r.getEntranceDoorWidth()) : null)
+                        .doorHeight(r != null ? Math.min(r.getEntranceDoorHeight(), r.getInnerDoorHeight()) : null)
                         .grabBar(r != null ? r.getGrabBar() : null)
                         .isAccessible(r != null ? r.getIsAccessible() : null)
 
