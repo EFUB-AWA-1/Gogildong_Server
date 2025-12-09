@@ -41,8 +41,8 @@ public class AdminSchoolService {
         // 토큰에서 role 추출
         String role = jwtTokenProvider.getUserRole(accessToken);
 
-        // ADMIN이 아니면 예외 발생
-        if (!"ADMIN".equals(role)) {
+        // ADMIN 또는 SUPER_ADMIN이 아니면 예외 발생
+        if (!"ADMIN".equals(role) && !"SUPER_ADMIN".equals(role)) {
             throw new GoGildongException(ExceptionCode.ACCESS_DENIED);
         }
 
@@ -85,8 +85,8 @@ public class AdminSchoolService {
         // 토큰에서 role 추출
         String role = jwtTokenProvider.getUserRole(accessToken);
 
-        // ADMIN이 아니면 예외 발생
-        if (!"ADMIN".equals(role)) {
+        // ADMIN 또는 SUPER_ADMIN이 아니면 예외 발생
+        if (!"ADMIN".equals(role) && !"SUPER_ADMIN".equals(role)) {
             throw new GoGildongException(ExceptionCode.ACCESS_DENIED);
         }
 
