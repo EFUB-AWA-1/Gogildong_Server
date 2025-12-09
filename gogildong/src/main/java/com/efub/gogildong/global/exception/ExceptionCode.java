@@ -18,6 +18,9 @@ public enum ExceptionCode {
     SCHOOL_VIEW_ALREADY_APPROVED(HttpStatus.BAD_REQUEST, ClientExceptionCode.SCHOOL_VIEW_ALREADY_APPROVED, "이미 열람 권한이 있는 학교입니다."),
     SCHOOL_VIEW_REQUEST_PENDING(HttpStatus.FORBIDDEN, ClientExceptionCode.SCHOOL_VIEW_REQUEST_PENDING, "열람 신청이 진행 중입니다. 승인되면 확인할 수 있습니다."),
 
+    // 건물
+    BUILDING_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.BUILDING_NOT_FOUND, "존재하지 않는 건물입니다."),
+
     // 층
     FLOOR_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND, "존재하지 않는 층입니다."),
     FLOOR_NOT_FOUND_IN_SCHOOL(HttpStatus.NOT_FOUND, ClientExceptionCode.FLOOR_NOT_FOUND_IN_SCHOOL, "해당 학교에는 해당 층이 존재하지 않습니다."),
@@ -66,6 +69,7 @@ public enum ExceptionCode {
     USER_HAS_NO_SCHOOL(HttpStatus.BAD_REQUEST, ClientExceptionCode.USER_HAS_NO_SCHOOL, "소속된 학교가 없습니다."),
 
     // 관리자
+    NOT_ADMIN(HttpStatus.FORBIDDEN, ClientExceptionCode.NOT_ADMIN, "관리자만 접근할 수 있습니다."),
     REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.REQUEST_NOT_FOUND, "요청 정보를 찾을 수 없습니다."),
 
     // Redis

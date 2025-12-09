@@ -24,6 +24,9 @@ public enum ClientExceptionCode {
     EMAIL_VERIFICATION_CODE_EXPIRED,
     EMAIL_VERIFICATION_REQUIRED,
 
+    // 건물
+    BUILDING_NOT_FOUND,
+
     // 층
     FLOOR_NOT_FOUND,
     FLOOR_NOT_FOUND_IN_SCHOOL,
@@ -69,6 +72,9 @@ public enum ClientExceptionCode {
 
     // 엽전
     COIN_INSUFFICIENT_BALANCE,
+
+    // 관리자
+    NOT_ADMIN,
 
     // 상점
     SHOP_ITEM_NOT_FOUND,

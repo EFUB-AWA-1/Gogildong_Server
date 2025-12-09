@@ -2,8 +2,10 @@ package com.efub.gogildong.facility.domain;
 
 import com.efub.gogildong.schools.domain.School;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class Building {
     // 학교와 n:1 매핑, 주인, 지연로딩
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id", nullable = false)
+    @Setter
     private School school;
 
     // 건물층과 1:n 매핑, 지연로딩 + 고아객체제거
@@ -32,5 +35,14 @@ public class Building {
     // 건물층 추가
     public void addFloor(Floor floor) {
         floors.add(floor);
+    }
+
+    // 건물 이름 변경
+    public void updateBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
+    public Building(String buildingName) {
+        this.buildingName = buildingName;
     }
 }
