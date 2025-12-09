@@ -52,6 +52,11 @@ public class Facility extends BaseEntity {
     @Setter
     private Classroom classroom;
 
+    // etc와 1:1 매핑, 지연로딩 + 고아객체제거
+    @OneToOne(mappedBy = "facility", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Setter
+    private Etc etc;
+
     // FacilityReview과 1:n 매핑, 지연로딩 + 고아객체제거
     @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FacilityReview> reviews = new ArrayList<>();

@@ -11,4 +11,5 @@ public interface FloorRepository extends JpaRepository<Floor, Long> {
     List<Floor> findByBuilding(Building building);
 
     Optional<Floor> findByFloorId(Long floorId);
+    Optional<Floor> findByBuildingAndFloorName(Building building, String floorName);
 }
