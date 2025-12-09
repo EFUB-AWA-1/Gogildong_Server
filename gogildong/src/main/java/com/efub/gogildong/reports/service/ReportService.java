@@ -104,7 +104,7 @@ public class ReportService {
 
         facility.updateNickname(request.getFacilityName());
         restRoomReportRepository.save(restRoomReport);
-
+        System.out.println("Dd");
         updateRestroomAggregate(facility.getRestroom());
 
         // 제보 시 포인트와 엽전 획득

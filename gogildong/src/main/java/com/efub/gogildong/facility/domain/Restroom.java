@@ -66,6 +66,8 @@ public class Restroom {
     @Builder
     public Restroom(Boolean isAccessible, GenderType gender, DoorType doorType,
                     Float toiletHeight, Boolean grabBar,  Facility facility,
+                    Float minEntranceDoorWidth, Float maxEntranceDoorWidth,
+                    Float minInnerDoorWidth, Float maxInnerDoorWidth,
                     Float innerDoorHeight, Float innerDoorWidth, Float entranceDoorWidth, Float entranceDoorHeight) {
         this.isAccessible = isAccessible;
         this.gender = gender;
@@ -74,6 +76,10 @@ public class Restroom {
         this.innerDoorHeight = innerDoorHeight;
         this.innerDoorWidth = innerDoorWidth;
         this.entranceDoorWidth = entranceDoorWidth;
+        this.maxEntranceDoorWidth = maxEntranceDoorWidth;
+        this.minEntranceDoorWidth = minEntranceDoorWidth;
+        this.maxInnerDoorWidth = maxInnerDoorWidth;
+        this.minInnerDoorWidth = minInnerDoorWidth;
         this.toiletHeight = toiletHeight;
         this.grabBar = grabBar;
         this.facility = facility;
