@@ -117,7 +117,7 @@ public class ReportService {
     private Report createRestroomReport(Facility facility, User user) {
         return Report.builder()
                 .isPublic(true)
-                .status(ReportStatus.PENDING)
+                .status(ReportStatus.APPROVED)
                 .facility(facility)
                 .user(user)
                 .reportType(FacilityType.RESTROOM)
@@ -350,12 +350,27 @@ public class ReportService {
         float avgGrabBar = reports.stream().filter(RestRoomReport::getGrabBar).count() / (float) reports.size();
 
         // 2) 숫자 평균, min, max
-        Float avgDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getDoorWidth).average().orElse(restroom.getDoorWidth());
-        Float avgDoorHeight = (float) reports.stream().mapToDouble(RestRoomReport::getDoorHeight).average().orElse(restroom.getDoorHeight());
-        Float avgToiletHeight = (float) reports.stream().mapToDouble(RestRoomReport::getToiletHeight).average().orElse(restroom.getToiletHeight());
-        Float minDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getDoorWidth).min().orElse(restroom.getMinDoorWidth());
-        Float maxDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getDoorWidth).max().orElse(restroom.getMaxDoorWidth());
+       Float avgToiletHeight = (float) reports.stream().mapToDouble(RestRoomReport::getToiletHeight).average().orElse(restroom.getToiletHeight());
 
+        // 출입문(entrance) 평균
+        Float avgEntranceDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getEntranceDoorWidth).average()
+                .orElse(restroom.getEntranceDoorWidth());
+        Float avgEntranceDoorHeight = (float) reports.stream().mapToDouble(RestRoomReport::getEntranceDoorHeight).average()
+                .orElse(restroom.getEntranceDoorHeight());
+        Float minEntranceDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getEntranceDoorWidth).min()
+                .orElse(restroom.getMinEntranceDoorWidth());
+        Float maxEntranceDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getEntranceDoorWidth).max()
+                .orElse(restroom.getMaxEntranceDoorWidth());
+
+        // 내부문(inner) 평균
+        Float avgInnerDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getInnerDoorWidth).average()
+                .orElse(restroom.getInnerDoorWidth());
+        Float avgInnerDoorHeight = (float) reports.stream().mapToDouble(RestRoomReport::getInnerDoorHeight).average()
+                .orElse(restroom.getInnerDoorHeight());
+        Float minInnerDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getInnerDoorWidth).min()
+                .orElse(restroom.getMinInnerDoorWidth());
+        Float maxInnerDoorWidth = (float) reports.stream().mapToDouble(RestRoomReport::getInnerDoorWidth).max()
+                .orElse(restroom.getMaxInnerDoorWidth());
         // 3) gender majority
         GenderType majorityGender = reports.stream()
                 .collect(Collectors.groupingBy(RestRoomReport::getGender, Collectors.counting()))
@@ -366,13 +381,17 @@ public class ReportService {
 
         RestRoomAggregateStat stat = RestRoomAggregateStat.builder()
                 .majorityGender(majorityGender)
-                .avgDoorWidth(avgDoorWidth)
-                .avgDoorHeight(avgDoorHeight)
                 .avgToiletHeight(avgToiletHeight)
                 .avgGrabBar(avgGrabBar)
                 .avgIsAccessible(avgIsAccessible)
-                .minDoorWidth(minDoorWidth)
-                .maxDoorWidth(maxDoorWidth)
+                .avgEntranceDoorWidth(avgEntranceDoorWidth)
+                .avgEntranceDoorHeight(avgEntranceDoorHeight)
+                .minEntranceDoorWidth(minEntranceDoorWidth)
+                .maxEntranceDoorWidth(maxEntranceDoorWidth)
+                .avgInnerDoorWidth(avgInnerDoorWidth)
+                .avgInnerDoorHeight(avgInnerDoorHeight)
+                .minInnerDoorWidth(minInnerDoorWidth)
+                .maxInnerDoorWidth(maxInnerDoorWidth)
                 .build();
 
         // 4) Restroom update

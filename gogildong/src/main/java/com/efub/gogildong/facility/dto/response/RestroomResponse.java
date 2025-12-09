@@ -19,7 +19,7 @@ public class RestroomResponse {
         Facility facility = restroom.getFacility();
         return RestroomResponse.builder()
                 .facilityDetail(FacilityDetailResponse.from(facility))
-                .doorWidth(restroom.getDoorWidth())
+                .doorWidth(Math.min(restroom.getEntranceDoorWidth(), restroom.getInnerDoorWidth()))
                 .gender(restroom.getGender().name())
                 .isAccessible(restroom.getIsAccessible())
                 .doorType(restroom.getDoorType().name())

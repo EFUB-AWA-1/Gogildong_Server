@@ -18,8 +18,10 @@ public class RestRoomReportResponse {
     private GenderType gender;
     private Boolean isAccessible;
     private DoorType doorType;
-    private Float doorWidth;
-    private Float doorHeight;
+    private Float entranceDoorWidth;
+    private Float entranceDoorHeight;
+    private Float innerDoorWidth;
+    private Float innerDoorHeight;
     private Float toiletHeight;
     private Boolean grabBar;
 
@@ -32,8 +34,10 @@ public class RestRoomReportResponse {
                 .gender(restRoomReport.getGender())
                 .isAccessible(restRoomReport.getIsAccessible())
                 .doorType(restRoomReport.getDoorType())
-                .doorWidth(restRoomReport.getDoorWidth())
-                .doorHeight(restRoomReport.getDoorHeight())
+                .entranceDoorWidth(restRoomReport.getEntranceDoorWidth())
+                .entranceDoorHeight(restRoomReport.getEntranceDoorHeight())
+                .innerDoorWidth(restRoomReport.getInnerDoorWidth())
+                .innerDoorHeight(restRoomReport.getInnerDoorHeight())
                 .toiletHeight(restRoomReport.getToiletHeight())
                 .grabBar(restRoomReport.getGrabBar())
                 .build();

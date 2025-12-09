@@ -32,16 +32,22 @@ public class Restroom {
     private DoorType doorType;
 
     @Column(nullable = false)
-    private Float doorWidth;
+    private Float entranceDoorWidth;
+    @Column(nullable = false)
+    private Float minEntranceDoorWidth;
+    @Column(nullable = false)
+    private Float maxEntranceDoorWidth;
+    @Column(nullable = false)
+    private Float entranceDoorHeight;
 
     @Column(nullable = false)
-    private Float minDoorWidth;
-
+    private Float innerDoorWidth;
     @Column(nullable = false)
-    private Float maxDoorWidth;
-
+    private Float minInnerDoorWidth;
     @Column(nullable = false)
-    private Float doorHeight;
+    private Float maxInnerDoorWidth;
+    @Column(nullable = false)
+    private Float innerDoorHeight;
 
     @Column(nullable = false)
     private Float toiletHeight;
@@ -59,15 +65,15 @@ public class Restroom {
 
     @Builder
     public Restroom(Boolean isAccessible, GenderType gender, DoorType doorType,
-                    Float doorWidth, Float minDoorWidth, Float maxDoorWidth,
-                    Float doorHeight, Float toiletHeight, Boolean grabBar,  Facility facility) {
+                    Float toiletHeight, Boolean grabBar,  Facility facility,
+                    Float innerDoorHeight, Float innerDoorWidth, Float entranceDoorWidth, Float entranceDoorHeight) {
         this.isAccessible = isAccessible;
         this.gender = gender;
         this.doorType = doorType;
-        this.doorWidth = doorWidth;
-        this.minDoorWidth = minDoorWidth;
-        this.maxDoorWidth = maxDoorWidth;
-        this.doorHeight = doorHeight;
+        this.entranceDoorHeight = entranceDoorHeight;
+        this.innerDoorHeight = innerDoorHeight;
+        this.innerDoorWidth = innerDoorWidth;
+        this.entranceDoorWidth = entranceDoorWidth;
         this.toiletHeight = toiletHeight;
         this.grabBar = grabBar;
         this.facility = facility;
@@ -82,12 +88,20 @@ public class Restroom {
     // 제보 추가 시 화장실 값 업데이트
     public void updateAggregate(RestRoomAggregateStat stat) {
         this.gender = stat.getMajorityGender();
-        this.doorWidth = stat.getAvgDoorWidth();
-        this.doorHeight = stat.getAvgDoorHeight();
         this.toiletHeight = stat.getAvgToiletHeight();
-        this.minDoorWidth = stat.getMinDoorWidth();
-        this.maxDoorWidth = stat.getMaxDoorWidth();
         this.grabBar = stat.getAvgGrabBar() >= 0.5;
         this.isAccessible = stat.getAvgIsAccessible() >= 0.5;
+
+        // 출입문 업데이트
+        this.entranceDoorWidth = stat.getAvgEntranceDoorWidth();
+        this.entranceDoorHeight = stat.getAvgEntranceDoorHeight();
+        this.minEntranceDoorWidth = stat.getMinEntranceDoorWidth();
+        this.maxEntranceDoorWidth = stat.getMaxEntranceDoorWidth();
+
+        // 내부문 업데이트
+        this.innerDoorWidth = stat.getAvgInnerDoorWidth();
+        this.innerDoorHeight = stat.getAvgInnerDoorHeight();
+        this.minInnerDoorWidth = stat.getMinInnerDoorWidth();
+        this.maxInnerDoorWidth = stat.getMaxInnerDoorWidth();
     }
 }
