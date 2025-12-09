@@ -39,6 +39,10 @@ public class VerifyService {
             String prompt = """
                     You are a strict facility verification AI.
                     Identify the facility type in the image and compare it to the user's report.
+                    
+                    IMPORTANT RULE:
+                    - Door type verification must be performed ONLY IF the facility is RESTROOM or CLASSROOM.
+                    - Otherwise, predicted_door_type must be null and is_door_matched must also be null.
 
                     Output ONLY valid JSON with fields:
                     predicted_facility_type, is_match, confidence, predicted_door_type, is_door_matched, reason.
@@ -94,9 +98,22 @@ public class VerifyService {
             res.setPredictedType(json.path("predicted_facility_type").asText());
             res.setMatched(json.path("is_match").asBoolean());
             res.setConfidence(json.path("confidence").asDouble());
-            res.setPredictedDoorType(json.path("predicted_door_type").asText(null));
-
             res.setReason(json.path("reason").asText());
+
+            // Door 검증 facility type 조건 적용 (RESTROOM, CLASSROOM)
+            String reportedType = req.getReportedFacilityType();
+
+            boolean needDoorCheck =
+                    "RESTROOM".equalsIgnoreCase(reportedType) ||
+                            "CLASSROOM".equalsIgnoreCase(reportedType);
+
+            if (needDoorCheck) {
+                res.setPredictedDoorType(json.path("predicted_door_type").asText(null));
+                res.setIsDoorMatched(json.path("is_door_matched").asBoolean());
+            } else {
+                res.setPredictedDoorType(null);
+                res.setIsDoorMatched(null);
+            }
 
             System.out.println("\n======= [VerifyService] END SUCCESS =======");
             return res;

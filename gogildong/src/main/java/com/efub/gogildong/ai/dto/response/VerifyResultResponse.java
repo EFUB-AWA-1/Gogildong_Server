@@ -8,6 +8,6 @@ public class VerifyResultResponse {
     private boolean isMatched;          // 시설 타입 매칭
     private double confidence;
     private String predictedDoorType;
-    private boolean isDoorMatched;      // 도어 타입 매칭
+    private Boolean isDoorMatched;      // 도어 타입 매칭
     private String reason;
 }
