@@ -56,4 +56,9 @@ public class JwtUtil {
     public String getRole(String token)    { return parseClaims(token).get("role", String.class); }
     public boolean isExpired(String token) { return parseClaims(token).getExpiration().before(new Date()); }
     public String getType(String token)    { return parseClaims(token).get("typ", String.class); }
+
+    public boolean isRefreshToken(String token) {
+        String typ = getType(token);
+        return "refresh".equals(typ);
+    }
 }
