@@ -21,7 +21,7 @@ public class JwtUtil {
 
     public JwtUtil(
             @Value("${spring.jwt.secret}") String secretBase64,
-            @Value("${spring.jwt.access-ttl:9000000}") long accessTtlMillis,
+            @Value("${spring.jwt.access-ttl:900000}") long accessTtlMillis,
             @Value("${spring.jwt.refresh-ttl:604800000}") long refreshTtlMillis
     ) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretBase64));
