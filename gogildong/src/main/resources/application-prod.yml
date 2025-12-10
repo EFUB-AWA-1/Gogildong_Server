@@ -12,7 +12,7 @@ spring:
 
   jwt:
     secret: ${JWT_SECRET}
-    access-ttl: 900000
+    access-ttl: 9000000
     refresh-ttl: 604800000
 
   data:
