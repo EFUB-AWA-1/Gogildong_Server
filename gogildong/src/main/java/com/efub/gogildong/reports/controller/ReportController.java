@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,6 +101,7 @@ public class ReportController {
     /*
     화장실 제보를 상세 조회합니다. (학교 관리자)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/restroom/{restRoomReportId}")
     public ResponseEntity<RestRoomReportResponse> getRestRoomReport(@PathVariable("restRoomReportId") Long restRoomReportId,
                                                                     Authentication authentication) {
@@ -110,6 +112,7 @@ public class ReportController {
     /*
     제보 전체 목록을 조회합니다. (학교 관리자)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(" ")
     public ResponseEntity<ReportListResponse> getAllReport() {
         return ResponseEntity.ok(reportService.getAllReports());
@@ -118,6 +121,7 @@ public class ReportController {
     /*
     제보 공개 여부를 수정합니다. (학교 관리자)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{reportId}")
     public ResponseEntity<ReportSummary> updateReportPublicStatus(@PathVariable Long reportId,
                                                                   @RequestBody @Valid UpdateReportPublicStatusRequest requestDto,
@@ -130,6 +134,7 @@ public class ReportController {
     /*
     제보 신고 내역을 조회합니다. (학교 관리자)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/flags/{reportId}")
     public ResponseEntity<ReportFlagListResponse> getReportFlags(@PathVariable Long reportId,
                                                  Authentication authentication) {
