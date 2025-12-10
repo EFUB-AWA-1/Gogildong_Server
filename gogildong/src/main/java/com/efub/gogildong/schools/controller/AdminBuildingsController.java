@@ -74,7 +74,7 @@ public class AdminBuildingsController {
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/floorplan")
     public ResponseEntity<Void> updateFloorPlan(@RequestBody @Valid UpdateFloorPlanImageRequest request, Authentication authentication){
-
+        adminBuildingsService.updateFloorPlan(authentication.getName(), request);
         return ResponseEntity.ok().build();
     }
 
