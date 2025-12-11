@@ -22,6 +22,7 @@ import com.efub.gogildong.reports.dto.response.classroom.ClassroomAggregateStat;
 import com.efub.gogildong.reports.dto.response.elevator.ElevatorAggregateStat;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomAggregateStat;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.response.restroom.RestroomReportSummaryResponse;
 import com.efub.gogildong.reports.dto.summary.ReportFlagSummary;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.repository.*;
@@ -505,5 +506,13 @@ public class ReportService {
     private void getPointAndCoinByReport(User user) {
         coinService.earnCoin(user, REPORT_POINT);
         pointService.addPoints(user.getUserId(), REPORT_POINT);
+    }
+
+    @Transactional(readOnly = true)
+    public RestroomReportSummaryResponse getRestroomSummaryByReportId(Long reportId) {
+        RestRoomReport restRoomReport = restRoomReportRepository.findById(reportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+
+
     }
 }
