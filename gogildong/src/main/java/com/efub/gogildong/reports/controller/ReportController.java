@@ -11,6 +11,7 @@ import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
+import com.efub.gogildong.reports.dto.response.restroom.RestroomReportSummaryResponse;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
 import com.efub.gogildong.reports.service.ReportService;
 import jakarta.validation.Valid;
@@ -135,5 +136,14 @@ public class ReportController {
                                                  Authentication authentication) {
 
         return ResponseEntity.ok(reportService.findReportFlagsByReportId(reportId));
+    }
+
+    /*
+    화장실 제보 정보 요약을 조회합니다.
+    */
+    @GetMapping("/summary/restroom/{reportId}")
+    public ResponseEntity<RestroomReportSummaryResponse> getRestroomSummary(@PathVariable Long reportId,
+                                                                            Authentication authentication){
+        return ResponseEntity.ok(reportService.getRestroomSummaryByReportId(reportId));
     }
 }
