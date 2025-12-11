@@ -21,7 +21,7 @@ public class JwtUtil {
 
     public JwtUtil(
             @Value("${spring.jwt.secret}") String secretBase64,
-            @Value("${spring.jwt.access-ttl:9000000}") long accessTtlMillis,
+            @Value("${spring.jwt.access-ttl:900000}") long accessTtlMillis,
             @Value("${spring.jwt.refresh-ttl:604800000}") long refreshTtlMillis
     ) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretBase64));
@@ -56,4 +56,9 @@ public class JwtUtil {
     public String getRole(String token)    { return parseClaims(token).get("role", String.class); }
     public boolean isExpired(String token) { return parseClaims(token).getExpiration().before(new Date()); }
     public String getType(String token)    { return parseClaims(token).get("typ", String.class); }
+
+    public boolean isRefreshToken(String token) {
+        String typ = getType(token);
+        return "refresh".equals(typ);
+    }
 }

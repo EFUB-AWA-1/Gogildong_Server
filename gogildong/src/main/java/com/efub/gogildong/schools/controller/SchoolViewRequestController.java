@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class SchoolViewRequestController {
     }
 
     // 학교 정보 열람 신청 상세 조회 (학교 관리자)
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{requestId}")
     public ResponseEntity<SchoolViewRequestDetailResponse> getRequestDetail(Authentication authentication,
                                                                             @PathVariable final Long requestId) {
@@ -40,6 +42,7 @@ public class SchoolViewRequestController {
     }
 
     // 학교 정보 열람 신청 목록 조회 (학교 관리자)
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<SchoolViewRequestListResponse> getAllRequests(Authentication authentication) {
         SchoolViewRequestListResponse response = schoolViewRequestService.getAllRequests();
@@ -47,6 +50,7 @@ public class SchoolViewRequestController {
     }
 
     // 학교 정보 열람 요청 상태 수정 (학교 관리자)
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{requestId}")
     public ResponseEntity<Void> updateRequestStatus(Authentication authentication,
                                                     @PathVariable final Long requestId,
