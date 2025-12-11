@@ -508,11 +508,14 @@ public class ReportService {
         pointService.addPoints(user.getUserId(), REPORT_POINT);
     }
 
+    /*
+    * 화장실 제보 요약 조회
+    * */
     @Transactional(readOnly = true)
     public RestroomReportSummaryResponse getRestroomSummaryByReportId(Long reportId) {
         RestRoomReport restRoomReport = restRoomReportRepository.findById(reportId)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
 
-
+        return RestroomReportSummaryResponse.from(restRoomReport);
     }
 }
