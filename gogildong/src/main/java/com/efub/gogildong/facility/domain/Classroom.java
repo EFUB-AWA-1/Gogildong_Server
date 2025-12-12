@@ -29,7 +29,7 @@ public class Classroom {
     private Float maxDoorWidth;
 
     @Column(nullable = false)
-    private Float doorHeight;
+    private Float doorHandleHeight;
 
     @Column(nullable = false)
     private Float minAisleWidth;
@@ -52,11 +52,11 @@ public class Classroom {
 
     @Builder
     public Classroom(Float doorWidth, Float minDoorWidth, Float maxDoorWidth,
-                    Float doorHeight, Float minAisleWidth, Boolean hasThreshold, DoorType doorType,  Facility facility) {
+                    Float doorHandleHeight, Float minAisleWidth, Boolean hasThreshold, DoorType doorType,  Facility facility) {
         this.doorWidth = doorWidth;
         this.minDoorWidth = minDoorWidth;
         this.maxDoorWidth = maxDoorWidth;
-        this.doorHeight = doorHeight;
+        this.doorHandleHeight = doorHandleHeight;
         this.minAisleWidth = minAisleWidth;
         this.hasThreshold = hasThreshold;
         this.doorType = doorType;
@@ -72,7 +72,7 @@ public class Classroom {
     // 제보 추가 시 교실 값 업데이트
     public void updateAggregate(ClassroomAggregateStat stat) {
         this.doorWidth = stat.getAvgDoorWidth();
-        this.doorHeight = stat.getAvgDoorHeight();
+        this.doorHandleHeight = stat.getAvgDoorHandleHeight();
         this.minAisleWidth = stat.getAvgMinAisleWidth();
         this.hasThreshold = stat.getAvgHasThreshold() >= 0.5;
         this.minDoorWidth = stat.getMinDoorWidth();

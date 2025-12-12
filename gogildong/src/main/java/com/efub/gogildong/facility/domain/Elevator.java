@@ -29,7 +29,7 @@ public class Elevator {
     private Float maxDoorWidth;
 
     @Column(nullable = false)
-    private Float doorHeight;
+    private Float interiorDepth;
 
     @Column(nullable = false)
     private Float maxControlPanelHeight;
@@ -43,11 +43,11 @@ public class Elevator {
 
     @Builder
     public Elevator(Float doorWidth, Float minDoorWidth, Float maxDoorWidth,
-                    Float doorHeight, Float maxControlPanelHeight, Facility facility) {
+                    Float interiorDepth, Float maxControlPanelHeight, Facility facility) {
         this.doorWidth = doorWidth;
         this.minDoorWidth = minDoorWidth;
         this.maxDoorWidth = maxDoorWidth;
-        this.doorHeight = doorHeight;
+        this.interiorDepth = interiorDepth;
         this.maxControlPanelHeight = maxControlPanelHeight;
         this.facility = facility;
     }
@@ -61,7 +61,7 @@ public class Elevator {
     // 제보 추가 시 엘리베이터 값 업데이트
     public void updateAggregate(ElevatorAggregateStat stat) {
         this.doorWidth = stat.getAvgDoorWidth();
-        this.doorHeight = stat.getAvgDoorHeight();
+        this.interiorDepth = stat.getAvgInteriorDepth();
         this.maxControlPanelHeight = stat.getAvgMaxControlPanelHeight();
         this.minDoorWidth = stat.getMinDoorWidth();
         this.maxDoorWidth = stat.getMaxDoorWidth();
