@@ -17,7 +17,7 @@ public class NewEtcReportRequest {
     private Long floorId;
 
     @NotBlank(message = "시설 이름을 작성해주세요.")
-    private String facilityName;
+    private String facilityNickname;
 
     @NotBlank(message = "시설 사진을 포함해주세요!")
     private String etcReportImage;
@@ -28,7 +28,7 @@ public class NewEtcReportRequest {
     public static Facility toFacilityEntity(NewEtcReportRequest request, String facilityName, Floor floor) {
         return Facility.builder()
                 .facilityName(facilityName)
-                .facilityNickname(request.getFacilityName())
+                .facilityNickname(request.getFacilityNickname())
                 .facilityType(FacilityType.ETC)
                 .floor(floor)
                 .build();

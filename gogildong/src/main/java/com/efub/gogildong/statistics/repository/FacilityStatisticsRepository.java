@@ -108,9 +108,6 @@ public class FacilityStatisticsRepository {
             QElevator elevator = QElevator.elevator;
             query.leftJoin(elevator).on(elevator.facility.eq(facility)).fetchJoin();
 
-            if (filter.getElevatorDoorHeightMin() != null) {
-                where.and(elevator.doorHeight.goe(filter.getElevatorDoorHeightMin()));
-            }
             if (filter.getElevatorDoorWidthMin() != null) {
                 where.and(elevator.doorWidth.goe(filter.getElevatorDoorWidthMin()));
             }
@@ -127,9 +124,6 @@ public class FacilityStatisticsRepository {
             QClassroom classroom = QClassroom.classroom;
             query.leftJoin(classroom).on(classroom.facility.eq(facility)).fetchJoin();
 
-            if (filter.getClassroomDoorHeightMin() != null) {
-                where.and(classroom.doorHeight.goe(filter.getClassroomDoorHeightMin()));
-            }
             if (filter.getClassroomDoorWidthMin() != null) {
                 where.and(classroom.doorWidth.goe(filter.getClassroomDoorWidthMin()));
             }
@@ -193,7 +187,6 @@ public class FacilityStatisticsRepository {
                         .doorWidth(e != null ? e.getDoorWidth() : null)
                         .minDoorWidth(e != null ? e.getMinDoorWidth() : null)
                         .maxDoorWidth(e != null ? e.getMaxDoorWidth() : null)
-                        .doorHeight(e != null ? e.getDoorHeight() : null)
                         .maxControlPanelHeight(e != null ? e.getMaxControlPanelHeight() : null)
 
                         .build();
@@ -213,7 +206,6 @@ public class FacilityStatisticsRepository {
                         .doorWidth(c != null ? c.getDoorWidth() : null)
                         .minDoorWidth(c != null ? c.getMinDoorWidth() : null)
                         .maxDoorWidth(c != null ? c.getMaxDoorWidth() : null)
-                        .doorHeight(c != null ? c.getDoorHeight() : null)
                         .minAisleWidth(c != null ? c.getMinAisleWidth() : null)
                         .hasThreshold(c != null ? c.getHasThreshold() : null)
                         .doorType(c != null ? c.getDoorType() : null)

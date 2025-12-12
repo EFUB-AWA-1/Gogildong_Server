@@ -10,7 +10,7 @@ import lombok.Getter;
 public class ClassroomAggregateStat {
 
     private Float avgDoorWidth;
-    private Float avgDoorHeight;
+    private Float avgDoorHandleHeight;
     private Float avgMinAisleWidth;
     private Float avgHasThreshold; // true 비율
     private Float minDoorWidth;

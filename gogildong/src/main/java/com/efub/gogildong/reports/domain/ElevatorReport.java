@@ -23,12 +23,10 @@ public class ElevatorReport {
     private Float doorWidth;
 
     @Column(nullable = false)
-    private Float doorHeight;
+    private Float interiorDepth;
 
     @Column(nullable = false)
     private Float maxControlPanelHeight;
-
-    private String note;
 
     @OneToOne
     @Setter
@@ -41,12 +39,11 @@ public class ElevatorReport {
     private Elevator elevator;
 
     @Builder
-    public ElevatorReport(String elevatorReportImage, Float doorWidth, Float doorHeight, Float maxControlPanelHeight, String note, Report report, Elevator elevator) {
+    public ElevatorReport(String elevatorReportImage, Float doorWidth, Float  interiorDepth, Float maxControlPanelHeight, Report report, Elevator elevator) {
         this.elevatorReportImage = elevatorReportImage;
         this.doorWidth = doorWidth;
-        this.doorHeight = doorHeight;
+        this.interiorDepth =  interiorDepth;
         this.maxControlPanelHeight = maxControlPanelHeight;
-        this.note = note;
         this.report = report;
         this.elevator = elevator;
     }
