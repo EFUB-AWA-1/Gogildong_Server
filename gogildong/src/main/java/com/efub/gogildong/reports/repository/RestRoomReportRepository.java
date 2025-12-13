@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RestRoomReportRepository extends JpaRepository<RestRoomReport, Long> {
     @Query("""
@@ -15,4 +16,6 @@ public interface RestRoomReportRepository extends JpaRepository<RestRoomReport, 
               AND r.report.isPublic = true
            """)
     List<RestRoomReport> findPublicByRestroom(@Param("restroom") Restroom restroom);
+
+    RestRoomReport findByReportId(Long reportId);
 }

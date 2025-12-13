@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EtcReportRepository extends JpaRepository<EtcReport, Long> {
     @Query("""
@@ -15,4 +16,6 @@ public interface EtcReportRepository extends JpaRepository<EtcReport, Long> {
               AND r.report.isPublic = true
            """)
     List<EtcReport> findPublicByEtc(@Param("etc") Etc etc);
+
+    EtcReport findByReportId(Long reportId);
 }

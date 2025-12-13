@@ -517,9 +517,7 @@ public class ReportService {
     * */
     @Transactional(readOnly = true)
     public RestroomReportSummaryResponse getRestroomSummaryByReportId(Long reportId) {
-        RestRoomReport restRoomReport = restRoomReportRepository.findById(reportId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
-
+        RestRoomReport restRoomReport = restRoomReportRepository.findByReportId(reportId);
         return RestroomReportSummaryResponse.from(restRoomReport);
     }
 
@@ -528,8 +526,7 @@ public class ReportService {
      * */
     @Transactional(readOnly = true)
     public ElevatorReportSummaryResponse getElevatorSummaryByReportId(Long reportId) {
-        ElevatorReport elevatorReport = elevatorReportRepository.findById(reportId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+        ElevatorReport elevatorReport = elevatorReportRepository.findByReportId(reportId);
 
         return ElevatorReportSummaryResponse.from(elevatorReport);
     }
@@ -539,8 +536,7 @@ public class ReportService {
     * */
     @Transactional(readOnly = true)
     public ClassroomReportSummaryResponse getClassroomSummaryByReportId(Long reportId) {
-        ClassroomReport classroomReport = classroomReportRepository.findById(reportId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+        ClassroomReport classroomReport = classroomReportRepository.findByReportId(reportId);
 
         return ClassroomReportSummaryResponse.from(classroomReport);
     }
@@ -550,8 +546,7 @@ public class ReportService {
     * */
     @Transactional(readOnly = true)
     public EtcReportSummaryResponse getEtcSummaryByReportId(Long reportId) {
-        EtcReport etcReport = etcReportRepository.findById(reportId)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+        EtcReport etcReport = etcReportRepository.findByReportId(reportId);
         return EtcReportSummaryResponse.from(etcReport);
     }
 }
