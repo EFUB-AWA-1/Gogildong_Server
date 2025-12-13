@@ -18,7 +18,7 @@ public class NewRestRoomReportRequest {
     private Long floorId;
 
     @NotBlank(message = "시설 이름을 작성해주세요.")
-    private String facilityName;
+    private String facilityNickname;
 
     @NotBlank(message = "시설 사진을 포함해주세요!")
     private String restRoomReportImage;
@@ -44,7 +44,7 @@ public class NewRestRoomReportRequest {
     public static Facility toFacilityEntity(NewRestRoomReportRequest request, String facilityName, Floor floor) {
         return Facility.builder()
                 .facilityName(facilityName)
-                .facilityNickname(request.getFacilityName())
+                .facilityNickname(request.getFacilityNickname())
                 .facilityType(FacilityType.RESTROOM)
                 .floor(floor)
                 .build();

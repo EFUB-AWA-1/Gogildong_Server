@@ -13,9 +13,8 @@ public class ElevatorReportResponse {
     private UserResponseDto user;
     private String elevatorReportImage;
     private Float doorWidth;
-    private Float doorHeight;
+    private Float interiorDepth;
     private Float maxControlPanelHeight;
-    private String note;
 
     public static ElevatorReportResponse from(ElevatorReport elevatorReport) {
         return ElevatorReportResponse.builder()
@@ -24,9 +23,8 @@ public class ElevatorReportResponse {
                 .user(UserResponseDto.from(elevatorReport.getReport().getUser()))
                 .elevatorReportImage(elevatorReport.getElevatorReportImage())
                 .doorWidth(elevatorReport.getDoorWidth())
-                .doorHeight(elevatorReport.getDoorHeight())
+                .interiorDepth(elevatorReport.getInteriorDepth())
                 .maxControlPanelHeight(elevatorReport.getMaxControlPanelHeight())
-                .note(elevatorReport.getNote())
                 .build();
     }
 }

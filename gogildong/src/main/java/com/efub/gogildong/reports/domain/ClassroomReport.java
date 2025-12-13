@@ -24,7 +24,7 @@ public class ClassroomReport {
     private Float doorWidth;
 
     @Column(nullable = false)
-    private Float doorHeight;
+    private Float doorHandleHeight;
 
     @Column(nullable = false)
     private Float minAisleWidth;
@@ -35,8 +35,6 @@ public class ClassroomReport {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private DoorType doorType;
-
-    private String note;
 
     @OneToOne
     @Setter
@@ -49,15 +47,14 @@ public class ClassroomReport {
     private Classroom classroom;
 
     @Builder
-    public ClassroomReport(String classroomReportImage, Float doorWidth, Float doorHeight, Float minAisleWidth, Boolean hasThreshold,
-                           DoorType doorType, String note, Report report, Classroom classroom) {
+    public ClassroomReport(String classroomReportImage, Float doorWidth, Float doorHandleHeight, Float minAisleWidth, Boolean hasThreshold,
+                           DoorType doorType, Report report, Classroom classroom) {
         this.classroomReportImage = classroomReportImage;
         this.doorWidth = doorWidth;
-        this.doorHeight = doorHeight;
+        this.doorHandleHeight = doorHandleHeight;
         this.minAisleWidth = minAisleWidth;
         this.hasThreshold = hasThreshold;
         this.doorType = doorType;
-        this.note = note;
         this.report = report;
         this.classroom = classroom;
     }

@@ -61,7 +61,8 @@ public class UserItemService {
 
         // 착용하고 싶은 타입의 아이템 별로 벗어야 하는 타입 정의
         Map<ClotheType, List<ClotheType>> conflictMap = Map.of(
-                ClotheType.HAT, List.of(ClotheType.HAT), // 모자 착용 원하면, 모자 벗어야 됨
+                ClotheType.HEAD, List.of(ClotheType.HEAD, ClotheType.HAT),
+                ClotheType.HAT, List.of(ClotheType.HAT, ClotheType.HEAD), // 모자 착용 원하면, 모자 벗어야 됨
                 ClotheType.SHOES, List.of(ClotheType.SHOES), // 신발 착용 원하면, 신발 벗어야 됨
                 ClotheType.DRESS, List.of(ClotheType.DRESS, ClotheType.TOP, ClotheType.BOTTOMS), // 드레스 착용 원하면, 드레스, 상의, 하의 벗어야 됨
                 ClotheType.TOP, List.of(ClotheType.DRESS, ClotheType.TOP), // 상의 착용 원하면, 드레스, 상의 벗어야 됨

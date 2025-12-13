@@ -104,7 +104,7 @@ public class ReportService {
 
         user.addReport(report);
 
-        facility.updateNickname(request.getFacilityName());
+        facility.updateNickname(request.getFacilityNickname());
         restRoomReportRepository.save(restRoomReport);
         System.out.println("Dd");
         updateRestroomAggregate(facility.getRestroom());
@@ -191,7 +191,7 @@ public class ReportService {
 
         user.addReport(report);
 
-        facility.updateNickname(request.getFacilityName());
+        facility.updateNickname(request.getFacilityNickname());
 
         reportRepository.save(report);
         elevatorReportRepository.save(elevatorReport);
@@ -266,7 +266,7 @@ public class ReportService {
 
         user.addReport(report);
 
-        facility.updateNickname(request.getFacilityName());
+        facility.updateNickname(request.getFacilityNickname());
 
         reportRepository.save(report);
         classroomReportRepository.save(classroomReport);
@@ -408,14 +408,14 @@ public class ReportService {
 
         // 숫자 평균, min, max
         Float avgDoorWidth = (float) reports.stream().mapToDouble(ElevatorReport::getDoorWidth).average().orElse(elevator.getDoorWidth());
-        Float avgDoorHeight = (float) reports.stream().mapToDouble(ElevatorReport::getDoorHeight).average().orElse(elevator.getDoorHeight());
+        Float avgInteriorDepth = (float) reports.stream().mapToDouble(ElevatorReport::getInteriorDepth).average().orElse(elevator.getInteriorDepth());
         Float avgMaxControlPanelHeight = (float) reports.stream().mapToDouble(ElevatorReport::getMaxControlPanelHeight).average().orElse(elevator.getMaxControlPanelHeight());
         Float minDoorWidth = (float) reports.stream().mapToDouble(ElevatorReport::getDoorWidth).min().orElse(elevator.getMinDoorWidth());
         Float maxDoorWidth = (float) reports.stream().mapToDouble(ElevatorReport::getDoorWidth).max().orElse(elevator.getMaxDoorWidth());
 
         ElevatorAggregateStat stat = ElevatorAggregateStat.builder()
                 .avgDoorWidth(avgDoorWidth)
-                .avgDoorHeight(avgDoorHeight)
+                .avgInteriorDepth(avgInteriorDepth)
                 .avgMaxControlPanelHeight(avgMaxControlPanelHeight)
                 .minDoorWidth(minDoorWidth)
                 .maxDoorWidth(maxDoorWidth)
@@ -436,14 +436,14 @@ public class ReportService {
 
         // 숫자 평균, min, max
         Float avgDoorWidth = (float) reports.stream().mapToDouble(ClassroomReport::getDoorWidth).average().orElse(classroom.getDoorWidth());
-        Float avgDoorHeight = (float) reports.stream().mapToDouble(ClassroomReport::getDoorHeight).average().orElse(classroom.getDoorHeight());
+        Float avgDoorHandleHeight = (float) reports.stream().mapToDouble(ClassroomReport::getDoorHandleHeight).average().orElse(classroom.getDoorHandleHeight());
         Float avgMinAisleWidth = (float) reports.stream().mapToDouble(ClassroomReport::getMinAisleWidth).average().orElse(classroom.getMinAisleWidth());
         Float minDoorWidth = (float) reports.stream().mapToDouble(ClassroomReport::getDoorWidth).min().orElse(classroom.getMinDoorWidth());
         Float maxDoorWidth = (float) reports.stream().mapToDouble(ClassroomReport::getDoorWidth).max().orElse(classroom.getMaxDoorWidth());
 
         ClassroomAggregateStat stat = ClassroomAggregateStat.builder()
                 .avgDoorWidth(avgDoorWidth)
-                .avgDoorHeight(avgDoorHeight)
+                .avgDoorHandleHeight(avgDoorHandleHeight)
                 .avgMinAisleWidth(avgMinAisleWidth)
                 .avgHasThreshold(avgHasThreshold)
                 .minDoorWidth(minDoorWidth)

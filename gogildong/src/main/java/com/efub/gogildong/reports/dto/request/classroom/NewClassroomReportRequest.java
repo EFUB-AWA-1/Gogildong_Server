@@ -17,14 +17,14 @@ public class NewClassroomReportRequest {
     private Long floorId;
 
     @NotBlank(message = "시설 이름을 작성해주세요.")
-    private String facilityName;
+    private String facilityNickname;
 
     @NotBlank(message = "시설 사진을 포함해주세요!")
     private String classroomReportImage;
 
     private Float doorWidth;
 
-    private Float doorHeight;
+    private Float doorHandleHeight;
 
     private Float minAisleWidth;
 
@@ -32,12 +32,10 @@ public class NewClassroomReportRequest {
 
     private DoorType doorType;
 
-    private String note;
-
     public static Facility toFacilityEntity(NewClassroomReportRequest request, String facilityName, Floor floor) {
         return Facility.builder()
                 .facilityName(facilityName)
-                .facilityNickname(request.getFacilityName())
+                .facilityNickname(request.getFacilityNickname())
                 .facilityType(FacilityType.CLASSROOM)
                 .floor(floor)
                 .build();
@@ -47,17 +45,16 @@ public class NewClassroomReportRequest {
         return ClassroomReport.builder()
                 .classroomReportImage(request.getClassroomReportImage())
                 .doorWidth(request.getDoorWidth())
-                .doorHeight(request.getDoorHeight())
+                .doorHandleHeight(request.getDoorHandleHeight())
                 .minAisleWidth(request.getMinAisleWidth())
                 .hasThreshold(request.getHasThreshold())
                 .doorType(request.getDoorType())
-                .note(request.getNote())
                 .build();
     }
 
     public static Classroom toClassroomEntity(NewClassroomReportRequest request, Facility facility, ClassroomReport report) {
         Classroom classroom = Classroom.builder()
-                .doorHeight(request.getDoorHeight())
+                .doorHandleHeight(request.getDoorHandleHeight())
                 .doorWidth(request.getDoorWidth())
                 .minAisleWidth(request.getMinAisleWidth())
                 .hasThreshold(request.getHasThreshold())

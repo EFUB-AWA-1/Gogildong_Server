@@ -16,6 +16,7 @@ public class ItemResponse {
     private final String type;
     private final int price;
     private final String itemImage;
+    private final String wearingItemImage;
     private final boolean hasItem;
     private final Boolean equip;
 
@@ -26,6 +27,7 @@ public class ItemResponse {
                 .type(shopItem.getType().name().toLowerCase())
                 .price(shopItem.getPrice())
                 .itemImage(shopItem.getItemImage())
+                .wearingItemImage(shopItem.getWearingItemImage())
                 .hasItem(true)
                 .build();
     }
@@ -37,6 +39,7 @@ public class ItemResponse {
                 .type(item.getType().name().toLowerCase())
                 .price(item.getPrice())
                 .itemImage(item.getItemImage())
+                .wearingItemImage(item.getWearingItemImage())
                 .hasItem(hasItem)
                 .build();
     }
@@ -48,6 +51,7 @@ public class ItemResponse {
                 .type(item.getType().name().toLowerCase())
                 .price(item.getPrice())
                 .itemImage(item.getItemImage())
+                .wearingItemImage(item.getWearingItemImage())
                 .hasItem(hasItem)
                 .equip(equip)
                 .build();

@@ -17,23 +17,21 @@ public class NewElevatorReportRequest {
     private Long floorId;
 
     @NotBlank(message = "시설 이름을 작성해주세요.")
-    private String facilityName;
+    private String facilityNickname;
 
     @NotBlank(message = "시설 사진을 포함해주세요!")
     private String elevatorReportImage;
 
     private Float doorWidth;
 
-    private Float doorHeight;
+    private Float interiorDepth;
 
     private Float maxControlPanelHeight;
-
-    private String note;
 
     public static Facility toFacilityEntity(NewElevatorReportRequest request, String facilityName, Floor floor) {
         return Facility.builder()
                 .facilityName(facilityName)
-                .facilityNickname(request.getFacilityName())
+                .facilityNickname(request.getFacilityNickname())
                 .facilityType(FacilityType.ELEVATOR)
                 .floor(floor)
                 .build();
@@ -43,15 +41,14 @@ public class NewElevatorReportRequest {
         return ElevatorReport.builder()
                 .elevatorReportImage(request.getElevatorReportImage())
                 .doorWidth(request.getDoorWidth())
-                .doorHeight(request.getDoorHeight())
+                .interiorDepth(request.getInteriorDepth())
                 .maxControlPanelHeight(request.getMaxControlPanelHeight())
-                .note(request.getNote())
                 .build();
     }
 
     public static Elevator toElevatorEntity(NewElevatorReportRequest request, Facility facility, ElevatorReport report) {
         Elevator elevator = Elevator.builder()
-                .doorHeight(request.getDoorHeight())
+                .interiorDepth(request.getInteriorDepth())
                 .doorWidth(request.getDoorWidth())
                 .maxControlPanelHeight(request.getMaxControlPanelHeight())
                 .facility(facility)

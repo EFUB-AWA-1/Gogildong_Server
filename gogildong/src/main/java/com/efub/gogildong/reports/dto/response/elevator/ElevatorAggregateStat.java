@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 public class ElevatorAggregateStat {
     private Float avgDoorWidth;
-    private Float avgDoorHeight;
+    private Float avgInteriorDepth;
     private Float avgMaxControlPanelHeight;
     private Float minDoorWidth;
     private Float maxDoorWidth;

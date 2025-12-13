@@ -15,11 +15,10 @@ public class ClassroomReportResponse {
     private UserResponseDto user;
     private String classroomReportImage;
     private Float doorWidth;
-    private Float doorHeight;
+    private Float doorHandleHeight;
     private Float minAisleWidth;
     private Boolean hasThreshold;
     private DoorType doorType;
-    private String note;
 
     public static ClassroomReportResponse from(ClassroomReport classroomReport) {
         return ClassroomReportResponse.builder()
@@ -28,11 +27,10 @@ public class ClassroomReportResponse {
                 .user(UserResponseDto.from(classroomReport.getReport().getUser()))
                 .classroomReportImage(classroomReport.getClassroomReportImage())
                 .doorWidth(classroomReport.getDoorWidth())
-                .doorHeight(classroomReport.getDoorHeight())
+                .doorHandleHeight(classroomReport.getDoorHandleHeight())
                 .minAisleWidth(classroomReport.getMinAisleWidth())
                 .hasThreshold(classroomReport.getHasThreshold())
                 .doorType(classroomReport.getDoorType())
-                .note(classroomReport.getNote())
                 .build();
     }
 }
