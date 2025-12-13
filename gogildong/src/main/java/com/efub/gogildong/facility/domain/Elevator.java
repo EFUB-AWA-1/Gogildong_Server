@@ -34,6 +34,14 @@ public class Elevator {
     @Column(nullable = false)
     private Float maxControlPanelHeight;
 
+    // 교직원 승인 여부
+    @Column(nullable = false)
+    private StaffApproved isStaffApproved;
+
+    // 수업시간 이용 가능 여부
+    @Column(nullable = false)
+    private Boolean isAvailableDuringClass;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_id")
     private Facility facility;
@@ -43,12 +51,15 @@ public class Elevator {
 
     @Builder
     public Elevator(Float doorWidth, Float minDoorWidth, Float maxDoorWidth,
-                    Float interiorDepth, Float maxControlPanelHeight, Facility facility) {
+                    Float interiorDepth, Float maxControlPanelHeight,
+                    StaffApproved isStaffApproved, Boolean isAvailableDuringClass, Facility facility) {
         this.doorWidth = doorWidth;
         this.minDoorWidth = minDoorWidth;
         this.maxDoorWidth = maxDoorWidth;
         this.interiorDepth = interiorDepth;
         this.maxControlPanelHeight = maxControlPanelHeight;
+        this.isStaffApproved = isStaffApproved;
+        this.isAvailableDuringClass = isAvailableDuringClass;
         this.facility = facility;
     }
 

@@ -3,6 +3,7 @@ package com.efub.gogildong.reports.dto.request.elevator;
 import com.efub.gogildong.facility.domain.*;
 import com.efub.gogildong.reports.domain.ElevatorReport;
 import com.efub.gogildong.reports.domain.Report;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,10 @@ public class NewElevatorReportRequest {
 
     private Float maxControlPanelHeight;
 
+    private StaffApproved isStaffApproved;
+
+    private Boolean isAvailableDuringClass;
+
     public static Facility toFacilityEntity(NewElevatorReportRequest request, String facilityName, Floor floor) {
         return Facility.builder()
                 .facilityName(facilityName)
@@ -43,6 +48,8 @@ public class NewElevatorReportRequest {
                 .doorWidth(request.getDoorWidth())
                 .interiorDepth(request.getInteriorDepth())
                 .maxControlPanelHeight(request.getMaxControlPanelHeight())
+                .isStaffApproved(request.getIsStaffApproved())
+                .isAvailableDuringClass(request.getIsAvailableDuringClass())
                 .build();
     }
 
@@ -54,6 +61,8 @@ public class NewElevatorReportRequest {
                 .facility(facility)
                 .maxDoorWidth(request.getDoorWidth())
                 .minDoorWidth(request.getDoorWidth())
+                .isStaffApproved(request.getIsStaffApproved())
+                .isAvailableDuringClass(request.getIsAvailableDuringClass())
                 .build();
 
         elevator.addElevatorReport(report);
