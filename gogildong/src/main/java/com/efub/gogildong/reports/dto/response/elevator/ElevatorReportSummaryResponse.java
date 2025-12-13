@@ -9,14 +9,14 @@ import lombok.Getter;
 public class ElevatorReportSummaryResponse {
 
     private Float doarWidth;
-    private Float doarHeight;
+    private Float interiorDepth;
     private Float maxControlPanelHeight;
 
     public static ElevatorReportSummaryResponse from(ElevatorReport elevatorReport) {
 
         return ElevatorReportSummaryResponse.builder()
                 .doarWidth(elevatorReport.getDoorWidth())
-                .doarHeight(elevatorReport.getDoorHeight())
+                .interiorDepth(elevatorReport.getInteriorDepth())
                 .maxControlPanelHeight(elevatorReport.getMaxControlPanelHeight())
                 .build();
     }
