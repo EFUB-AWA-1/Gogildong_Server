@@ -21,6 +21,8 @@ public class ShopItem {
 
     private String itemImage;
 
+    private String wearingItemImage;
+
     @Enumerated(EnumType.STRING)
     private ClotheType type;
 
@@ -37,11 +39,12 @@ public class ShopItem {
     }
 
     @Builder
-    public ShopItem(String name, String itemImage, ClotheType type, int price, boolean defaultFlag) {
+    public ShopItem(String name, String itemImage, ClotheType type, int price, boolean defaultFlag, String wearingItemImage) {
         this.name = name;
         this.itemImage = itemImage;
         this.type = type;
         this.price = price;
         this.defaultFlag = defaultFlag;
+        this.wearingItemImage = wearingItemImage;
     }
 }
