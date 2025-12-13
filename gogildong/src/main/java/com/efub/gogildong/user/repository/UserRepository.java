@@ -1,7 +1,9 @@
 package com.efub.gogildong.user.repository;
 
+import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.statistics.dto.DailyCountProjection;
 import com.efub.gogildong.user.domain.User;
+import com.efub.gogildong.user.domain.UserRole;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    List<User> findBySchoolAndRole(School school, UserRole role);
     Optional<User> findByLoginId(String loginId);
     boolean existsByEmail(String email);
     boolean existsByLoginId(String loginId);
