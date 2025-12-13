@@ -1,5 +1,6 @@
 package com.efub.gogildong.schools.repository;
 
+import com.efub.gogildong.schools.domain.EduLevel;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.statistics.dto.DailyCountProjection; // 🔥 추가
 import org.springframework.data.domain.Page;
@@ -67,5 +68,17 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
     List<DailyCountProjection> countDailyNewSchools(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
+    );
+
+    // 학교 검색 + 페이징
+    @Query("SELECT s FROM School s " +
+            "WHERE (:region IS NULL OR s.region = :region) " +
+            "AND (:eduLevel IS NULL OR s.eduLevel = :eduLevel) " +
+            "AND (:keyword IS NULL OR s.schoolName LIKE %:keyword%)")
+    Page<School> searchSchools(
+            @Param("region") String region,
+            @Param("eduLevel") EduLevel eduLevel,
+            @Param("keyword") String keyword,
+            Pageable pageable
     );
 }
