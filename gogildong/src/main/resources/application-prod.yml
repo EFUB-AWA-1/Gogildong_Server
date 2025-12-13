@@ -37,6 +37,8 @@ spring:
   ai:
     openai:
       api-key: ${OPEN_API_KEY}
+      api-url: https://api.openai.com/v1/responses
+      model: gpt-4.1-mini
 
 item:
   image-base-url: ${CLOTHES_IMG_URL}
