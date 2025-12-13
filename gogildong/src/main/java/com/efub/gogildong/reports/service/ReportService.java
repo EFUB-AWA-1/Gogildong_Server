@@ -20,6 +20,7 @@ import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.*;
 import com.efub.gogildong.reports.dto.response.classroom.ClassroomAggregateStat;
 import com.efub.gogildong.reports.dto.response.elevator.ElevatorAggregateStat;
+import com.efub.gogildong.reports.dto.response.elevator.ElevatorReportSummaryResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomAggregateStat;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestroomReportSummaryResponse;
@@ -517,5 +518,16 @@ public class ReportService {
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
 
         return RestroomReportSummaryResponse.from(restRoomReport);
+    }
+
+    /*
+     엘리베이터 제보 요약 조회
+     * */
+    @Transactional(readOnly = true)
+    public ElevatorReportSummaryResponse getElevatorSummaryByReportId(Long reportId) {
+        ElevatorReport elevatorReport = elevatorReportRepository.findById(reportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+
+        return ElevatorReportSummaryResponse.from(elevatorReport);
     }
 }
