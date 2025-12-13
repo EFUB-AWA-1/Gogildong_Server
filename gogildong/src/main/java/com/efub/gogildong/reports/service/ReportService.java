@@ -517,7 +517,7 @@ public class ReportService {
     * */
     @Transactional(readOnly = true)
     public RestroomReportSummaryResponse getRestroomSummaryByReportId(Long reportId) {
-        RestRoomReport restRoomReport = restRoomReportRepository.findByReportId(reportId);
+        RestRoomReport restRoomReport = restRoomReportRepository.findByReport_reportId(reportId);
         return RestroomReportSummaryResponse.from(restRoomReport);
     }
 
@@ -526,7 +526,7 @@ public class ReportService {
      * */
     @Transactional(readOnly = true)
     public ElevatorReportSummaryResponse getElevatorSummaryByReportId(Long reportId) {
-        ElevatorReport elevatorReport = elevatorReportRepository.findByReportId(reportId);
+        ElevatorReport elevatorReport = elevatorReportRepository.findByReport_reportId(reportId);
 
         return ElevatorReportSummaryResponse.from(elevatorReport);
     }
@@ -536,7 +536,7 @@ public class ReportService {
     * */
     @Transactional(readOnly = true)
     public ClassroomReportSummaryResponse getClassroomSummaryByReportId(Long reportId) {
-        ClassroomReport classroomReport = classroomReportRepository.findByReportId(reportId);
+        ClassroomReport classroomReport = classroomReportRepository.findByReport_reportId(reportId);
 
         return ClassroomReportSummaryResponse.from(classroomReport);
     }
@@ -546,7 +546,7 @@ public class ReportService {
     * */
     @Transactional(readOnly = true)
     public EtcReportSummaryResponse getEtcSummaryByReportId(Long reportId) {
-        EtcReport etcReport = etcReportRepository.findByReportId(reportId);
+        EtcReport etcReport = etcReportRepository.findByReport_reportId(reportId);
         return EtcReportSummaryResponse.from(etcReport);
     }
 }

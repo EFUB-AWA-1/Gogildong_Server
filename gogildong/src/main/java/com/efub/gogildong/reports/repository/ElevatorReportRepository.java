@@ -17,5 +17,5 @@ public interface ElevatorReportRepository extends JpaRepository<ElevatorReport, 
            """)
     List<ElevatorReport> findPublicByElevator(@Param("elevator")Elevator elevator);
 
-    ElevatorReport findByReportId(Long reportId);
+    ElevatorReport findByReport_reportId(Long reportId);
 }

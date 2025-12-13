@@ -17,5 +17,5 @@ public interface EtcReportRepository extends JpaRepository<EtcReport, Long> {
            """)
     List<EtcReport> findPublicByEtc(@Param("etc") Etc etc);
 
-    EtcReport findByReportId(Long reportId);
+    EtcReport findByReport_reportId(Long reportId);
 }

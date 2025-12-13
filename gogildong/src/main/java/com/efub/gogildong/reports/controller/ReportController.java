@@ -117,7 +117,7 @@ public class ReportController {
     제보 전체 목록을 조회합니다. (학교 관리자)
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(" ")
+    @GetMapping
     public ResponseEntity<ReportListResponse> getAllReport() {
         return ResponseEntity.ok(reportService.getAllReports());
     }
