@@ -30,6 +30,7 @@ public class FacilityImageSummaryResponse {
                 .userName(report.getUser().getUsername())
                 .reportId(report.getReportId())
                 .facilityImage(facilityImage)
+                .createdAt(report.getCreatedAt())
                 .build();
     }
 }
