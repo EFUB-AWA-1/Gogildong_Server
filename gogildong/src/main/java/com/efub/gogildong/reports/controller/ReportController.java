@@ -10,6 +10,9 @@ import com.efub.gogildong.reports.dto.request.restroom.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.ReportFlagListResponse;
 import com.efub.gogildong.reports.dto.response.ReportListResponse;
+import com.efub.gogildong.reports.dto.response.classroom.ClassroomReportSummaryResponse;
+import com.efub.gogildong.reports.dto.response.elevator.ElevatorReportSummaryResponse;
+import com.efub.gogildong.reports.dto.response.etc.EtcReportSummaryResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestroomReportSummaryResponse;
 import com.efub.gogildong.reports.dto.summary.ReportSummary;
@@ -150,5 +153,32 @@ public class ReportController {
     public ResponseEntity<RestroomReportSummaryResponse> getRestroomSummary(@PathVariable Long reportId,
                                                                             Authentication authentication){
         return ResponseEntity.ok(reportService.getRestroomSummaryByReportId(reportId));
+    }
+
+    /*
+    엘리베이터 제보 정보 요약을 조회합니다.
+    * */
+    @GetMapping("/summary/elevator/{reportId}")
+    public ResponseEntity<ElevatorReportSummaryResponse> getElevatorSummary(@PathVariable Long reportId,
+                                                                            Authentication authentication){
+        return ResponseEntity.ok(reportService.getElevatorSummaryByReportId(reportId));
+    }
+
+    /*
+    교실 제보 정보 요약을 조회합니다.
+    * */
+    @GetMapping("/summary/classroom/{reportId}")
+    public ResponseEntity<ClassroomReportSummaryResponse> getClassroomSummary(@PathVariable Long reportId,
+                                                                              Authentication authentication){
+        return ResponseEntity.ok(reportService.getClassroomSummaryByReportId(reportId));
+    }
+
+    /*
+    기타 제보 정보 요약을 조회합니다.
+    * */
+    @GetMapping("/summary/etc/{reportId}")
+    public ResponseEntity<EtcReportSummaryResponse> getEtcSummary(@PathVariable Long reportId,
+                                                                  Authentication authentication){
+        return ResponseEntity.ok(reportService.getEtcSummaryByReportId(reportId));
     }
 }

@@ -19,7 +19,10 @@ import com.efub.gogildong.reports.dto.request.restroom.NewRestRoomReportRequest;
 import com.efub.gogildong.reports.dto.request.restroom.RestRoomReportRequest;
 import com.efub.gogildong.reports.dto.response.*;
 import com.efub.gogildong.reports.dto.response.classroom.ClassroomAggregateStat;
+import com.efub.gogildong.reports.dto.response.classroom.ClassroomReportSummaryResponse;
 import com.efub.gogildong.reports.dto.response.elevator.ElevatorAggregateStat;
+import com.efub.gogildong.reports.dto.response.elevator.ElevatorReportSummaryResponse;
+import com.efub.gogildong.reports.dto.response.etc.EtcReportSummaryResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomAggregateStat;
 import com.efub.gogildong.reports.dto.response.restroom.RestRoomReportResponse;
 import com.efub.gogildong.reports.dto.response.restroom.RestroomReportSummaryResponse;
@@ -47,6 +50,7 @@ public class ReportService {
     private final ReportFlagRepository reportFlagRepository;
     private final ElevatorReportRepository elevatorReportRepository;
     private final ClassroomReportRepository classroomReportRepository;
+    private final EtcReportRepository etcReportRepository;
     private final FloorRepository floorRepository;
     private final CoinService coinService;
     private final PointService pointService;
@@ -517,5 +521,37 @@ public class ReportService {
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
 
         return RestroomReportSummaryResponse.from(restRoomReport);
+    }
+
+    /*
+     엘리베이터 제보 요약 조회
+     * */
+    @Transactional(readOnly = true)
+    public ElevatorReportSummaryResponse getElevatorSummaryByReportId(Long reportId) {
+        ElevatorReport elevatorReport = elevatorReportRepository.findById(reportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+
+        return ElevatorReportSummaryResponse.from(elevatorReport);
+    }
+
+    /*
+    교실 제보 요약 조회
+    * */
+    @Transactional(readOnly = true)
+    public ClassroomReportSummaryResponse getClassroomSummaryByReportId(Long reportId) {
+        ClassroomReport classroomReport = classroomReportRepository.findById(reportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+
+        return ClassroomReportSummaryResponse.from(classroomReport);
+    }
+
+    /*
+    기타 제보 요약 조회
+    * */
+    @Transactional(readOnly = true)
+    public EtcReportSummaryResponse getEtcSummaryByReportId(Long reportId) {
+        EtcReport etcReport = etcReportRepository.findById(reportId)
+                .orElseThrow(() -> new GoGildongException(ExceptionCode.REPORT_NOT_FOUND));
+        return EtcReportSummaryResponse.from(etcReport);
     }
 }
