@@ -39,7 +39,7 @@ spring:
       api-key: ${OPEN_API_KEY}
 
 item:
-  image-base-url: https://mycdn.com/items/
+  image-base-url: ${CLOTHES_IMG_URL}
 mail:
   from: gogildong.power@gmail.com
 

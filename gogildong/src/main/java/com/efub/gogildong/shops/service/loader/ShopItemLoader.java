@@ -20,19 +20,28 @@ public class ShopItemLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // --- 기본 아이템 ---
-        insertIfNotExists("기본 티셔츠", "default_top.png", ClotheType.TOP, 0, true);
-        insertIfNotExists("기본 모자", "default_hat.png", ClotheType.HAT, 0, true);
-        insertIfNotExists("기본 원피스", "default_dress.png", ClotheType.DRESS, 0, true);
-        insertIfNotExists("기본 신발", "default_shoes.png", ClotheType.SHOES, 0, true);
+        insertIfNotExists("기본 얼굴", "/head/default-head.svg", "/head/default-head.svg", ClotheType.HEAD, 0, true);
+        insertIfNotExists("길동이 옷", "/body/default-body.svg", "/body/default-body.svg", ClotheType.DRESS, 0, true);
+
 
         // --- 일반 상점 아이템 ---
-        insertIfNotExists("멋진 청바지", "jeans.png", ClotheType.BOTTOMS, 500, false);
-        insertIfNotExists("레드 스니커즈", "red_sneakers.png", ClotheType.SHOES, 300, false);
-        insertIfNotExists("블루 후드티", "blue_hoodie.png", ClotheType.TOP, 400, false);
-        insertIfNotExists("민트 원피스", "mint_dress.png", ClotheType.DRESS, 600, false);
+        insertIfNotExists("검정 머리", "/head/black.svg", "/head/black.svg", ClotheType.HEAD, 30, false);
+        insertIfNotExists("갈색 머리", "/head/brown.svg", "/head/brown.svg", ClotheType.HEAD, 35, false);
+        insertIfNotExists("캡모자", "/head/cap.svg", "/head/cap.svg", ClotheType.HEAD, 30, false);
+        insertIfNotExists("삐에로 모자", "/head/clown.svg", "/head/clown.svg", ClotheType.HEAD, 40, false);
+        insertIfNotExists("판다 모자", "/head/panda.svg", "/head/panda.svg", ClotheType.HEAD, 50, false);
+        insertIfNotExists("분홍 머리", "/head/pink.svg", "/head/pink.svg", ClotheType.HEAD, 35, false);
+        insertIfNotExists("상투", "/head/sangtoo.svg", "/head/sangtoo.svg", ClotheType.HEAD, 20, false);
+        insertIfNotExists("산타 모자", "/head/santa.svg", "/head/santa.svg", ClotheType.HEAD, 42, false);
+
+        insertIfNotExists("삐에로 옷", "/body/clown-cloth.svg", "/body/clown-cloth.svg", ClotheType.DRESS, 42, false);
+        insertIfNotExists("곤룡포", "/body/king.svg", "/body/king.svg", ClotheType.DRESS, 100, false);
+        insertIfNotExists("I♥길동", "/body/love.svg", "/body/love.svg", ClotheType.DRESS, 32, false);
+        insertIfNotExists("산타 옷", "/body/santa-cloth.svg", "/body/santa-cloth.svg", ClotheType.DRESS, 42, false);
+        insertIfNotExists("트레이닝복", "/body/train.svg", "/body/train.svg", ClotheType.DRESS, 30, false);
     }
 
-    private void insertIfNotExists(String name, String fileName, ClotheType type, int price, boolean defaultFlag){
+    private void insertIfNotExists(String name, String itemfileName, String wearingItemfileName, ClotheType type, int price, boolean defaultFlag){
         if(shopItemRepository.existsByName(name)){
             return;
         }
@@ -41,7 +50,8 @@ public class ShopItemLoader implements ApplicationRunner {
                 .type(type)
                 .price(price)
                 .defaultFlag(defaultFlag)
-                .itemImage(baseImageUrl + fileName)
+                .itemImage(baseImageUrl + itemfileName)
+                .wearingItemImage(baseImageUrl + wearingItemfileName)
                 .build();
         shopItemRepository.save(shopItem);
     }
