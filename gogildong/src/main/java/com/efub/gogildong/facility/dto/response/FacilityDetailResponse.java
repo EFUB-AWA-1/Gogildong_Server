@@ -14,7 +14,7 @@ public class FacilityDetailResponse {
     private String floorName;
     private Long facilityId;
     private String facilityName;
-    private String facilityNiceName;
+    private String facilityNickName;
     private String facilityType;
     private String reviewSummary;
     private LocalDateTime createdAt;
@@ -25,7 +25,7 @@ public class FacilityDetailResponse {
                 .floorName(facility.getFloor().getFloorName())
                 .facilityId(facility.getFacilityId())
                 .facilityName(facility.getFacilityName())
-                .facilityNiceName(facility.getFacilityNickname())
+                .facilityNickName(facility.getFacilityNickname())
                 .facilityType(facility.getFacilityType().name())
                 .reviewSummary(facility.getReviewSummary())
                 .createdAt(facility.getCreatedAt())
