@@ -9,18 +9,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(
+        name = "facility_review_like",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_facility_review_like_review_user",
+                columnNames = {"facility_review_id", "user_id"}
+        )
+)
 public class FacilityReviewLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long facilityReviewLikeId;
 
-    // 리뷰와 n:1 매핑, 주인, 지연로딩
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_review_id", nullable = false)
     private FacilityReview facilityReview;
 
-    // 유저와 n:1 매핑, 주인, 지연로딩
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

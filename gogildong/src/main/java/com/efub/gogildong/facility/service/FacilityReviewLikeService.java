@@ -59,12 +59,13 @@ public class FacilityReviewLikeService {
         // 시설 리뷰 접근 권한 검사
         schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
 
-        FacilityReviewLike reviewLike = facilityReviewLikeRepository.findByFacilityReviewAndUser(review, user)
-                .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_LIKE_NOT_FOUND));
+        // (reviewId, userId) 조건으로 DB에서 바로 삭제
+        int deleted = facilityReviewLikeRepository.deleteByReviewIdAndUserId(reviewId, user.getUserId());
+        if (deleted == 0) {
+            throw new GoGildongException(ExceptionCode.FACILITY_REVIEW_LIKE_NOT_FOUND);
+        }
 
-        // 리뷰 상태 변경
+        // 카운트 감소
         review.deleteLike();
-        // 좋아요 엔티티 삭제
-        facilityReviewLikeRepository.delete(reviewLike);
     }
 }
