@@ -67,4 +67,12 @@ public class FacilityReview extends BaseEntity {
     public void addFlag() {
         flagCount++;
     }
+
+    // 좋아요 수 증감
+    public void addLike() { likeCount++; }
+    public void deleteLike() { likeCount--; }
+
+    // 댓글 수 증감
+    public void addComment() { commentCount++; }
+    public void deleteComment() { commentCount--; }
 }

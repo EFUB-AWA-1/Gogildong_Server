@@ -10,13 +10,13 @@ import java.util.List;
 @Builder
 public class FacilityReviewCommentListResponse {
     private int total;
-    private FacilityReviewResponse review;
+    private FacilityReviewSummaryResponse review;
     private List<FacilityReviewCommentResponse> reviewComments;
 
-    public static FacilityReviewCommentListResponse from(FacilityReview review, List<FacilityReviewCommentResponse> comments) {
+    public static FacilityReviewCommentListResponse from(FacilityReview review, List<FacilityReviewCommentResponse> comments, boolean likedByUser) {
         return FacilityReviewCommentListResponse.builder()
                 .total(comments.size())
-                .review(FacilityReviewResponse.from(review))
+                .review(FacilityReviewSummaryResponse.from(review, likedByUser))
                 .reviewComments(comments)
                 .build();
     }

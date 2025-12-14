@@ -14,16 +14,18 @@ public class FacilityReviewSummaryResponse {
     private String userName;
     private Long reviewId;
     private String reviewText;
+    private boolean likedByUser;
     private Integer likeCount;
     private Integer commentCount;
     private LocalDateTime createdAt;
 
-    public static FacilityReviewSummaryResponse from(FacilityReview review) {
+    public static FacilityReviewSummaryResponse from(FacilityReview review, boolean likedByUser) {
         return FacilityReviewSummaryResponse.builder()
                 .userId(review.getUser().getUserId())
                 .userName(review.getUser().getUsername())
                 .reviewId(review.getFacilityReviewId())
                 .reviewText(review.getReviewText())
+                .likedByUser(likedByUser)
                 .likeCount(review.getLikeCount())
                 .commentCount(review.getCommentCount())
                 .createdAt(review.getCreatedAt())
