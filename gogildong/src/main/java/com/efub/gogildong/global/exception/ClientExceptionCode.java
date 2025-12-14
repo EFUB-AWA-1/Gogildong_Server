@@ -83,5 +83,5 @@ public enum ClientExceptionCode {
 
     // 휠체어
     WHEEL_NOT_FOUND,
-    WHEELMARK_NOT_FOUND,
+    WHEELMARK_NOT_FOUND, INVALID_REQUEST,
 }

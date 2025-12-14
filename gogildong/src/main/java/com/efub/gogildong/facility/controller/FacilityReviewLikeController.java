@@ -18,15 +18,14 @@ public class FacilityReviewLikeController {
     private final UserRepository userRepository;
     private final FacilityReviewLikeService facilityReviewLikeService;
 
-    // 시설 리뷰 좋아요 생성
     @PostMapping
-    public ResponseEntity<FacilityReviewLikeResponse> createFacilityReviewLike(Authentication authentication,
-                                                                               @PathVariable("reviewId") Long reviewId) {
-        FacilityReviewLikeResponse response = facilityReviewLikeService.createFacilityReviewLike(authentication.getName(), reviewId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createFacilityReviewLike(Authentication authentication,
+                                                         @PathVariable("reviewId") Long reviewId) {
+        facilityReviewLikeService.createFacilityReviewLike(authentication.getName(), reviewId);
+        return ResponseEntity.noContent().build();
     }
 
-    // 시설 리뷰 좋아요 취소
+    // 좋아요 취소
     @DeleteMapping
     public ResponseEntity<Void> deleteFacilityReviewLike(Authentication authentication,
                                                          @PathVariable("reviewId") Long reviewId) {
