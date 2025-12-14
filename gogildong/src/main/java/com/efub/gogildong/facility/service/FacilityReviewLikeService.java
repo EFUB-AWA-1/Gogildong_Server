@@ -37,6 +37,9 @@ public class FacilityReviewLikeService {
             throw new GoGildongException(ExceptionCode.FACILITY_REVIEW_LIKE_ALREADY_EXISTS);
         }
 
+        // 리뷰 상태 변결
+        review.addLike();
+        // 좋아요 엔티티 생성
         FacilityReviewLike like = FacilityReviewLike.builder()
                 .facilityReview(review)
                 .user(user)
@@ -59,11 +62,9 @@ public class FacilityReviewLikeService {
         FacilityReviewLike reviewLike = facilityReviewLikeRepository.findByFacilityReviewAndUser(review, user)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FACILITY_REVIEW_LIKE_NOT_FOUND));
 
-        // 좋아요 생성자 검사
-        if(!reviewLike.getUser().getUserId().equals(user.getUserId())) {
-            throw new GoGildongException(ExceptionCode.UNAUTHORIZED_ACCESS);
-        }
-
+        // 리뷰 상태 변경
+        review.deleteLike();
+        // 좋아요 엔티티 삭제
         facilityReviewLikeRepository.delete(reviewLike);
     }
 }

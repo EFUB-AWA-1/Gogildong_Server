@@ -9,6 +9,7 @@ import com.efub.gogildong.facility.dto.response.FacilityReviewCommentListRespons
 import com.efub.gogildong.facility.dto.response.FacilityReviewCommentResponse;
 import com.efub.gogildong.facility.respository.FacilityReviewCommentFlagRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewCommentRepository;
+import com.efub.gogildong.facility.respository.FacilityReviewLikeRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
@@ -33,6 +34,7 @@ public class FacilityReviewCommentService {
     private final EntityFinder entityFinder;
     private final SchoolViewRequestService schoolViewRequestService;
     private final PointService pointService;
+    private final FacilityReviewLikeRepository facilityReviewLikeRepository;
 
     private static final int REVIEW_COMMENT_POINTS = 5;
     private final CoinService coinService;
@@ -50,11 +52,14 @@ public class FacilityReviewCommentService {
         List<FacilityReviewComment> commentList =
                 facilityReviewCommentRepository.findAllByFacilityReview_FacilityReviewId(facilityReviewId);
 
+        boolean likedByUser =
+                facilityReviewLikeRepository.existsByFacilityReviewAndUser(review, user);
+
         List<FacilityReviewCommentResponse> comments = commentList.stream()
                 .map(FacilityReviewCommentResponse::from)
                 .toList();
 
-        return FacilityReviewCommentListResponse.from(review, comments);
+        return FacilityReviewCommentListResponse.from(review, comments,  likedByUser);
     }
 
     // 시설 리뷰 댓글 작성
@@ -66,6 +71,8 @@ public class FacilityReviewCommentService {
 
         // 시설 리뷰 댓글 작성 권한 검사
         schoolViewRequestService.validateViewRequestBySchoolAndUser(school, user);
+
+        review.addComment();
 
         FacilityReviewComment comment = request.toEntity(review, user);
         facilityReviewCommentRepository.save(comment);
@@ -111,6 +118,7 @@ public class FacilityReviewCommentService {
         // 작성자 검사
         validateCommentAuthor(comment, user);
 
+        review.deleteComment();
         facilityReviewCommentRepository.deleteById(commentId);
     }
 

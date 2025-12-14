@@ -8,6 +8,7 @@ import com.efub.gogildong.facility.dto.response.FacilityReviewListResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewResponse;
 import com.efub.gogildong.facility.dto.response.FacilityReviewSummaryResponse;
 import com.efub.gogildong.facility.respository.FacilityReviewFlagRepository;
+import com.efub.gogildong.facility.respository.FacilityReviewLikeRepository;
 import com.efub.gogildong.facility.respository.FacilityReviewRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -35,6 +36,7 @@ public class FacilityReviewService {
     private final FacilityReviewRepository facilityReviewRepository;
     private final SchoolViewRequestService schoolViewRequestService;
     private final PointService pointService;
+    private final FacilityReviewLikeRepository facilityReviewLikeRepository;
 
     private static final int REVIEW_POINTS = 5;
     private final CoinService coinService;
@@ -53,8 +55,17 @@ public class FacilityReviewService {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<FacilityReview> reviewPage = facilityReviewRepository.findByFacility(facility, pageRequest);
 
-        List<FacilityReviewSummaryResponse> reviewList = reviewPage.getContent().stream()
-                .map(FacilityReviewSummaryResponse::from)
+        List<FacilityReview> reviews = reviewPage.getContent();
+
+        // 유저가 좋아요 누른 리뷰 ID 목록
+        List<Long> likedReviewIds =
+                facilityReviewLikeRepository.findLikedReviewIdsByUserAndReviews(user, reviews);
+
+        List<FacilityReviewSummaryResponse> reviewList = reviews.stream()
+                .map(review -> FacilityReviewSummaryResponse.from(
+                        review,
+                        likedReviewIds.contains(review.getFacilityReviewId())
+                ))
                 .toList();
 
         return FacilityReviewListResponse.from(reviewPage, facility, reviewList);
