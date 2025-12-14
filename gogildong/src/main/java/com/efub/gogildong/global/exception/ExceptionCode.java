@@ -85,7 +85,8 @@ public enum ExceptionCode {
 
     // 휠체어
     WHEEL_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.WHEEL_NOT_FOUND, "해당되는 휠체어를 찾을 수 없습니다"),
-    WHEELMARK_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.WHEELMARK_NOT_FOUND, "즐겨찾기 된 휠체어가 없습니다.");
+    WHEELMARK_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.WHEELMARK_NOT_FOUND, "즐겨찾기 된 휠체어가 없습니다."),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, ClientExceptionCode.INVALID_REQUEST,"잘못된 요청입니다." );
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;
