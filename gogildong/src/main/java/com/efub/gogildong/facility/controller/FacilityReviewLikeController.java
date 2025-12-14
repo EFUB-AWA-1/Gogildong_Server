@@ -27,7 +27,7 @@ public class FacilityReviewLikeController {
     }
 
     // 시설 리뷰 좋아요 취소
-    @DeleteMapping("/{likeId}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteFacilityReviewLike(Authentication authentication,
                                                          @PathVariable("reviewId") Long reviewId) {
         facilityReviewLikeService.deleteFacilityReviewLike(authentication.getName(), reviewId);
