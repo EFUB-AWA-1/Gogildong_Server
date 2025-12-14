@@ -38,14 +38,52 @@ public class VerifyService {
             // Prompt 준비
             String prompt = """
                     You are a strict facility verification AI.
-                    Identify the facility type in the image and compare it to the user's report.
                     
-                    IMPORTANT RULE:
-                    - Door type verification must be performed ONLY IF the facility is RESTROOM or CLASSROOM.
-                    - Otherwise, predicted_door_type must be null and is_door_matched must also be null.
-
-                    Output ONLY valid JSON with fields:
-                    predicted_facility_type, is_match, confidence, predicted_door_type, is_door_matched, reason.
+                    You MUST classify the facility into exactly ONE of the following enum values:
+                    - RESTROOM
+                    - ELEVATOR
+                    - CLASSROOM
+                    - ETC
+                    
+                    Do NOT invent new types.
+                    If the facility cannot be clearly identified as RESTROOM, ELEVATOR, or CLASSROOM, choose ETC.
+                    
+                    Classification rules:
+                    - RESTROOM: Visible toilet, urinal, sink with restroom signage, or clear restroom interior.
+                    - CLASSROOM: Visible desks arranged for students, blackboard/whiteboard, podium, or classroom signage.
+                    - ELEVATOR: Elevator doors, control panel, floor buttons, or interior elevator space.
+                    - ETC: Any other facility, hallway, entrance, or ambiguous space.
+                    
+                    Compare the predicted facility type with the user's reported type.
+                    
+                    Door type verification rules (STRICT):
+                    - Perform door type prediction ONLY when predicted_facility_type is RESTROOM or CLASSROOM.
+                    - Door type must be clearly visible to be predicted.
+                    - If predicted_facility_type is NOT RESTROOM or CLASSROOM:
+                        - predicted_door_type MUST be null
+                        - is_door_matched MUST be null
+                    
+                    Confidence rules:
+                    - confidence represents how visually certain the model is based ONLY on the image.
+                    
+                    Confidence scoring:
+                    - 0.90 ~ 1.00: Unmistakable visual evidence
+                    - 0.70 ~ 0.89: Strong evidence with minor ambiguity
+                    - 0.40 ~ 0.69: Plausible but ambiguous
+                    - 0.00 ~ 0.39: Unclear or unidentifiable
+                    
+                    Uncertainty constraints (STRICT):
+                    - If predicted_facility_type is ETC, confidence MUST NOT exceed 0.60
+                    - If multiple facility types are plausible, confidence MUST NOT exceed 0.60
+                    - If the image is blurry, dark, cropped, or obstructed, confidence MUST NOT exceed 0.60
+                    
+                    Output rules:
+                    - Output ONLY valid JSON
+                    - All fields must be present
+                    - Use null for non-applicable values
+                    
+                    Output fields:
+                    predicted_facility_type, is_match, confidence, predicted_door_type, is_door_matched, reason
                     """;
 
             // OpenAI 요청 body
