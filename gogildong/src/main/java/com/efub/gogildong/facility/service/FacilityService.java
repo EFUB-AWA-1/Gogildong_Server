@@ -3,10 +3,7 @@ package com.efub.gogildong.facility.service;
 import com.efub.gogildong.facility.domain.Facility;
 import com.efub.gogildong.facility.domain.FacilityType;
 import com.efub.gogildong.facility.dto.request.FacilityImageFlagRequest;
-import com.efub.gogildong.facility.dto.response.FacilityDetailResponse;
-import com.efub.gogildong.facility.dto.response.FacilityImageListResponse;
-import com.efub.gogildong.facility.dto.response.FacilityImageSummaryResponse;
-import com.efub.gogildong.facility.dto.response.RestroomResponse;
+import com.efub.gogildong.facility.dto.response.*;
 import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
@@ -53,7 +50,25 @@ public class FacilityService {
         // 각 타입별 Dto 변환 메서드 호출
         switch (facility.getFacilityType()) {
             case RESTROOM :
+                if (facility.getRestroom() == null) {
+                    return FacilityDetailResponse.from(facility);
+                }
                 return RestroomResponse.from(facility.getRestroom());
+            case CLASSROOM:
+                if (facility.getClassroom() == null) {
+                    return FacilityDetailResponse.from(facility);
+                }
+                return ClassroomResponse.from(facility.getClassroom());
+            case ELEVATOR:
+                if (facility.getElevator() == null) {
+                    return FacilityDetailResponse.from(facility);
+                }
+                    return ElevatorResponse.from(facility.getElevator());
+            case ETC:
+                if (facility.getEtc() == null) {
+                    return FacilityDetailResponse.from(facility);
+                }
+                return EtcResponse.from(facility.getEtc());
             default:
                 return FacilityDetailResponse.from(facility);
         }
