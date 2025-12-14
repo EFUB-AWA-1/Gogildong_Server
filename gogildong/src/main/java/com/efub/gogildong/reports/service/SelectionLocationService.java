@@ -5,6 +5,7 @@ import com.efub.gogildong.facility.domain.Floor;
 import com.efub.gogildong.facility.dto.response.FacilityListResponse;
 import com.efub.gogildong.facility.dto.response.FacilitySummaryResponse;
 import com.efub.gogildong.facility.respository.BuildingRepository;
+import com.efub.gogildong.facility.respository.FacilityRepository;
 import com.efub.gogildong.global.exception.ExceptionCode;
 import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
@@ -26,6 +27,7 @@ public class SelectionLocationService {
 
     private final EntityFinder finder;
     private final BuildingRepository buildingRepository;
+    private final FacilityRepository facilityRepository;
 
     @Transactional(readOnly = true)
     public BuildingListResponse getBuildingList(String loginId) {
@@ -48,13 +50,14 @@ public class SelectionLocationService {
     }
 
     @Transactional(readOnly = true)
-    public FacilityListResponse getFacilityList(String loginId, Long floorId) {
+    public FacilityListResponse getFacilityList(String loginId, Long floorId, String type) {
         User user = finder.getUserByLoginId(loginId);
         Floor floor = finder.getFloorById(floorId);
         if(floor.getBuilding().getSchool() != user.getSchool()) {
             throw new GoGildongException(ExceptionCode.UNAUTHORIZED_SCHOOL_ACCESS);
         }
-        List<FacilitySummaryResponse> facilitySummaryResponses = floor.getFacilities().stream().map(FacilitySummaryResponse::from).toList();
+        List<FacilitySummaryResponse> facilitySummaryResponses = facilityRepository.findAllByFloorAndType(floor, type)
+                .stream().map(FacilitySummaryResponse::from).toList();
         return new FacilityListResponse(facilitySummaryResponses, facilitySummaryResponses.size());
     }
 }
