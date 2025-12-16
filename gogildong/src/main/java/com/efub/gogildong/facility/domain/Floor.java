@@ -1,6 +1,7 @@
 package com.efub.gogildong.facility.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +27,17 @@ public class Floor {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", nullable = false)
+    @Setter
     private Building building;
 
     @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Facility> facilities = new ArrayList<>();
+
+    @Builder
+    public Floor(String floorName, String floorPlanImage){
+        this.floorName = floorName;
+        this.floorPlanImage = floorPlanImage;
+    }
 
     // 시설 추가
     public void addFacility(Facility facility) {

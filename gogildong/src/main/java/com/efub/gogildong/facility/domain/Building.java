@@ -35,6 +35,7 @@ public class Building {
     // 건물층 추가
     public void addFloor(Floor floor) {
         floors.add(floor);
+        floor.setBuilding(this);
     }
 
     // 건물 이름 변경

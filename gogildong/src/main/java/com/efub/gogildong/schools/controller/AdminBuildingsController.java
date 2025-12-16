@@ -2,6 +2,7 @@ package com.efub.gogildong.schools.controller;
 
 import com.efub.gogildong.facility.dto.request.UpdateFloorPlanImageRequest;
 import com.efub.gogildong.schools.dto.request.CreateBuildingRequest;
+import com.efub.gogildong.schools.dto.request.CreateFloorRequest;
 import com.efub.gogildong.schools.dto.request.UpdateBuildingRequest;
 import com.efub.gogildong.schools.dto.response.BuildingListResponse;
 import com.efub.gogildong.schools.dto.response.FloorPlanListResponse;
@@ -69,12 +70,39 @@ public class AdminBuildingsController {
     }
 
     /*
+    *층 및 도면 추가
+    * */
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/floors")
+    public ResponseEntity<Void> createFloor(@RequestBody @Valid CreateFloorRequest request, Authentication authentication) {
+        adminBuildingsService.createFloor(authentication.getName(), request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /*
     * 도면 수정하기
     * */
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/floorplan")
     public ResponseEntity<Void> updateFloorPlan(@RequestBody @Valid UpdateFloorPlanImageRequest request, Authentication authentication){
         adminBuildingsService.updateFloorPlan(authentication.getName(), request);
+        return ResponseEntity.ok().build();
+    }
+
+    /*
+    * 건물 삭제
+    * */
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{buildingId}")
+    public ResponseEntity<Void> deleteBuilding(@PathVariable Long buildingId, Authentication authentication) {
+        adminBuildingsService.deleteBuilding(authentication.getName(), buildingId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteBuildingsInBuilding(Authentication authentication) {
+        adminBuildingsService.deleteBuildings(authentication.getName());
         return ResponseEntity.ok().build();
     }
 
