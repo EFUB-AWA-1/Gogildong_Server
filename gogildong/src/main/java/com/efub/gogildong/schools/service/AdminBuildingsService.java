@@ -10,6 +10,7 @@ import com.efub.gogildong.global.exception.GoGildongException;
 import com.efub.gogildong.global.util.EntityFinder;
 import com.efub.gogildong.schools.domain.School;
 import com.efub.gogildong.schools.dto.request.CreateBuildingRequest;
+import com.efub.gogildong.schools.dto.request.CreateFloorRequest;
 import com.efub.gogildong.schools.dto.request.UpdateBuildingRequest;
 import com.efub.gogildong.schools.dto.response.BuildingListResponse;
 import com.efub.gogildong.schools.dto.response.BuildingSummaryResponse;
@@ -28,6 +29,7 @@ public class AdminBuildingsService {
     private final EntityFinder finder;
     private final BuildingRepository buildingRepository;
     private final FloorRepository floorRepository;
+    private static final String ORIGIN_FLOOR_IMAGE = "https://lh3.googleusercontent.com/d/1WjzEhD2xiTQtATw1XoaAJBCtZBFI1Z1T";
 
     /*
      * 학교 관리자가 해당 학교에 건물 추가
@@ -38,6 +40,11 @@ public class AdminBuildingsService {
         Building createdBuilding = request.createBuilding();
         School school = user.getSchool();
         school.addBuilding(createdBuilding);
+        Floor floor = Floor.builder()
+                .floorName("0층")
+                .floorPlanImage(ORIGIN_FLOOR_IMAGE)
+                .build();
+        createdBuilding.addFloor(floor);
     }
 
     /*
@@ -88,6 +95,31 @@ public class AdminBuildingsService {
         validateFloorByUser(user, floor);
         return FloorPlanResponse.to(floor);
 
+    }
+
+    @Transactional
+    public void createFloor(String loginId, CreateFloorRequest request) {
+        Long buildingId = request.getBuildingId();
+        Building building = finder.getBuildingById(buildingId);
+        User user = finder.getUserByLoginId(loginId);
+        validateBuildingInSchool(building, user.getSchool());
+        building.addFloor(request.toEntity());
+    }
+
+    @Transactional
+    public void deleteBuilding(String loginId, Long buildingId) {
+        User user = finder.getUserByLoginId(loginId);
+        Building building = finder.getBuildingById(buildingId);
+        validateBuildingInSchool(building, user.getSchool());
+        buildingRepository.delete(building);
+    }
+
+    @Transactional
+    public void deleteBuildings(String loginId) {
+        User user = finder.getUserByLoginId(loginId);
+        School school = user.getSchool();
+        List<Building> buildings = buildingRepository.findBySchool(school);
+        buildingRepository.deleteAll(buildings);
     }
 
     /*

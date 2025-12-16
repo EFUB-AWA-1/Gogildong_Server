@@ -74,4 +74,8 @@ public class EntityFinder {
         return floorRepository.findByFloorId(floorId)
                 .orElseThrow(() -> new GoGildongException(ExceptionCode.FLOOR_NOT_FOUND));
     }
+
+    public Building getBuildingById(Long buildingId) {
+        return buildingRepository.findByBuildingId(buildingId).orElseThrow(()-> new GoGildongException(ExceptionCode.BUILDING_NOT_FOUND));
+    }
 }
