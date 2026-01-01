@@ -12,6 +12,16 @@
 ## 🗓️ 개발 기간
 - 2025.10.28 ~ 2025.12.17
 
+## 🎬 서비스 소개 영상
+
+<div align="center">
+
+[![고!길동 서비스 소개 영상](https://img.youtube.com/vi/jPUrGcPT_-8/0.jpg)](https://youtu.be/jPUrGcPT_-8)
+
+▶ 이미지를 클릭하면 YouTube에서 소개 영상을 볼 수 있어요
+
+</div>
+
 ## 💡 주요 기능
 
 <div align="center">
