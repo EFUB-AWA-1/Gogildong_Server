@@ -34,6 +34,7 @@
 </div>
 
 ## 🔧 아키텍처
+<img width="100%" src="https://github.com/user-attachments/assets/004ed4e1-7c46-4d8c-b0c4-a917b51bf99c" />
 
 ## 🔨 기술 스택
 **Develop**
