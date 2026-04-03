@@ -25,11 +25,11 @@
 ## 💡 주요 기능
 
 <div align="center">
-<img alt="서비스 주요 기능1" src="https://github.com/user-attachments/assets/267eb0fa-b2a2-49ff-bcd7-ea56257a597a" width="45%" />
-<img  alt="서비스 주요 기능2" src="https://github.com/user-attachments/assets/ad8c1a3d-1560-4ebf-a4e7-0c39baab1799" width="45%" />
+<img alt="서비스 주요 기능1" src="https://github.com/user-attachments/assets/e80f7ac1-ade7-43ce-a7de-3ac1721397ca" width="45%" />
+<img  alt="서비스 주요 기능2" src="https://github.com/user-attachments/assets/566ede91-3b1d-4a65-8f4c-f6b1b43374de" width="45%" />
 <br>
-<img alt="서비스 주요 기능3" src="https://github.com/user-attachments/assets/409f1c88-4957-4a2b-8b4e-e57f0dd7573a" width="45%"/>
-<img alt="서비스 주요 기능4" src="https://github.com/user-attachments/assets/799ec88e-6381-44ff-83b0-995b7de0f15a" width="45%"/>
+<img alt="서비스 주요 기능3" src="https://github.com/user-attachments/assets/d7c544a7-7573-461c-88ba-4f3bbd234d8c" width="45%"/>
+<img alt="서비스 주요 기능4"  src="https://github.com/user-attachments/assets/c6607a17-96fa-48f8-960c-bfd9016566dc" width="45%"/>
 
 </div>
 
